@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Home on Valencia Drone Works</title>
+    <link>http://vlcdroneworks.com/</link>
+    <description>Recent content in Home on Valencia Drone Works</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>es-es</language>
+    <lastBuildDate>Thu, 03 Sep 2020 17:27:59 +0700</lastBuildDate><atom:link href="http://vlcdroneworks.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>My First Video</title>
+      <link>http://vlcdroneworks.com/portfolio/my-first-video.html</link>
+      <pubDate>Thu, 03 Sep 2020 17:27:59 +0700</pubDate>
+      
+      <guid>http://vlcdroneworks.com/portfolio/my-first-video.html</guid>
+      <description>Here&amp;rsquo;s an example blog post.</description>
+    </item>
+    
+    <item>
+      <title>Contacto</title>
+      <link>http://vlcdroneworks.com/contacto.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://vlcdroneworks.com/contacto.html</guid>
+      <description>¿Quiénes somos? Valencia Drone Works nace de la colaboración de un equipo de pilotos de drones profesionales titulados expertos en vuelo FPV (First Person View) y estabilizado.
+Además, disponemos de las titulaciones necesarias para poder realizar vuelos en espacios aéreos controlados, vuelos en urbano, etc. Nosotros nos encargamos de gestionar cualquier permiso necesario.
+Un grupo de pilotos de confianza para hacer realidad sus proyectos volando en exteriores e interiores, consiguiendo la toma aérea necesaria para sus videos corporativos, promocionales, deportivos, familiares.</description>
+    </item>
+    
+  </channel>
+</rss>

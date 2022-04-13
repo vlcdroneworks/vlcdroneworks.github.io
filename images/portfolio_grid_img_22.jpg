@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--================ Basic page needs ================-->
+  <title>Monkeysan | Home</title>
+  <meta charset="UTF-8">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <meta name='ir-site-verification-token' value='475289819' />
+  <meta name="description" content="">
+  <!--================ Mobile specific metas ================-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--================ Favicon ================-->
+  <link rel="shortcut icon" href="site/images/favicon.ico">
+  <!--================ Google web fonts ================-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oxygen:300,400,700">
+  <link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css">
+  <!--================ Vendor CSS ================-->
+  <link rel="stylesheet" href="site/css/fontawesome-all.min.css">
+  <link rel="stylesheet" href="site/css/linearicons.css">
+  <link rel="stylesheet" href="site/vendors/owl-carousel/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="site/css/bootstrap.min.css">
+  <!--================ Theme CSS ================-->
+  <link rel="stylesheet" href="site/css/style.css">
+  <link rel="stylesheet" href="site/css/responsive.css">
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-144025601-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-144025601-1');
+</script>
+
+
+  <!--================ Vendor JS ================-->
+</head>
+
+<body class="mad-body--scheme-brown">
+  <div class="mad-preloader"></div>
+  <div id="mad-page-wrapper" class="mad-page-wrapper">
+    <!--================ Search Modal ================-->
+    <div class="mad-d-none">
+      <div id="search-modal" class="mad-modal mad-modal--search">
+        <button type="button" class="mad-icon arcticmodal-close"><i class="icon licon-cross"></i></button>
+        <h3>What are you looking for?</h3>
+        <!--================ Search Form ================-->
+        <form role="search" method="get" class="mad-singlefield-form mad-form--fields-white mad-searchform">
+          <input type="text" name="s" placeholder="Search">
+          <button type="submit" class="btn btn-big">Search</button>
+        </form>
+        <!--================ End of Search Form ================-->
+      </div>
+    </div>
+    <!--================ End of Search Modal ================-->
+    <!--================ Header ================-->
+    <header id="mad-header" class="mad-header">
+      <!--================ Section ================-->
+      <div class="mad-header-section mad-header-section--sticky-xl">
+        <!--================ Column ================-->
+        <div class="mad-header-col">
+          <a href="index.html" class="mad-ln--independent"><img src="site/images/logo.png" alt=""></a>
+        </div>
+        <!--================ End of Column ================-->
+        <!--================ Column ================-->
+        <div class="mad-header-col">
+          <div class="mad-header-items">
+            <div>
+              <!--================ Navigation ================-->
+              <nav class="mad-navigation-container">
+                <ul class="mad-navigation mad-navigation--vertical-sm">
+                  <li class="menu-item"><a href="website-html-templates.html" class="mad-ln--independent">Website Templates</a></li>
+                  <li class="menu-item"><a href="wordpress-themes.html" class="mad-ln--independent">WordPress Themes</a></li>
+                  <li class="menu-item"><a href="virtuemart-templates.html" class="mad-ln--independent">VirtueMart Themes</a></li>
+				  <li class="menu-item"><a href="shopify-themes.html" class="mad-ln--independent">Shopify Themes</a></li>
+                  <li class="menu-item"><a href="hosting.html" class="mad-ln--independent">Website Hosting</a></li>
+                  <li class="menu-item"><a href="https://velikorodnov.ticksy.com/" target="_blank" class="mad-ln--independent">Support</a></li>
+                </ul>
+              </nav>
+              <!--================ End of Navigation ================-->
+            </div>
+          </div>
+        </div>
+        <!--================ End of Column ================-->
+      </div>
+      <!--================ End of Section ================-->
+    </header>
+    <!--================ End of Header ================-->
+    <div class="media-holder">
+      <span class="mad-elipsys"><img src="site/images/circle_header.svg" alt=""></span>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-5">
+            <div class="media-content">
+              <h1 class="mad-media-title">Premium Themes
+                and Templates
+                For Any Purpose!</h1>
+              <p>Most up-to-date designs, micro-niche focused, 100% mobile-friendly, SEO optimized, powerful theme options and most
+                popular plugins included.</p>
+              <a href="https://1.envato.market/7KxEQ" target="_blank" class="btn btn-style-2">Discover More</a>
+            </div>
+          </div>
+          <div class="col-xl-7">
+            <div class="box-shadow">
+              <div class="mad-grid owl-carousel mad-simple-slideshow mad-simple-slideshow--autoplay">
+			  <div class="mad-grid-item">
+                  <div class="mad-overlay">
+                    <a href="site/cleansy_html_single_project.html" class="btn">View Details</a>
+                    <a href="https://velikorodnov.com/themeforest/cleansy-html/preview/" target="_blank" class="btn btn-style-2">View Demo</a>
+                  </div>
+                  <img src="site/images/929x1001_img18.jpg" alt="">
+                </div>
+				<div class="mad-grid-item">
+                  <div class="mad-overlay">
+                    <a href="site/lemar_wordpress_single_project.html" class="btn">View Details</a>
+                    <a href="https://velikorodnov.com/themeforest/lemar-wp/preview/" target="_blank" class="btn btn-style-2">View Demo</a>
+                  </div>
+                  <img src="site/images/929x1001_img16.jpg" alt="">
+                </div>
+				<div class="mad-grid-item">
+                  <div class="mad-overlay">
+                    <a href="site/sushifushi_html_single_project.html" class="btn">View Details</a>
+                    <a href="https://velikorodnov.com/themeforest/sushifushi-html/preview/" target="_blank" class="btn btn-style-2">View Demo</a>
+                  </div>
+                  <img src="site/images/929x1001_img15.jpg" alt="">
+                </div>
+				<div class="mad-grid-item">
+                  <div class="mad-overlay">
+                    <a href="site/steakbreak_html_single_project.html" class="btn">View Details</a>
+                    <a href="http://velikorodnov.com/themeforest/steakbreak-html/preview/" target="_blank" class="btn btn-style-2">View Demo</a>
+                  </div>
+                  <img src="site/images/929x1001_img17.jpg" alt="">
+                </div>
+                <div class="mad-grid-item">
+                  <div class="mad-overlay">
+                    <a href="site/kunstwerk_wordpress_single_project.html" class="btn">View Details</a>
+                    <a href="https://velikorodnov.com/themeforest/kunstwerk/preview/" target="_blank" class="btn btn-style-2">View Demo</a>
+                  </div>
+                  <img src="site/images/929x1001_img13.jpg" alt="">
+                </div>
+                <div class="mad-grid-item">
+                  <div class="mad-overlay">
+                    <a href="site/ewent_wordpress_single_project.html" class="btn">View Details</a>
+                    <a href="https://velikorodnov.com/themeforest/ewent-wp/preview/" target="_blank" class="btn btn-style-2">View Demo</a>
+                  </div>
+                  <img src="site/images/929x1001_img12.jpg" alt="">
+                </div>
+				 <div class="mad-grid-item">
+                  <div class="mad-overlay">
+                    <a href="site/milenia_wordpress_single_project.html" class="btn">View Details</a>
+                    <a href="https://velikorodnov.com/themeforest/milenia-wp/preview/" target="_blank" class="btn btn-style-2">View Demo</a>
+                  </div>
+                  <img src="site/images/929x1001_img3.jpg" alt="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mad-content no-pd">
+      <div class="container">
+        <!--================ Section ================-->
+        <div class="mad-section mad-section-pt-big">
+          <h2 class="mad-page-title align-center">What Makes Our Products Special</h2>
+          <!--================ Icon boxes ================-->
+          <div class="mad-icon-boxes item-col-4">
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon licon-diamond2"></i>
+                <h4 class="mad-box-title">Micro Nich Design</h4>
+                <p>Vestibulum iaculis lacinia est. Proin dictum elementum velit. Fusce euismod consequat ante. Lorem ipsum dolor
+                  sit
+                  amet,
+                  consectetuer.</p>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon licon-code"></i>
+                <h4 class="mad-box-title">Solid Code Framework</h4>
+                <p>Mauris accumsan nulla vel diam. Sed in lacus ut enim adipiscing aliquet. Nulla venenatis. In pede mi, aliquet
+                  sit amet,
+                  euismod in.</p>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon licon-mouse-left"></i>
+                <h4 class="mad-box-title">One-click Installation</h4>
+                <p>In pede mi, aliquet sit amet, euismod in, auctor ut, ligula. Aliquam dapibus tincidunt metus. Praesent justo
+                  dolor,
+                  lobortis quis.</p>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon licon-laptop-phone"></i>
+                <h4 class="mad-box-title">100% Mobile-friendly</h4>
+                <p>Vestibulum sed ante. Donec sagittis euismod purus. Sed ut perspiciatis unde omnis iste natus error sit
+                  voluptatem
+                  accusantium.</p>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon licon-fingers-scroll-horizontal"></i>
+                <h4 class="mad-box-title">Drag & Drop Page Builder</h4>
+                <p>Vestibulum iaculis lacinia est. Proin dictum elementum velit. Fusce euismod consequat ante. Lorem ipsum dolor
+                  sit amet,
+                  consectetuer.</p>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon licon-equalizer"></i>
+                <h4 class="mad-box-title">Powerful Theme Options</h4>
+                <p>Mauris accumsan nulla vel diam. Sed in lacus ut enim adipiscing aliquet. Nulla venenatis. In pede mi, aliquet
+                  sit amet,
+                  euismod in.</p>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon licon-redo2"></i>
+                <h4 class="mad-box-title">Free Theme Updates</h4>
+                <p>In pede mi, aliquet sit amet, euismod in, auctor ut, ligula. Aliquam dapibus tincidunt metus. Praesent justo
+                  dolor,
+                  lobortis quis.</p>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon licon-lifebuoy"></i>
+                <h4 class="mad-box-title">Excellent Support</h4>
+                <p>Vestibulum sed ante. Donec sagittis euismod purus. Sed ut perspiciatis unde omnis iste natus error sit
+                  voluptatem
+                  accusantium.</p>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+          </div>
+          <!--================ End of Icon boxes ================-->
+          <div class="align-center"><a href="https://1.envato.market/7KxEQ" target="_blank" class="btn">Discover More</a></div>
+        </div>
+        <!--================ End of Section ================-->
+        <!--================ Section ================-->
+        <div class="mad-section mad-section--stretched mad-colorizer--scheme-color-2">
+          <h2 class="mad-page-title align-center">Recent Works</h2>
+          <!--================ Icon boxes ================-->
+          <div class="owl-carousel mad-entities mad-grid mad-grid--cols-4 with-nav">
+		   <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/cleansy_html_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_html42.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Automotive, Car Wash</div>
+                  <h6 class="mad-entity-title"><a href="site/cleansy_html_single_project.html">Cleansy - Car Wash Services & Products HTML Template</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$24</span> $18
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/cleansy_html_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/cleansy-html/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+			
+		   <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/steakbreak_html_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_html41.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Restaurant, Steakhouse</div>
+                  <h6 class="mad-entity-title"><a href="site/steakbreak_html_single_project.html">SteakBreak - Restaurant HTML Template</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$24</span> $18
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/steakbreak_html_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/steakbreak-html/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+			
+		  <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/sushifushi_html_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_html40.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Restaurant, Sushi</div>
+                  <h6 class="mad-entity-title"><a href="site/sushifushi_html_single_project.html">SushiFushi - Japanese & Asian Restaurant HTML Template</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$24</span> $18
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/sushifushi_html_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/sushifushi-html/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+		  <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/lemar_wordpress_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_wp32.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Restaurant, Seafood</div>
+                  <h6 class="mad-entity-title"><a href="site/lemar_wordpress_single_project.html">LeMar - Seafood Restaurant WordPress Theme</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$75</span> $69
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/lemar_wordpress_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/lemar-wp/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+			
+		   <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/flexibles_virtuemart_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_vm7.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Retail, Fashion</div>
+                  <h6 class="mad-entity-title"><a href="site/flexibles_virtuemart_single_project.html">Flexibles - Fashion VirtueMart Template</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  $59
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/flexibles_virtuemart_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/virtuemart/flexibles" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+			
+		   <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/lemar_html_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_html39.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Restaurant</div>
+                  <h6 class="mad-entity-title"><a href="site/lemar_html_single_project.html">LeMar - Finest Seafood Restaurant HTML Template</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$24</span> $18
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/lemar_html_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/lemar/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+			
+		  <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/ewent_wordpress_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_wp31.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Events, Conference</div>
+                  <h6 class="mad-entity-title"><a href="site/ewent_wordpress_single_project.html">Ewent - Conference & Event Oriented WordPress Theme</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$89</span> $79
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/ewent_wordpress_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/ewent-wp/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+			
+		    			
+		  <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/kunstwerk_wordpress_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_wp30.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Fashion, Store, Multivendor</div>
+                  <h6 class="mad-entity-title"><a href="site/kunstwerk_wordpress_single_project.html">Kunstwerk - Handycraft Marketplace WordPress Theme</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$79</span> $69
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/kunstwerk_wordpress_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/kunstwerk/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+			
+			<!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/matebook_html_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_html38.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Social Network</div>
+                  <h6 class="mad-entity-title"><a href="site/matebook_html_single_project.html">MateBook - Social Network HTML Template</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$24</span> $18
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/matebook_html_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/html/matebook/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+			
+		   <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/flatastic_shopify_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_sp1.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Fashion, Store</div>
+                  <h6 class="mad-entity-title"><a href="site/flatastic_shopify_single_project.html">Flatastic - Fashion Shopify Theme</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$69</span> $39
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/flatastic_shopify_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="http://velikorodnov.com/themeforest/flatastic-shopify/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+			<!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/sweetsqft_html_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_html36.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Real Estate, Property</div>
+                  <h6 class="mad-entity-title"><a href="site/sweetsqft_html_single_project.html">Sweetsqft - Real Estate HTML Template</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$24</span> $18
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/sweetsqft_html_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/sweetsqft/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+			<!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/kunswerk_html_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_html37.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Handmade, Artisan</div>
+                  <h6 class="mad-entity-title"><a href="site/kunswerk_html_single_project.html">Kunstwerk - Handmade & Artisan HTML Website Template</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$24</span> $18
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/kunswerk_html_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/kunstwerk-html/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+		   <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/autorai_wordpress_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_wp29.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Automotive, Directory</div>
+                  <h6 class="mad-entity-title"><a href="site/autorai_wordpress_single_project.html">Avtorai- Car Dealer & Automotive Classified WordPress Theme</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$79</span> $64
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/autorai_wordpress_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/autorai/preview/index.html" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+		   <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/surround_wordpress_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_wp28.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Vlog, Travel, Blog</div>
+                  <h6 class="mad-entity-title"><a href="site/surround_wordpress_single_project.html">Surround - Vlog & Blog WordPress Theme</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$69</span> $75
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/surround_wordpress_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="http://velikorodnov.com/themeforest/surround/splash_page/index.html" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+            <!--================ End of Entity ================-->
+		   <!--================ Entity ================-->
+            <article class="mad-entity">
+               <div class="mad-entity-media">
+                <a href="site/illusion_wordpress_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_wp27.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Multipurpose, WooCommerce</div>
+                  <h6 class="mad-entity-title"><a href="site/illusion_wordpress_single_project.html">illusion - Multipurpose Corporate and WooCommerce Theme</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$69</span> $79
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/illusion_wordpress_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="http://velikorodnov.com/themeforest/illusion-wp/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+            <!--================ End of Entity ================-->
+            <!--================ Entity ================-->
+            <article class="mad-entity">
+              <div class="mad-entity-media">
+                <a href="site/milenia_wordpress_single_project.html" class="mad-ln--independent"><img src="site/images/370x259_wp4.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Hotel, Property</div>
+                  <h6 class="mad-entity-title"><a href="site/milenia_wordpress_single_project.html">Milenia - Hotel & Booking WordPress Theme </a></h6>
+                </header>
+                <div class="mad-entity-price">
+                   <span>$99</span> $69
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="site/milenia_wordpress_single_project.html" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/milenia-wp/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+            <!--================ End of Entity ================-->
+            <!--================ Entity ================-->
+            <article class="mad-entity">
+              <div class="mad-entity-media">
+                <a href="https://velikorodnov.com/themeforest/wowed/preview/" target="_blank" class="mad-ln--independent"><img src="site/images/370x259_img2.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Wedding</div>
+                  <h6 class="mad-entity-title"><a href="https://velikorodnov.com/themeforest/wowed/preview/" target="_blank">WoWedding - Wedding
+                      Oriented WordPress Theme</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$69</span> $59
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="https://1.envato.market/Da4J2" target="_blank" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/wowed/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+            <!--================ End of Entity ================-->
+            <!--================ Entity ================-->
+            <article class="mad-entity">
+              <div class="mad-entity-media">
+                <a href="https://velikorodnov.com/joomla/ilusion/" target="_blank" class="mad-ln--independent"><img src="site/images/370x259_img3.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Business</div>
+                  <h6 class="mad-entity-title"><a href="https://velikorodnov.com/joomla/ilusion/" target="_blank">ilusion - Versatile Joomla 3
+                      Template</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  $59
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="https://1.envato.market/ge3ZO" target="_blank" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/joomla/ilusion/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+            <!--================ End of Entity ================-->
+            <!--================ Entity ================-->
+            <article class="mad-entity">
+              <div class="mad-entity-media">
+                <a href="https://velikorodnov.com/themeforest/jogasana-wp/preview/" target="_blank" class="mad-ln--independent"><img src="site/images/370x259_img4.jpg" alt=""></a>
+              </div>
+              <div class="mad-entity-content">
+                <header class="mad-entity-header">
+                  <div class="mad-cat">Health and Sport</div>
+                  <h6 class="mad-entity-title"><a href="https://velikorodnov.com/themeforest/jogasana-wp/preview/" target="_blank">Jogasana - Yoga Oriented WordPress
+                      Theme</a></h6>
+                </header>
+                <div class="mad-entity-price">
+                  <span>$79</span> $69
+                </div>
+                <footer class="mad-entity-footer">
+                  <a href="https://1.envato.market/z5JLe" target="_blank" class="btn btn-small">View Details</a>
+                  <a href="https://velikorodnov.com/themeforest/jogasana-wp/preview/" target="_blank" class="btn btn-small btn-style-2">View Demo</a>
+                </footer>
+              </div>
+            </article>
+            <!--================ End of Entity ================-->
+          </div>
+          <!--================ End of Icon boxes ================-->
+          <div class="align-center"><a href="https://1.envato.market/7KxEQ" target="_blank" class="btn">View All</a></div>
+        </div>
+        <!--================ End of Section ================-->
+        <!--================ Section ================-->
+        <div class="mad-section mad-section--stretched mad-colorizer--scheme-color-3">
+          <h2 class="mad-page-title align-center">What Our Customers Say</h2>
+          <!--================ Testimonials ================-->
+          <div class="mad-testimonials">
+            <div class="mad-grid owl-carousel with-nav">
+              <div class="mad-grid-item">
+                <div class="row">
+                  <div class="col-md-5">
+                    <figure class="mad-img-testimonials"><img src="site/images/608x441_img2.jpg" alt=""></figure>
+                  </div>
+                  <div class="col-md-7">
+                    <!--================ Testimonial ================-->
+                    <div class="mad-testimonial">
+                      <blockquote aria-labelledby="testimonial-cite-1" class="mad-blockquote--unstyled">Great template options, great support and I was able to get a very high page speed score. You can see the template in use at: <a href="https://www.missoulapediatricdentistry.com" target="_blank">www.missoulapediatricdentistry.com</a></blockquote>
+                      <footer class="mad-author">
+                        <div class="mad-author-photo">
+                          <img src="site/images/90x90_photo2.jpg" alt="">
+                        </div>
+                        <div class="mad-author-info">
+                          <cite id="testimonial-cite-1">Brett Rodli</cite>
+                          Lead Developer 
+                        </div>
+                      </footer>
+                    </div>
+                    <!--================ End of Testimonial ================-->
+                  </div>
+                </div>
+          
+              </div>
+              <div class="mad-grid-item">
+                <div class="row">
+                  <div class="col-md-5">
+                    <figure class="mad-img-testimonials"><img src="site/images/608x441_img1.jpg" alt=""></figure>
+                  </div>
+                  <div class="col-md-7">
+                    <!--================ Testimonial ================-->
+                    <div class="mad-testimonial">
+                      <blockquote aria-labelledby="testimonial-cite-1" class="mad-blockquote--unstyled">Thank you Sergii, I do appreciate your time to correct the issues I was having and for also the great support. I will keep working with you to get everything finalized. Thank you so much A++++ five star!! You can see the template in use at: <a href="https://www.trainstaysaline.com" target="_blank">www.trainstaysaline.com</a></blockquote>
+                      <footer class="mad-author">
+                        <div class="mad-author-photo">
+                          <img src="site/images/90x90_photo1.jpg" alt="">
+                        </div>
+                        <div class="mad-author-info">
+                          <cite id="testimonial-cite-1">John McCoist</cite>
+                          Creative Director
+                        </div>
+                      </footer>
+                    </div>
+                    <!--================ End of Testimonial ================-->
+                  </div>
+                </div>
+              
+              </div>
+            </div>
+          </div>
+          <!--================ End of Testimonials ================-->
+        </div>
+        <!--================ End of Section ================-->
+        <!--================ Section ================-->
+        <div class="mad-section mad-section-pt-small mad-section--stretched mad-colorizer--scheme-color-2">
+          <!--================ Counters ================-->
+          <div class="mad-counters item-col-4">
+            <div class="mad-col">
+              <div class="mad-counter">
+                <div class="mad-counter-inner">
+                  <div class="mad-counter-icon"><i class="licon-briefcase"></i></div>
+                  <div class="mad-counter-content">
+                    <div aria-labelledby="counter-1" class="mad-counter-count">15+</div>
+                    <div id="counter-1" class="mad-counter-title">Years of Experience</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mad-col">
+              <div class="mad-counter">
+                <div class="mad-counter-inner">
+                  <div class="mad-counter-icon"><i class="licon-smile"></i></div>
+                  <div class="mad-counter-content">
+                    <div aria-labelledby="counter-2" class="mad-counter-count">32 000+</div>
+                    <div id="counter-2" class="mad-counter-title">Satisfied Customers</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mad-col">
+              <div class="mad-counter">
+                <div class="mad-counter-inner">
+                  <div class="mad-counter-icon"><i class="licon-bubble-quote"></i></div>
+                  <div class="mad-counter-content">
+                    <div aria-labelledby="counter-3" class="mad-counter-count">2 300+</div>
+                    <div id="counter-3" class="mad-counter-title">Positive Reviews</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mad-col">
+              <div class="mad-counter">
+                <div class="mad-counter-inner">
+                  <div class="mad-counter-icon"><i class="licon-ticket"></i></div>
+                  <div class="mad-counter-content">
+                    <div aria-labelledby="counter-4" class="mad-counter-count">17 000+</div>
+                    <div id="counter-4" class="mad-counter-title">Closed Support Tickets</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--================ End of Counters ================-->
+        </div>
+        <!--================ End of Section ================-->
+        <!--================ Section ================-->
+        <div class="mad-section size-2 mad-section--stretched mad-colorizer--scheme-color-4">
+          <!--================ Icon boxes ================-->
+          <div class="mad-icon-boxes icons-hr item-col-4">
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon"><img src="site/images/evato_logo.svg" alt=""></i>
+                <div class="mad-icon-box-content">
+                  <h2 class="mad-icon-box-title">Follow Us</h2>
+                  <h2 class="mad-icon-box-title"><a href="https://1.envato.market/xj1WR" target="_blank">On Envato</a></h2>
+                </div>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon licon-at-sign"></i>
+                <div class="mad-icon-box-content">
+                  <h2 class="mad-icon-box-title">Join Our</h2>
+                  <h2 class="mad-icon-box-title"><a href="https://eepurl.com/dkFjz1" target="_blank">Newsletter</a></h2>
+                </div>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon fab fa-facebook-f"></i>
+                <div class="mad-icon-box-content">
+                  <h2 class="mad-icon-box-title">Follow Us</h2>
+                  <h2 class="mad-icon-box-title"><a href="https://www.facebook.com/monkeysan" target="_blank" >On Facebook</a></h2>
+                </div>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+            <div class="mad-col">
+              <!--================ Icon box ================-->
+              <div class="mad-icon-box">
+                <i class="mad-icon fab fa-twitter"></i>
+                <div class="mad-icon-box-content">
+                  <h2 class="mad-icon-box-title">Follow Us</h2>
+                  <h2 class="mad-icon-box-title"><a href="https://twitter.com/velikorodnov" target="_blank">On Twitter</a></h2>
+                </div>
+              </div>
+              <!--================ End of Icon box ================-->
+            </div>
+          </div>
+          <!--================ End of Icon boxes ================-->
+        </div>
+        <!--================ End of Section ================-->
+      </div>
+    </div>
+    <!--================ Footer ================-->
+    <footer id="mad-footer" class="mad-footer">
+      <!--================ Footer row ================-->
+      <div class="mad-footer-main">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-3 col-md-6">
+              <!--================ Widget ================-->
+              <a href="index.html" class="mad-logo mad-ln--independent"><img src="site/images/logo.png" alt=""></a>
+              <!--================ End of Widget ================-->
+              <div class="mad-widget mad-share">
+                <span>Share this on:</span>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://velikorodnov.com" target="_blank" class="btn btn-micro btn-facebook">facebook</a>
+                <a href="https://twitter.com/intent/tweet?textMonkeysan&url=https://velikorodnov.com/" target="_blank" class="btn btn-micro btn-twitter">twitter</a>
+                <a href="https://pinterest.com/pin/create/button/?url=https://velikorodnov.com" target="_blank" class="btn btn-micro btn-pinterest">pinterest</a>
+              </div>
+              <div class="mad-widget copyright">© 2020 MonkeysanThemes. <br>
+                All Rights Reserved.</div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <!--================ Widget ================-->
+              <div class="mad-widget">
+                <h5 class="mad-widget-title">About Us</h5>
+                <p>We are a small but very talanted team that works hard in order to provide the quality and functional
+                  products. At
+                  the
+                  same time we are constantly growning and improving the process of website development.</p>
+                <ul class="mad-social-icons">
+                  <li><a href="https://www.facebook.com/monkeysan" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                  <li><a href="https://twitter.com/velikorodnov" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                  <li><a href="https://www.youtube.com/channel/UCHLY0iBPh03oLba9Hc0ABMg" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                </ul>
+              </div>
+              <!--================ End of Widget ================-->
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <!--================ Widget ================-->
+              <div class="mad-widget">
+                <h5 class="mad-widget-title">Quick Links</h5>
+                <nav class="mad-menu">
+                  <ul>
+                    <li><a href="html-templates.html">Website Templates</a></li>
+                    <li><a href="wordpress-themes.html">WordPress Themes</a></li>
+                    <li><a href="virtuemart-templates.html">VirueMart Themes</a></li>
+                    <li><a href="hosting.html">Website Hosting</a></li>
+                    <li><a href="https://velikorodnov.ticksy.com/" target="_blank">Support</a></li>
+                  </ul>
+                </nav>
+              </div>
+              <!--================ End of Widget ================-->
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <!--================ Widget ================-->
+              <div class="mad-widget">
+                <h5 class="mad-widget-title">Need Support?</h5>
+                <p>If you have any questions concerning your purchased item, please contact us via our support system .
+                  We are located in
+                  GMT +1 time zone and we usually answer all questions within 12-24 hours in weekdays.</p>
+                <a href="https://velikorodnov.ticksy.com/" target="_blank" class="btn btn-big">Submit a Ticket</a>
+              </div>
+              <!--================ End of Widget ================-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--================ End of Footer row ================-->
+    </footer>
+    <!--================ End of Footer ================-->
+  </div>
+  <script src="site/vendors/modernizr.js"></script>
+  <script src="site/vendors/jquery-3.3.1.min.js"></script>
+  <script src="site/vendors/jquery.easing.1.3.min.js"></script>
+  <script src="site/vendors/jquery.parallax-1.1.3.min.js"></script>
+  <script src="site/vendors/owl-carousel/owl.carousel.min.js"></script>
+  <script src="site/vendors/handlebars-v4.0.5.min.js"></script>
+  <script src="site/vendors/retina.min.js"></script>
+  <script src="site/js/modules/mad.sticky-header-section.min.js"></script>
+  <script src="site/js/mad.app.js"></script>
+</body>
+
+</html>
