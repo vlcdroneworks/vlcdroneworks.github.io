@@ -22,7 +22,7 @@ function Navigation() {
     { href: '#inicio', label: 'Inicio' },
     { href: '#quienes-somos', label: 'Quienes Somos' },
     { href: '#servicios', label: 'Servicios' },
-    { href: '#portfolio', label: 'Portfolio' },
+    // { href: '#portfolio', label: 'Portfolio' },  // Oculto temporalmente
     { href: '#contacto', label: 'Contacto' },
   ];
 
@@ -217,17 +217,17 @@ function TeamSection() {
   const pilots = [
     {
       name: 'Alejandro Plá',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+      image: '/img/alejandro.jpg',
       description: 'Piloto de dron con gran experiencia en el <span class="text-vdw-orange">sector audiovisual</span> como operador de steadicam/cámara'
     },
     {
       name: 'Mark Barrachina',
-      image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop',
+      image: '/img/mark.jpg',
       description: 'Piloto de dron <span class="text-vdw-orange">polivalente</span>, cámara, y <span class="text-vdw-orange">editor</span> de video y fotografía.'
     },
     {
       name: 'Sergio García',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop',
+      image: '/img/sergio.jpg',
       description: 'Piloto de dron cinemático y de <span class="text-vdw-orange">interiores</span>, para aquellas grabaciones que requieren precisión'
     }
   ];
@@ -264,6 +264,12 @@ function TeamSection() {
   );
 }
 
+// Types for media items
+type MediaItem = {
+  image: string;
+  videoUrl: string;
+};
+
 // Drone Service Card
 function DroneServiceCard({ 
   title, 
@@ -272,7 +278,7 @@ function DroneServiceCard({
   recording, 
   idealUse, 
   strengths, 
-  image,
+  media,
   accentColor = 'vdw-orange'
 }: { 
   title: string;
@@ -281,15 +287,25 @@ function DroneServiceCard({
   recording: string;
   idealUse: string;
   strengths: string[];
-  image: string;
+  media: MediaItem | MediaItem[];
   accentColor?: string;
 }) {
+  // Select random media item if array provided
+  const mediaArray = Array.isArray(media) ? media : [media];
+  const [selectedMedia] = useState(() => 
+    mediaArray[Math.floor(Math.random() * mediaArray.length)]
+  );
+  
+  const handlePlayClick = () => {
+    window.open(selectedMedia.videoUrl, '_blank');
+  };
+  
   return (
     <div className="relative bg-vdw-navy/60 backdrop-blur-sm rounded-2xl overflow-hidden">
       {/* Background */}
       <div 
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${image})` }}
+        style={{ backgroundImage: `url(${selectedMedia.image})` }}
       >
         <div className="absolute inset-0 bg-vdw-navy/85" />
       </div>
@@ -339,9 +355,12 @@ function DroneServiceCard({
           </div>
           
           {/* Video Placeholder */}
-          <div className="relative aspect-video rounded-xl overflow-hidden bg-black/30 group cursor-pointer">
+          <div 
+            className="relative aspect-video rounded-xl overflow-hidden bg-black/30 group cursor-pointer"
+            onClick={handlePlayClick}
+          >
             <img 
-              src={image} 
+              src={selectedMedia.image} 
               alt={title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform"
             />
@@ -382,7 +401,10 @@ function AerialServicesSection() {
               'Permite <span class="text-vdw-orange">plano secuencia</span> fluido y altamente inmersivo.',
               'Aporta dinamismo sin riesgo y con estética moderna.'
             ]}
-            image="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80"
+            media={[
+              { image: '/img/interiores-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=8ImPizCcFcw' },
+              { image: '/img/interiores-2.jpg', videoUrl: 'https://www.youtube.com/watch?v=XWDfxyvIix0' }
+            ]}
           />
 
           {/* Public Events */}
@@ -398,7 +420,7 @@ function AerialServicesSection() {
               'Sensación de <span class="text-vdw-orange">estar dentro del evento</span>.',
               'Energía visual sin comprometer la seguridad.'
             ]}
-            image="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80"
+            media={{ image: '/img/publico-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=7n-vaE7qVHI' }}
           />
 
           {/* Action/Following */}
@@ -413,7 +435,7 @@ function AerialServicesSection() {
               'Vuelos acrobáticos o de seguimiento a <span class="text-vdw-orange">alta velocidad</span>.',
               'Planos únicos que transmiten adrenalina pura.'
             ]}
-            image="https://images.unsplash.com/photo-1541348263662-e068662d82af?w=800&q=80"
+            media={{ image: '/img/accion-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=6kFuLprN4yA' }}
           />
 
           {/* Stable Shots */}
@@ -428,7 +450,10 @@ function AerialServicesSection() {
               'Imagen limpia para <span class="text-vdw-orange">tomas calmadas o estáticas</span>.',
               'Ideal donde se requiere discreción o baja huella sonora.'
             ]}
-            image="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80"
+            media={[
+              { image: '/img/estables-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=J9wTErdDX2I' },
+              { image: '/img/estables-2.jpg', videoUrl: 'https://www.youtube.com/watch?v=a7oVsDdYp6Y' }
+            ]}
           />
 
           {/* Maximum Quality */}
@@ -443,7 +468,7 @@ function AerialServicesSection() {
               'Planos aéreos con <span class="text-vdw-orange">máxima calidad, nitidez y fidelidad</span>.',
               'Imagen de nivel profesional apta para producciones exigentes.'
             ]}
-            image="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&q=80"
+            media={{ image: '/img/publicidad-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=Qot6fJoMooA' }}
           />
         </div>
       </div>
@@ -473,7 +498,7 @@ function GroundRecordingSection() {
             
             <div className="relative z-10 p-6 md:p-10">
               <h3 className="text-2xl md:text-4xl font-bold mb-8">
-                <span className="text-vdw-navy">Grabación</span> <span className="text-vdw-orange">4K</span>
+                <span className="text-white">Grabación</span> <span className="text-vdw-orange">4K</span>
               </h3>
               
               <div className="grid md:grid-cols-2 gap-8 md:gap-12">
@@ -490,7 +515,13 @@ function GroundRecordingSection() {
                     <p><span className="text-vdw-orange font-semibold">Uso ideal:</span> para todo tipo de trabajos no aéreos.</p>
                     <div className="mt-4">
                       <span className="text-vdw-orange font-semibold">Fortalezas:</span>
-                      <p className="text-white/80 mt-1">versatilidad híbrida para fotografía y video, calidad de imagen superior con sensor full frame de 33 megapixels, enfoque automático inteligente, video de alta gama, y estabilización de 5 ejes.</p>
+                      <ul className="mt-2 space-y-1 text-white/80">
+                        <li>- versatilidad híbrida para fotografía y video</li>
+                        <li>- calidad de imagen superior con sensor full frame de 33 megapixels</li>
+                        <li>- enfoque automático inteligente</li>
+                        <li>- video de alta gama</li>
+                        <li>- estabilización de 5 ejes</li>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -554,19 +585,19 @@ function RealEstateSection() {
                   <ul className="space-y-3 text-white/90">
                     <li className="flex items-start gap-2">
                       <span className="text-vdw-orange mt-1">-</span>
-                      <span><span className="text-vdw-orange">Residenciales</span> (viviendas)</span>
+                      <span><span className="text-vdw-orange">Residenciales:</span> viviendas unifamiliares, apartamentos, edificios de viviendas, urbanizaciones, etc.</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-vdw-orange mt-1">-</span>
-                      <span><span className="text-vdw-orange">Comerciales</span> (oficinas, locales, hoteles, restaurantes, centros comerciales, parkings, concesionarios, gimnasios, ocio)</span>
+                      <span><span className="text-vdw-orange">Comerciales:</span> oficinas, locales, hoteles, restaurantes, centros comerciales, parkings, concesionarios, gimnasios, ocio, etc.</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-vdw-orange mt-1">-</span>
-                      <span><span className="text-vdw-orange">Industriales</span> (naves, almacenes, fábricas)</span>
+                      <span><span className="text-vdw-orange">Industriales:</span> naves, almacenes, fábricas, etc.</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-vdw-orange mt-1">-</span>
-                      <span><span className="text-vdw-orange">Infraestructuras y terrenos</span></span>
+                      <span><span className="text-vdw-orange">Infraestructuras y terrenos:</span> infraestructuras públicas y privadas, terrenos, parcelas, etc.</span>
                     </li>
                   </ul>
                 </div>
@@ -617,8 +648,8 @@ function RealEstateSection() {
   );
 }
 
-// Portfolio Section
-function PortfolioSection() {
+// Portfolio Section (Oculto temporalmente)
+export function PortfolioSection() {
   const portfolioImages = [
     'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=300&h=200&fit=crop',
     'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop',
@@ -900,7 +931,7 @@ function App() {
       <AerialServicesSection />
       <GroundRecordingSection />
       <RealEstateSection />
-      <PortfolioSection />
+      {/* <PortfolioSection /> */}  {/* Oculto temporalmente */}
       <ServicesOverviewSection />
       <StatsSection />
       <ClientsSection />
