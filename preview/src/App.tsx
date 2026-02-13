@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { 
   Menu, X, ChevronDown, Play, Camera, 
   Settings, Building2, Video, Phone, 
-  Mail, Instagram, CheckCircle, Map, Cog, Plane
+  Mail, Instagram, CheckCircle, Map, Cog
 } from 'lucide-react';
 
 // Navigation Component
@@ -34,9 +34,7 @@ function Navigation() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <a href="#inicio" className="flex items-center gap-3">
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-vdw-orange to-amber-500 flex items-center justify-center">
-              <Plane className="w-5 h-5 md:w-6 md:h-6 text-white" />
-            </div>
+            <img src="./img/logo-2.png" alt="VDW" className="w-10 h-10 md:w-12 md:h-12" />
             <div className="hidden sm:block">
               <span className="text-white font-bold text-lg md:text-xl">Valencia</span>
               <span className="text-vdw-orange font-bold text-lg md:text-xl"> Drone</span>
@@ -105,9 +103,11 @@ function HeroSection() {
         <div className="flex flex-col items-center text-center">
           {/* Logo */}
           <div className="mb-8">
-            <div className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full bg-gradient-to-br from-vdw-orange to-amber-500 flex items-center justify-center mb-6 shadow-2xl">
-              <Plane className="w-12 h-12 md:w-16 md:h-16 text-white" />
-            </div>
+            <img 
+              src="./img/logo-1.png" 
+              alt="Valencia Drone Works" 
+              className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-6"
+            />
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2">
               Valencia <span className="text-vdw-orange">Drone</span> Works
             </h1>
@@ -906,9 +906,7 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-vdw-orange flex items-center justify-center">
-              <Plane className="w-4 h-4 text-white" />
-            </div>
+            <img src="./img/logo-2.png" alt="VDW" className="w-8 h-8" />
             <span className="text-white font-semibold">Valencia Drone Works</span>
           </div>
           <p className="text-white/60 text-sm">
