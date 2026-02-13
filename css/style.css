@@ -90,7 +90,7 @@ ul {
 body {
   margin: 0;
   padding: 0;
-  font-family: "Pt Serif", serif;
+  font-family: "Raleway", sans-serif;
   color: #7a7a7a;
   font-size: 15px;
   line-height: 1.5;
@@ -115,7 +115,7 @@ body img {
   user-select: none; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   margin-top: 0;
   text-transform: uppercase;
   color: #8e8c85;
@@ -147,7 +147,7 @@ p {
   line-height: 25px; }
 
 .subheading {
-  font-family: "Pt Serif", serif;
+  font-family: "Raleway", sans-serif;
   font-size: 16px;
   font-style: italic; }
 
@@ -273,7 +273,7 @@ p {
   float: none;
   display: inline-block; }
   .navbar-nav > li > a {
-    font-family: "Montserrat", sans-serif;
+    font-family: "Raleway", sans-serif;
     text-transform: uppercase;
     padding: 0 20px;
     line-height: 90px;
@@ -772,7 +772,7 @@ p {
     display: block;
     position: relative;
     overflow: hidden;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Raleway", sans-serif;
     font-size: 36px;
     letter-spacing: 0.05em;
     color: #fff;
@@ -968,7 +968,7 @@ p {
 
 .statistic span {
   font-size: 36px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   color: #fff;
   display: block;
   line-height: 1;
@@ -1404,7 +1404,7 @@ p {
 .skills-progress h6,
 .skills-progress h6 span {
   color: #111;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 13px;
   margin-top: 0;
   margin-bottom: 10px;
@@ -1485,7 +1485,7 @@ p {
 
 .read-more {
   font-size: 12px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.02em;
   font-weight: bold;
@@ -1561,7 +1561,7 @@ p {
   color: #fff;
   font-style: italic;
   margin: 30px 0;
-  font-family: "Pt Serif", serif; }
+  font-family: "Raleway", sans-serif; }
 
 .testimonial i {
   font-size: 28px;
@@ -1842,7 +1842,7 @@ p {
   width: 70px;
   height: 70px;
   border: 3px solid #111;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   color: #3b3b3b;
   font-weight: bold;
   text-align: center; }
@@ -1874,7 +1874,7 @@ p {
   font-size: 22px;
   line-height: 34px;
   font-style: italic;
-  font-family: "Pt Serif", serif; }
+  font-family: "Raleway", sans-serif; }
 
 .blog-content .entry-item blockquote > p > a:hover {
   color: #7a7a7a; }
@@ -1914,7 +1914,7 @@ p {
     -ms-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Raleway", sans-serif;
     font-weight: bold;
     text-transform: uppercase; }
   .pagination span.pagination-dots {
@@ -2009,7 +2009,7 @@ input.searchbox:focus {
 
 .widget.latest-posts ul li a {
   font-size: 11px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   text-transform: uppercase;
   color: #111;
   vertical-align: top;
@@ -2018,7 +2018,7 @@ input.searchbox:focus {
 .widget.latest-posts .entry-meta > span {
   color: #7a7a7a;
   font-size: 13px;
-  font-family: "Pt Serif", serif;
+  font-family: "Raleway", sans-serif;
   text-transform: none;
   margin-top: 5px;
   display: block; }
@@ -2031,7 +2031,7 @@ input.searchbox:focus {
 .tags a {
   background-color: transparent;
   border: 3px solid #e5e5e5;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   text-transform: uppercase;
   padding: 9px 16px;
   line-height: 1;
@@ -2087,7 +2087,7 @@ input.searchbox:focus {
   font-style: italic;
   font-size: 14px;
   line-height: 37px;
-  font-family: "Pt Serif", serif;
+  font-family: "Raleway", sans-serif;
   color: #7a7a7a; }
   .entry-content .entry-tags a:hover {
     color: #111; }
@@ -2121,7 +2121,7 @@ input.searchbox:focus {
 .entry-comments .comment-author {
   display: block;
   margin-bottom: 5px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-weight: bold;
   font-size: 15px;
   color: #111; }
@@ -2137,7 +2137,7 @@ input.searchbox:focus {
   margin-top: 15px; }
 
 .comment-content > a {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   color: #111;
   font-size: 14px; }
 
@@ -2323,7 +2323,7 @@ input.searchbox:focus {
     text-decoration: none;
     padding: 7px 15px;
     border: 3px solid #e5e5e5;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Raleway", sans-serif;
     text-transform: uppercase;
     font-size: 12px;
     -webkit-transition: all 0.3s ease-in-out;
@@ -2482,7 +2482,7 @@ input.searchbox:focus {
   box-shadow: 0px 0px 5px 0px rgba(14, 16, 9, 0.1); }
 
 .pricing-currency {
-  font-family: "Montserrat", sans-serif; }
+  font-family: "Raleway", sans-serif; }
 
 .pricing-term {
   font-size: 12px;
@@ -2543,7 +2543,7 @@ input.searchbox:focus {
 
 .testimonials.style-2 .testimonial-text {
   margin: 10px 0 20px;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 20px; }
 
 /* Page Title Style-2
@@ -2644,7 +2644,7 @@ input.searchbox:focus {
   font-size: 50px;
   font-weight: 700;
   line-height: 1.5;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   color: #111; }
 
 /* Portfolio Masonry
@@ -2700,7 +2700,7 @@ input.searchbox:focus {
     text-shadow: none;
     font-weight: 700;
     line-height: 1;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Raleway", sans-serif;
     letter-spacing: 0.02em;
     margin: 0px;
     border-width: 0px;
@@ -2815,7 +2815,7 @@ ol.numbers {
   border: 3px solid #d1d1d1;
   -webkit-border-radius: 0;
   border-radius: 0;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   text-transform: uppercase;
   font-weight: 700;
   -webkit-transition: all 0.3s ease-in-out;
@@ -2871,7 +2871,7 @@ ol.numbers {
     -webkit-border-radius: 0;
     border-radius: 0;
     margin-right: 10px;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Raleway", sans-serif;
     color: #7a7a7a;
     font-size: 12px;
     text-transform: uppercase;
@@ -2897,7 +2897,7 @@ ol.numbers {
   margin-bottom: 20px; }
 
 .btn {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-weight: 700;
   text-transform: uppercase;
   text-decoration: none;
@@ -2982,7 +2982,7 @@ ol.numbers {
   line-height: 174px;
   z-index: 2;
   font-size: 24px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   color: #111; }
   .percent:after {
     content: '%';
@@ -3140,7 +3140,7 @@ input[type="checkbox"] + label,
 input[type="radio"] + label {
   cursor: pointer;
   margin-bottom: 0;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Raleway", sans-serif;
   text-transform: none;
   letter-spacing: normal;
   color: #7a7a7a;
@@ -3179,7 +3179,7 @@ label {
   font-weight: normal;
   color: #111;
   font-size: 12px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   vertical-align: middle; }
@@ -3188,14 +3188,14 @@ label {
 /* Footer
 /*-------------------------------------------------------*/
 .footer.minimal {
-  padding: 120px 0;
+  padding: 18px 0;
   text-align: center; }
 
 .footer.minimal .copyright {
   display: block;
-  margin-top: 70px;
+  margin-top: 0;
   font-size: 10px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em; }
 
@@ -3338,5 +3338,373 @@ p.footer-address {
     .footer-type-3 a:hover {
       color: #111; 
 }
+
+/*-------------------------------------------------------*/
+/* Valencia Drone Works - Custom Styles 2026
+/*-------------------------------------------------------*/
+
+/* Inner Page Navigation
+-------------------------------------------------------*/
+.nav-inner-page .navigation-overlay.sticky {
+  background-color: rgba(104, 153, 176, 0.95); }
+
+.nav-inner-page .logo-wrap > a {
+  height: 60px; }
+
+.nav-inner-page .logo-wrap img {
+  height: 48px; }
+
+.nav-inner-page .navbar-nav > li > a,
+.nav-inner-page .menu-socials li > a {
+  line-height: 60px; }
+
+/* Page Title Custom
+-------------------------------------------------------*/
+.page-title-custom {
+  background-color: #6899b0;
+  padding: 120px 0 60px;
+  margin-top: 60px; }
+
+.page-title-custom h1 {
+  color: #fff;
+  font-size: 36px;
+  margin-bottom: 10px; }
+
+.page-title-custom .page-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-style: italic;
+  margin-bottom: 0; }
+
+@media (max-width: 767px) {
+  .page-title-custom {
+    padding: 100px 0 40px; }
+  
+  .page-title-custom h1 {
+    font-size: 28px; }
+}
+
+/* Team/Pilotos Section
+-------------------------------------------------------*/
+.team-member {
+  background-color: #fff;
+  padding: 0 0 30px;
+  margin-bottom: 30px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out; }
+
+.team-member:hover {
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1); }
+
+.team-member .team-img {
+  margin-bottom: 20px;
+  overflow: hidden; }
+
+.team-member .team-img img {
+  width: 100%;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out; }
+
+.team-member:hover .team-img img {
+  -webkit-transform: scale(1.05);
+  -moz-transform: scale(1.05);
+  transform: scale(1.05); }
+
+.team-title {
+  font-size: 16px;
+  margin: 0 0 5px;
+  color: #111; }
+
+.team-role {
+  font-size: 13px;
+  color: #e79459;
+  font-style: italic;
+  display: block;
+  margin-bottom: 15px; }
+
+.team-description {
+  font-size: 14px;
+  color: #7a7a7a;
+  padding: 0 20px;
+  line-height: 1.6; }
+
+/* Statistics Section
+-------------------------------------------------------*/
+.result-boxes .result-box {
+  padding: 80px 30px; }
+
+.result-wrap-centered {
+  text-align: center; }
+
+.statistic-number {
+  font-size: 60px;
+  font-family: "Raleway", sans-serif;
+  color: #fff;
+  display: block;
+  line-height: 1;
+  margin-bottom: 15px; }
+
+.statistic-text {
+  font-size: 14px;
+  color: #929292;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.4; }
+
+/* Service Item Box Enhancements
+-------------------------------------------------------*/
+.service-item-box {
+  background-color: #fff;
+  padding: 50px 30px;
+  margin-bottom: 30px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out; }
+
+.service-item-box:hover {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); }
+
+.service-item-box .hi-icon {
+  margin-bottom: 25px; }
+
+.service-item-box h3 {
+  font-size: 16px;
+  margin-bottom: 15px; }
+
+.service-item-box p {
+  margin-bottom: 20px; }
+
+/* Service Detail Pages
+-------------------------------------------------------*/
+.service-detail-img {
+  margin-bottom: 30px; }
+
+.service-detail-img img {
+  width: 100%;
+  border-radius: 4px; }
+
+.service-detail-content {
+  padding-left: 30px; }
+
+.service-detail-content h3 {
+  font-size: 24px;
+  margin-bottom: 10px; }
+
+.service-detail-content .subtitle {
+  font-size: 14px;
+  font-style: italic;
+  color: #e79459;
+  margin-bottom: 25px; }
+
+.service-specs {
+  background-color: #f7f7f7;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-left: 3px solid #e79459; }
+
+.bg-light .service-specs {
+  background-color: #fff; }
+
+.service-specs p {
+  margin-bottom: 8px;
+  font-size: 14px; }
+
+.service-specs p:last-child {
+  margin-bottom: 0; }
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0; }
+
+.features-list li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: #7a7a7a; }
+
+.features-list li i {
+  color: #e79459;
+  margin-right: 10px; }
+
+/* Portfolio Notice
+-------------------------------------------------------*/
+.portfolio-notice {
+  background-color: #fff;
+  padding: 50px 40px;
+  border-radius: 4px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.08); }
+
+.portfolio-notice h4 {
+  margin-bottom: 15px; }
+
+.portfolio-notice p {
+  font-size: 15px;
+  line-height: 1.7; }
+
+/* Asset Type Box (Inmobiliarios)
+-------------------------------------------------------*/
+.asset-type-box {
+  background-color: #fff;
+  padding: 30px 20px;
+  margin-bottom: 30px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out; }
+
+.asset-type-box:hover {
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); }
+
+.asset-type-box h5 {
+  margin-bottom: 10px; }
+
+.asset-type-box p {
+  font-size: 13px;
+  margin-bottom: 0; }
+
+/* Advantage Items
+-------------------------------------------------------*/
+.advantage-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 30px; }
+
+.advantage-icon {
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  background-color: #f7f7f7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px; }
+
+.advantage-icon i {
+  font-size: 22px;
+  color: #e79459; }
+
+.advantage-content h5 {
+  margin-bottom: 8px;
+  font-size: 15px; }
+
+.advantage-content p {
+  margin-bottom: 0;
+  font-size: 14px; }
+
+/* Service Cards
+-------------------------------------------------------*/
+.service-card {
+  background-color: #fff;
+  padding: 30px 25px;
+  margin-bottom: 30px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out; }
+
+.service-card:hover {
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+  -webkit-transform: translateY(-5px);
+  -moz-transform: translateY(-5px);
+  transform: translateY(-5px); }
+
+.service-card h5 {
+  margin-bottom: 10px; }
+
+.service-card p {
+  font-size: 13px;
+  margin-bottom: 0; }
+
+/* Feature Box
+-------------------------------------------------------*/
+.feature-box {
+  padding: 30px 20px;
+  margin-bottom: 30px; }
+
+.feature-box h5 {
+  margin-bottom: 10px; }
+
+.feature-box p {
+  font-size: 14px;
+  margin-bottom: 0; }
+
+/* Utility Classes
+-------------------------------------------------------*/
+.mb-15 {
+  margin-bottom: 15px !important; }
+
+.mb-20 {
+  margin-bottom: 20px !important; }
+
+.mb-30 {
+  margin-bottom: 30px !important; }
+
+.mb-40 {
+  margin-bottom: 40px !important; }
+
+.mb-50 {
+  margin-bottom: 50px !important; }
+
+.mt-30 {
+  margin-top: 30px !important; }
+
+.mt-50 {
+  margin-top: 50px !important; }
+
+.text-muted {
+  color: #999 !important; }
+
+/* Contact Icon Instagram Fix
+-------------------------------------------------------*/
+.contact-icon .fa-instagram {
+  font-size: 18px;
+  color: #e79459;
+  line-height: 47px; }
+
+/* Responsive Adjustments
+-------------------------------------------------------*/
+@media (max-width: 991px) {
+  .service-detail-content {
+    padding-left: 0;
+    margin-top: 30px; }
+  
+  .advantage-item {
+    margin-bottom: 25px; }
+  
+  .statistic-number {
+    font-size: 48px; }
+}
+
+@media (max-width: 767px) {
+  .result-boxes .result-box {
+    padding: 50px 20px; }
+  
+  .statistic-number {
+    font-size: 42px; }
+  
+  .team-member {
+    max-width: 350px;
+    margin: 0 auto 30px; }
+  
+  .service-detail-content h3 {
+    font-size: 20px; }
+}
+
+/* Highlighted Text - Corporate Colors
+-------------------------------------------------------*/
+.text-orange {
+  color: #e79459; }
+
+.text-blue {
+  color: #6899b0; }
+
+.text-orange-bold {
+  color: #e79459;
+  font-weight: 600; }
+
+.text-blue-bold {
+  color: #6899b0;
+  font-weight: 600; }
 
 /*# sourceMappingURL=style.css.map */
