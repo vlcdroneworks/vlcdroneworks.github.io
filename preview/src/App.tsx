@@ -217,17 +217,17 @@ function TeamSection() {
   const pilots = [
     {
       name: 'Alejandro Plá',
-      image: '/img/alejandro.jpg',
+      image: './img/alejandro.jpg',
       description: 'Piloto de dron con gran experiencia en el <span class="text-vdw-orange">sector audiovisual</span> como operador de steadicam/cámara'
     },
     {
       name: 'Mark Barrachina',
-      image: '/img/mark.jpg',
+      image: './img/mark.jpg',
       description: 'Piloto de dron <span class="text-vdw-orange">polivalente</span>, cámara, y <span class="text-vdw-orange">editor</span> de video y fotografía.'
     },
     {
       name: 'Sergio García',
-      image: '/img/sergio.jpg',
+      image: './img/sergio.jpg',
       description: 'Piloto de dron cinemático y de <span class="text-vdw-orange">interiores</span>, para aquellas grabaciones que requieren precisión'
     }
   ];
@@ -402,8 +402,8 @@ function AerialServicesSection() {
               'Aporta dinamismo sin riesgo y con estética moderna.'
             ]}
             media={[
-              { image: '/img/interiores-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=8ImPizCcFcw' },
-              { image: '/img/interiores-2.jpg', videoUrl: 'https://www.youtube.com/watch?v=XWDfxyvIix0' }
+              { image: './img/interiores-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=8ImPizCcFcw' },
+              { image: './img/interiores-2.jpg', videoUrl: 'https://www.youtube.com/watch?v=XWDfxyvIix0' }
             ]}
           />
 
@@ -420,7 +420,7 @@ function AerialServicesSection() {
               'Sensación de <span class="text-vdw-orange">estar dentro del evento</span>.',
               'Energía visual sin comprometer la seguridad.'
             ]}
-            media={{ image: '/img/publico-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=7n-vaE7qVHI' }}
+            media={{ image: './img/publico-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=7n-vaE7qVHI' }}
           />
 
           {/* Action/Following */}
@@ -435,7 +435,7 @@ function AerialServicesSection() {
               'Vuelos acrobáticos o de seguimiento a <span class="text-vdw-orange">alta velocidad</span>.',
               'Planos únicos que transmiten adrenalina pura.'
             ]}
-            media={{ image: '/img/accion-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=6kFuLprN4yA' }}
+            media={{ image: './img/accion-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=6kFuLprN4yA' }}
           />
 
           {/* Stable Shots */}
@@ -451,8 +451,8 @@ function AerialServicesSection() {
               'Ideal donde se requiere discreción o baja huella sonora.'
             ]}
             media={[
-              { image: '/img/estables-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=J9wTErdDX2I' },
-              { image: '/img/estables-2.jpg', videoUrl: 'https://www.youtube.com/watch?v=a7oVsDdYp6Y' }
+              { image: './img/estables-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=J9wTErdDX2I' },
+              { image: './img/estables-2.jpg', videoUrl: 'https://www.youtube.com/watch?v=a7oVsDdYp6Y' }
             ]}
           />
 
@@ -468,7 +468,7 @@ function AerialServicesSection() {
               'Planos aéreos con <span class="text-vdw-orange">máxima calidad, nitidez y fidelidad</span>.',
               'Imagen de nivel profesional apta para producciones exigentes.'
             ]}
-            media={{ image: '/img/publicidad-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=Qot6fJoMooA' }}
+            media={{ image: './img/publicidad-1.jpg', videoUrl: 'https://www.youtube.com/watch?v=Qot6fJoMooA' }}
           />
         </div>
       </div>
