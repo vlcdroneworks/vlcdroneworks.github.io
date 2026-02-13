@@ -117,9 +117,6 @@ function HeroSection() {
           <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Filmaciones <span className="text-vdw-orange">aéreas</span> profesionales
           </h2>
-          <p className="text-lg md:text-xl text-white/80 mb-8">
-            Dossier + Tarifas 2026
-          </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
@@ -824,7 +821,7 @@ function ContactSection() {
         <div className="flex items-center justify-center bg-vdw-cream p-8 md:p-16">
           <div className="max-w-md">
             <h2 className="text-5xl md:text-7xl font-bold text-vdw-orange mb-8">
-              Gracias
+              Contacto
             </h2>
             <p className="text-vdw-navy text-lg mb-8">
               Nos puedes contactar en:
@@ -841,11 +838,11 @@ function ContactSection() {
                 <span>@valenciadroneworks</span>
               </a>
               <a 
-                href="mailto:info@vlcdroneworks.com" 
+                href="mailto:info@valenciadroneworks.com" 
                 className="flex items-center gap-4 text-vdw-navy hover:text-vdw-orange transition-colors"
               >
                 <Mail className="w-6 h-6" />
-                <span>info@vlcdroneworks.com</span>
+                <span>info@valenciadroneworks.com</span>
               </a>
               <a 
                 href="tel:+34668831105" 
