@@ -92,7 +92,7 @@ function HeroSection() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ 
-          backgroundImage: 'url(https://images.unsplash.com/photo-1583422409516-2895a77efded?w=1920&q=80)',
+          backgroundImage: 'url(./img/hero-bg.jpg)',
         }}
       >
         <div className="absolute inset-0 bg-vdw-navy/70" />
@@ -150,7 +150,12 @@ function HeroSection() {
 }
 
 // Section Header Component
-function SectionHeader({ title, subtitle, accentWord }: { title: string; subtitle?: string; accentWord?: string }) {
+function SectionHeader({ title, subtitle, accentWord, backgroundImage = './img/hero-bg.jpg' }: { 
+  title: string; 
+  subtitle?: string; 
+  accentWord?: string;
+  backgroundImage?: string;
+}) {
   const parts = accentWord ? title.split(accentWord) : [title];
   
   return (
@@ -158,7 +163,7 @@ function SectionHeader({ title, subtitle, accentWord }: { title: string; subtitl
       {/* Background */}
       <div 
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1920&q=80)' }}
+        style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <div className="absolute inset-0 bg-vdw-navy/80" />
       </div>
@@ -191,6 +196,7 @@ function AboutSection() {
         title="Quienes somos" 
         subtitle="Presentación del equipo"
         accentWord=" somos"
+        backgroundImage="./img/about-bg.jpg"
       />
       
       <div className="bg-vdw-navy py-16 md:py-24">
@@ -384,6 +390,7 @@ function AerialServicesSection() {
         title="Grabaciones aéreas" 
         subtitle="Grabación y fotografía aérea con drones"
         accentWord="aéreas"
+        backgroundImage="./img/aereas-bg.jpg"
       />
       
       <div className="bg-vdw-navy py-12 md:py-20 space-y-8 md:space-y-12">
@@ -484,6 +491,7 @@ function GroundRecordingSection() {
         title="Grabaciones en tierra" 
         subtitle="Fotografía y/o video con cámara 4K y estabilizador"
         accentWord="tierra"
+        backgroundImage="./img/tierra-bg.jpg"
       />
       
       <div className="bg-vdw-navy py-16 md:py-24">
@@ -562,6 +570,7 @@ function RealEstateSection() {
         title="Activos Inmobiliarios" 
         subtitle="Servicios específicos para constructoras y/o inmobiliarias"
         accentWord="Inmobiliarios"
+        backgroundImage="./img/real-estate-bg.jpg"
       />
       
       <div className="bg-vdw-navy py-16 md:py-24">
@@ -732,6 +741,7 @@ function ServicesOverviewSection() {
         title="Nuestros Servicios" 
         subtitle="Servicios generales (presupuestos a medida)"
         accentWord="Servicios"
+        backgroundImage="./img/servicios-bg.jpg"
       />
       
       <div className="bg-vdw-navy py-16 md:py-24">
@@ -772,7 +782,7 @@ function StatsSection() {
       {/* Background */}
       <div 
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80)' }}
+        style={{ backgroundImage: 'url(./img/real-estate-bg.jpg)' }}
       >
         <div className="absolute inset-0 bg-vdw-navy/85" />
       </div>
@@ -890,7 +900,7 @@ function ContactSection() {
         <div 
           className="hidden md:block bg-cover bg-center"
           style={{ 
-            backgroundImage: 'url(https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800&q=80)',
+            backgroundImage: 'url(./img/contact-bg.jpg)',
             clipPath: 'ellipse(100% 100% at 100% 50%)'
           }}
         />
