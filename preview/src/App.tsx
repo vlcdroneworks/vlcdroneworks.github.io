@@ -87,7 +87,7 @@ function Navigation() {
 // Hero Section
 function HeroSection() {
   return (
-    <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="inicio" className="relative min-h-screen flex items-start justify-center overflow-hidden pt-24 md:pt-32">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -103,18 +103,25 @@ function HeroSection() {
         <div className="flex flex-col items-center text-center">
           {/* Logo */}
           <div className="mb-8">
-            <img 
-              src="./img/logo-1.png" 
-              alt="Valencia Drone Works" 
-              className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-6"
-            />
+            <div className="flex flex-col items-center mb-6">
+              <img 
+                src="./img/logo-3.png" 
+                alt="Valencia Drone Works" 
+                className="w-72 h-72 md:w-96 md:h-96"
+              />
+              <img 
+                src="./img/logo-2-larger.png" 
+                alt="Valencia Drone Works" 
+                className="w-48 h-auto md:w-64 -mt-32 md:-mt-44"
+              />
+            </div>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2">
               Valencia <span className="text-vdw-orange">Drone</span> Works
             </h1>
           </div>
 
           {/* Tagline */}
-          <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-12">
             Filmaciones <span className="text-vdw-orange">aéreas</span> profesionales
           </h2>
 
