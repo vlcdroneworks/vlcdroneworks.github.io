@@ -867,12 +867,12 @@ function ClientsSection() {
           {clients.map((client, index) => (
             <div 
               key={index} 
-              className="aspect-[3/2] bg-white rounded-lg flex items-center justify-center p-4 hover:scale-105 transition-transform"
+              className="aspect-[3/2] bg-vdw-navy/30 border-2 border-white/20 rounded-lg flex items-center justify-center p-5 hover:scale-105 transition-transform"
             >
               <img 
                 src={client.logo} 
                 alt={client.name}
-                className="max-w-full max-h-full object-contain"
+                className={`object-contain ${client.name === 'Botanic' ? 'max-w-full max-h-full scale-125' : 'max-w-[85%] max-h-[85%]'}`}
               />
             </div>
           ))}
