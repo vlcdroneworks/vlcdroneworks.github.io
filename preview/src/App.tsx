@@ -824,11 +824,36 @@ function StatsSection() {
 // Clients Section
 function ClientsSection() {
   const clients = [
-    'Rojas Arena', 'Palau Ducal', 'Marina', 'Garaje', 'Maratón Valencia',
-    'Bioparc', 'Feria Valencia', 'Tyris', 'Noatum', 'À Punt',
-    'JFS Architectes', 'Gran Circo Wonderland', 'Tedi', 'Vedat Import', 'Somos5',
-    'La Bolera Campanar', 'CAHH', 'ERRE', 'Mar de Sons', 'Festardor',
-    'Galmed', 'UMA Gym', 'Fran Motor Show', 'Botanic', 'HybridBox'
+    { name: 'Roig Arena', logo: './img/cliente-roig-arena.png' },
+    { name: 'Palau Ducal', logo: './img/cliente-palau-ducal.png' },
+    { name: 'Marina', logo: './img/cliente-marina.png' },
+    { name: 'Garaje', logo: './img/cliente-garaje.png' },
+    { name: 'Maratón Valencia', logo: './img/cliente-maraton.png' },
+    { name: 'Bioparc', logo: './img/cliente-bioparc.png' },
+    { name: 'Feria Valencia', logo: './img/cliente-feria-valencia.png' },
+    { name: 'Tyris', logo: './img/cliente-tyris.jpg' },
+    { name: 'Noatum', logo: './img/cliente-noatum.jpg' },
+    { name: 'À Punt', logo: './img/cliente-apunt.png' },
+    { name: 'JFS Architectes', logo: './img/cliente-jfs.png' },
+    { name: 'Gran Circo Wonderland', logo: './img/cliente-wonderland.png' },
+    { name: 'Tedi', logo: './img/cliente-tedi.png' },
+    { name: 'Vedat Import', logo: './img/cliente-vedat-import.png' },
+    { name: 'Somos5', logo: './img/cliente-somos5.png' },
+    { name: 'La Bolera', logo: './img/cliente-bolera.png' },
+    { name: 'CAHH', logo: './img/cliente-cahh.png' },
+    { name: 'ERRE', logo: './img/cliente-erre.png' },
+    { name: 'Mar de Sons', logo: './img/cliente-mar-de-sons.jpg' },
+    { name: 'Festardor', logo: './img/cliente-festardor.png' },
+    { name: 'Galmed', logo: './img/cliente-galmed.png' },
+    { name: 'UMA Gym', logo: './img/cliente-uma.jpg' },
+    { name: 'Fran Motor Show', logo: './img/cliente-frank-motorshow.jpg' },
+    { name: 'HybridBox', logo: './img/cliente-hybridbox.png' },
+    { name: 'Centenares', logo: './img/cliente-centenares.png' },
+    { name: 'Festivern', logo: './img/cliente-festivern.png' },
+    { name: 'Llorca', logo: './img/cliente-llorca.jpg' },
+    { name: 'Tot Aventura', logo: './img/cliente-tot-aventura.png' },
+    { name: 'Botanic', logo: './img/cliente-botanic.png' },
+    { name: 'Galáctica', logo: './img/cliente-galactica.png' },
   ];
 
   return (
@@ -842,9 +867,13 @@ function ClientsSection() {
           {clients.map((client, index) => (
             <div 
               key={index} 
-              className="aspect-[3/2] bg-white/10 rounded-lg flex items-center justify-center p-4 hover:bg-white/20 transition-colors"
+              className="aspect-[3/2] bg-white rounded-lg flex items-center justify-center p-4 hover:scale-105 transition-transform"
             >
-              <span className="text-white/80 text-xs md:text-sm font-medium text-center">{client}</span>
+              <img 
+                src={client.logo} 
+                alt={client.name}
+                className="max-w-full max-h-full object-contain"
+              />
             </div>
           ))}
         </div>
