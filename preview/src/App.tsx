@@ -856,54 +856,63 @@ function ClientsSection() {
 // Contact Section
 function ContactSection() {
   return (
-    <section id="contacto" className="relative min-h-screen flex items-center">
-      <div className="grid md:grid-cols-2 w-full min-h-screen">
-        {/* Left - Content */}
-        <div className="flex items-center justify-center bg-vdw-cream p-8 md:p-16">
-          <div className="max-w-md">
-            <h2 className="text-5xl md:text-7xl font-bold text-vdw-orange mb-8">
-              Contacto
+    <section id="contacto" className="relative py-20 md:py-32 overflow-hidden">
+      {/* Background */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: 'url(./img/contact-bg.jpg)' }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-vdw-navy/90 to-vdw-navy/70" />
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 max-w-2xl mx-auto px-4">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-5xl font-bold mb-3">
+              <span className="text-vdw-navy">¿Tienes un </span>
+              <span className="text-vdw-orange">proyecto</span>
+              <span className="text-vdw-navy">?</span>
             </h2>
-            <p className="text-vdw-navy text-lg mb-8">
-              Nos puedes contactar en:
+            <p className="text-gray-500 text-lg">
+              Cuéntanoslo y te ayudamos a hacerlo realidad
             </p>
-            
-            <div className="space-y-4">
-              <a 
-                href="https://instagram.com/valenciadroneworks" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-4 text-vdw-navy hover:text-vdw-orange transition-colors"
-              >
-                <Instagram className="w-6 h-6" />
-                <span>@valenciadroneworks</span>
-              </a>
-              <a 
-                href="mailto:info@valenciadroneworks.com" 
-                className="flex items-center gap-4 text-vdw-navy hover:text-vdw-orange transition-colors"
-              >
-                <Mail className="w-6 h-6" />
-                <span>info@valenciadroneworks.com</span>
-              </a>
-              <a 
-                href="tel:+34668831105" 
-                className="flex items-center gap-4 text-vdw-navy hover:text-vdw-orange transition-colors"
-              >
-                <Phone className="w-6 h-6" />
-                <span>+34 668 831 105</span>
-              </a>
-            </div>
+            <div className="w-20 h-1 bg-vdw-orange mx-auto rounded-full mt-4" />
+          </div>
+          
+          <div className="space-y-6">
+            <a href="https://instagram.com/valenciadroneworks" target="_blank" rel="noopener noreferrer"
+               className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 hover:bg-vdw-orange/10 transition-colors group">
+              <div className="w-12 h-12 rounded-full bg-vdw-orange/10 flex items-center justify-center group-hover:bg-vdw-orange/20">
+                <Instagram className="w-6 h-6 text-vdw-orange" />
+              </div>
+              <div>
+                <p className="text-vdw-navy font-semibold">Instagram</p>
+                <p className="text-gray-500 text-sm">@valenciadroneworks</p>
+              </div>
+            </a>
+            <a href="mailto:info@valenciadroneworks.com" 
+               className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 hover:bg-vdw-orange/10 transition-colors group">
+              <div className="w-12 h-12 rounded-full bg-vdw-orange/10 flex items-center justify-center group-hover:bg-vdw-orange/20">
+                <Mail className="w-6 h-6 text-vdw-orange" />
+              </div>
+              <div>
+                <p className="text-vdw-navy font-semibold">Email</p>
+                <p className="text-gray-500 text-sm">info@valenciadroneworks.com</p>
+              </div>
+            </a>
+            <a href="tel:+34668831105" 
+               className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 hover:bg-vdw-orange/10 transition-colors group">
+              <div className="w-12 h-12 rounded-full bg-vdw-orange/10 flex items-center justify-center group-hover:bg-vdw-orange/20">
+                <Phone className="w-6 h-6 text-vdw-orange" />
+              </div>
+              <div>
+                <p className="text-vdw-navy font-semibold">Teléfono</p>
+                <p className="text-gray-500 text-sm">+34 668 831 105</p>
+              </div>
+            </a>
           </div>
         </div>
-        
-        {/* Right - Image */}
-        <div 
-          className="hidden md:block bg-cover bg-center"
-          style={{ 
-            backgroundImage: 'url(./img/contact-bg.jpg)',
-            clipPath: 'ellipse(100% 100% at 100% 50%)'
-          }}
-        />
       </div>
     </section>
   );
