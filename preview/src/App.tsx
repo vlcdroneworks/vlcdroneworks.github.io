@@ -87,7 +87,7 @@ function Navigation() {
 // Hero Section
 function HeroSection() {
   return (
-    <section id="inicio" className="relative min-h-screen flex items-start justify-center overflow-hidden pt-16 md:pt-32">
+    <section id="inicio" className="relative min-h-screen flex items-center md:items-start justify-center overflow-hidden md:pt-32">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
