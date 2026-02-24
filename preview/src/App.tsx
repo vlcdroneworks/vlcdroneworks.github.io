@@ -806,7 +806,7 @@ function StatsSection() {
           <div className="flex items-start gap-6">
             <span className="text-6xl md:text-8xl font-bold text-white">68</span>
             <p className="text-white/90 text-lg md:text-xl mt-4">
-              Operaciones realizadas en <span className="text-vdw-blue">entorno urbano</span> del territorio nacional (conciertos, eventos deportivos, videos promocionales, parques acuáticos, con animales, etc.)
+              Operaciones realizadas en <span className="text-vdw-blue">entorno urbano</span> del territorio nacional (conciertos, eventos deportivos, videos promocionales, parques acuáticos, etc.)
             </p>
           </div>
           
