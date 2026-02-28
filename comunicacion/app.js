@@ -277,13 +277,21 @@ async function generate() {
   if (!pilotos.length) { showToast("Selecciona al menos un piloto"); return; }
   if (!drones.length) { showToast("Selecciona al menos un drone"); return; }
 
-  const ts = timestamp();
   const total = pilotos.length * drones.length;
+  const fechaOp = document.getElementById("com-fecha-operacion").value.trim()
+    || state.operaciones[operacion]?.fecha || "";
+  const fechaParts = fechaOp.split("/");
+  const fechaClean = fechaParts.length === 3
+    ? `${fechaParts[2]}${fechaParts[1]}${fechaParts[0]}`
+    : fechaOp.replace(/\//g, "");
+
+  const makeName = (piloto, drone) =>
+    `comunicacion_${operacion}_${fechaClean}_${piloto}_${drone}.pdf`;
 
   if (total === 1) {
     const data = resolveData({ operador, piloto: pilotos[0], observador, uas: drones[0], operacion });
     const pdfBytes = await fillPdf(data);
-    downloadBlob(pdfBytes, `comunicacion_${ts}.pdf`, "application/pdf");
+    downloadBlob(pdfBytes, makeName(pilotos[0], drones[0]), "application/pdf");
     saveToLocal();
     showToast("PDF generado correctamente");
     return;
@@ -294,12 +302,12 @@ async function generate() {
     for (const drone of drones) {
       const data = resolveData({ operador, piloto, observador, uas: drone, operacion });
       const pdfBytes = await fillPdf(data);
-      zip.file(`comunicacion_${piloto}_${drone}_${ts}.pdf`, pdfBytes);
+      zip.file(makeName(piloto, drone), pdfBytes);
     }
   }
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
-  downloadBlob(zipBlob, `comunicaciones_${ts}.zip`, "application/zip");
+  downloadBlob(zipBlob, `comunicaciones_${operacion}_${fechaClean}.zip`, "application/zip");
   saveToLocal();
   showToast(`${total} PDFs generados en ZIP`);
 }
