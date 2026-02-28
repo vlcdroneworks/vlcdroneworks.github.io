@@ -1,0 +1,63 @@
+/* Custom overrides for Bootstrap 5 UI */
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.checkbox-list label {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .4rem .6rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: .375rem;
+  font-size: .875rem;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+
+.checkbox-list label:hover {
+  background: var(--bs-tertiary-bg);
+}
+
+.checkbox-list label.checked {
+  border-color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), .08);
+}
+
+/* Key field inside accordion items */
+.key-field {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .75rem;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.key-field label {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--bs-secondary-color);
+  white-space: nowrap;
+}
+
+.key-field input {
+  max-width: 250px;
+}
+
+/* Compact accordion headers */
+.accordion-button {
+  padding: .6rem 1rem;
+  font-size: .9rem;
+}
+
+.accordion-subtitle {
+  font-size: .8rem;
+  color: var(--bs-secondary-color);
+  margin-left: .5rem;
+}
