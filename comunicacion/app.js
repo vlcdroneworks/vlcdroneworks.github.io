@@ -1,4 +1,4 @@
-/* global PDFLib, jsyaml, JSZip, bootstrap */
+/* global PDFLib, jsyaml, JSZip */
 
 // =========================================================================
 // PDF field mappings (data key -> AcroForm field name)
@@ -374,16 +374,26 @@ function loadFromLocal() {
 // UI: Section navigation (driven by navbar links)
 // =========================================================================
 function showSection(name) {
-  document.querySelectorAll(".app-section").forEach(s => s.classList.add("d-none"));
+  document.querySelectorAll(".app-section").forEach(s => s.classList.add("hidden"));
   const target = document.getElementById(`section-${name}`);
-  if (target) target.classList.remove("d-none");
+  if (target) {
+    target.classList.remove("hidden");
+    target.classList.remove("section-enter");
+    void target.offsetWidth;
+    target.classList.add("section-enter");
+  }
 
   document.querySelectorAll("[data-nav]").forEach(a => {
     a.classList.toggle("active", a.dataset.nav === name);
   });
-  const datosDropdown = document.querySelector(".nav-item.dropdown");
-  const anyDropdownActive = datosDropdown.querySelector("[data-nav].active");
-  datosDropdown.querySelector(".nav-link").classList.toggle("active", !!anyDropdownActive);
+  const datosToggle = document.getElementById("datos-toggle");
+  if (datosToggle) {
+    datosToggle.classList.toggle("active", ["personas", "drones", "operaciones"].includes(name));
+  }
+  const menu = document.getElementById("datos-menu");
+  if (menu) menu.classList.add("hidden");
+  const mobileMenu = document.getElementById("mobile-menu");
+  if (mobileMenu) mobileMenu.classList.add("hidden");
 }
 
 // =========================================================================
@@ -392,45 +402,42 @@ function showSection(name) {
 function renderAccordionList(containerId, catalog, fieldDefs, section) {
   const container = document.getElementById(containerId);
   container.innerHTML = "";
-  const parentId = containerId;
 
   for (const [key, data] of Object.entries(catalog)) {
-    const itemId = `${section}-${key.replace(/\W/g, "_")}`;
-
     const subtitle = section === "personas" ? (data.nombre || "")
       : section === "drones" ? `${data.fabricante || ""} ${data.tipo_modelo || ""} (${data.mtom || ""})`
       : `${data.fecha || ""} — ${data.lugar || ""}`;
 
     const item = document.createElement("div");
-    item.className = "accordion-item";
+    item.className = "acc-item";
     item.innerHTML = `
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button"
-                data-bs-toggle="collapse" data-bs-target="#collapse-${itemId}">
-          <strong>${esc(key)}</strong>
-          <span class="accordion-subtitle">${esc(subtitle)}</span>
-        </button>
-      </h2>
-      <div id="collapse-${itemId}" class="accordion-collapse collapse" data-bs-parent="#${parentId}">
-        <div class="accordion-body">
-          <div class="key-field">
-            <label>Clave:</label>
-            <input type="text" class="form-control form-control-sm" value="${escAttr(key)}"
-                   data-section="${section}" data-role="key" data-old-key="${escAttr(key)}">
-          </div>
-          <div class="row g-2">
-            ${fieldDefs.map(f => `
-              <div class="col-md-6">
-                <label class="form-label small text-secondary">${esc(f.label)}</label>
-                <input type="text" class="form-control form-control-sm" value="${escAttr(data[f.key] || "")}"
-                       data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}">
-              </div>
-            `).join("")}
-          </div>
-          <div class="d-flex gap-2 mt-3 pt-2 border-top">
-            <button class="btn btn-danger btn-sm" data-action="delete"
-                    data-section="${section}" data-item-key="${escAttr(key)}">Eliminar</button>
-          </div>
+      <div class="acc-header" data-acc-toggle>
+        <div class="flex items-center gap-2 min-w-0">
+          <strong class="text-white truncate">${esc(key)}</strong>
+          <span class="text-white/40 text-sm truncate hidden sm:inline">${esc(subtitle)}</span>
+        </div>
+        <svg class="acc-chevron w-5 h-5 text-white/40 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </div>
+      <div class="acc-content hidden">
+        <div class="key-field">
+          <label class="text-xs font-semibold text-white/50 whitespace-nowrap">Clave:</label>
+          <input type="text" class="field-input text-sm" value="${escAttr(key)}"
+                 data-section="${section}" data-role="key" data-old-key="${escAttr(key)}">
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          ${fieldDefs.map(f => `
+            <div>
+              <label class="block text-xs text-white/50 mb-1">${esc(f.label)}</label>
+              <input type="text" class="field-input text-sm" value="${escAttr(data[f.key] || "")}"
+                     data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}">
+            </div>
+          `).join("")}
+        </div>
+        <div class="flex gap-2 mt-4 pt-3 border-t border-white/10">
+          <button class="text-red-400 hover:text-red-300 text-sm font-medium transition-colors" data-action="delete"
+                  data-section="${section}" data-item-key="${escAttr(key)}">Eliminar</button>
         </div>
       </div>
     `;
@@ -455,6 +462,7 @@ function renderComunicacion() {
     k => `${k} (${state.personas[k]?.nombre || ""})`, true);
 
   document.getElementById("com-fecha-hora").value = state.comunicacion.fecha_hora || "";
+  document.getElementById("com-fecha-operacion").value = "";
   document.getElementById("com-notificacion").checked = state.comunicacion.notificacion_email !== false;
 
   renderCheckboxList("pilotos-list", pKeys, k => `${k} — ${state.personas[k]?.nombre || ""}`);
@@ -486,10 +494,10 @@ function renderCheckboxList(containerId, keys, labelFn) {
   container.innerHTML = "";
   for (const k of keys) {
     const lbl = document.createElement("label");
+    lbl.className = "cb-item";
     const cb = document.createElement("input");
     cb.type = "checkbox";
     cb.value = k;
-    cb.className = "form-check-input me-2";
     cb.addEventListener("change", () => {
       lbl.classList.toggle("checked", cb.checked);
       updateSummary();
@@ -536,7 +544,7 @@ function updateSummary() {
 function syncStateFromUI() {
   for (const section of ["personas", "drones", "operaciones"]) {
     const cat = {};
-    const items = document.querySelectorAll(`#${section}-list .accordion-item`);
+    const items = document.querySelectorAll(`#${section}-list .acc-item`);
     for (const item of items) {
       const keyInput = item.querySelector('[data-role="key"]');
       const key = keyInput.value.trim() || keyInput.dataset.oldKey;
@@ -566,8 +574,17 @@ function addItem(section, fieldDefs) {
   renderAll();
   saveToLocal();
 
-  const last = document.querySelector(`#${section}-list .accordion-item:last-child .accordion-collapse`);
-  if (last) new bootstrap.Collapse(last, { toggle: true });
+  const container = document.getElementById(`${section}-list`);
+  const allItems = container.querySelectorAll(".acc-item");
+  const last = allItems[allItems.length - 1];
+  if (last) {
+    container.querySelectorAll(".acc-content").forEach(c => c.classList.add("hidden"));
+    container.querySelectorAll(".acc-header").forEach(h => h.classList.remove("open"));
+    const content = last.querySelector(".acc-content");
+    const header = last.querySelector(".acc-header");
+    if (content) content.classList.remove("hidden");
+    if (header) header.classList.add("open");
+  }
 }
 
 function deleteItem(section, key) {
@@ -585,6 +602,21 @@ function renderAll() {
   renderAccordionList("drones-list", state.drones, DRONE_FIELDS, "drones");
   renderAccordionList("operaciones-list", state.operaciones, OPERACION_FIELDS, "operaciones");
   renderComunicacion();
+  updateNavCounts();
+}
+
+function updateNavCounts() {
+  const counts = {
+    personas: Object.keys(state.personas).length,
+    drones: Object.keys(state.drones).length,
+    operaciones: Object.keys(state.operaciones).length,
+  };
+  for (const [key, count] of Object.entries(counts)) {
+    for (const suffix of ["", "-m"]) {
+      const el = document.getElementById(`count-${key}${suffix}`);
+      if (el) el.textContent = count ? `(${count})` : "";
+    }
+  }
 }
 
 // =========================================================================
@@ -593,8 +625,9 @@ function renderAll() {
 function showToast(msg) {
   const el = document.getElementById("toast");
   document.getElementById("toast-body").textContent = msg;
-  const bsToast = bootstrap.Toast.getOrCreateInstance(el, { delay: 2500 });
-  bsToast.show();
+  el.classList.add("show");
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => el.classList.remove("show"), 2500);
 }
 
 function timestamp() {
@@ -628,21 +661,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderAll();
 
-  // Navbar section navigation
+  // Section navigation (all [data-nav] links)
   document.querySelectorAll("[data-nav]").forEach(link => {
     link.addEventListener("click", e => {
       e.preventDefault();
       showSection(link.dataset.nav);
-      // Collapse mobile navbar after click
-      const navCollapse = document.getElementById("mainNav");
-      if (navCollapse.classList.contains("show")) {
-        new bootstrap.Collapse(navCollapse).hide();
-      }
     });
   });
 
-  // File input (YAML import)
-  document.getElementById("fileInput").addEventListener("change", e => {
+  // Dropdown toggle
+  document.getElementById("datos-toggle").addEventListener("click", e => {
+    e.stopPropagation();
+    document.getElementById("datos-menu").classList.toggle("hidden");
+  });
+
+  // Close dropdown on outside click
+  document.addEventListener("click", e => {
+    if (!e.target.closest("#datos-dropdown-wrapper")) {
+      document.getElementById("datos-menu").classList.add("hidden");
+    }
+  });
+
+  // Mobile menu toggle
+  document.getElementById("mobile-toggle").addEventListener("click", () => {
+    document.getElementById("mobile-menu").classList.toggle("hidden");
+  });
+
+  // YAML file handler (shared between desktop and mobile)
+  const handleFileChange = e => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
@@ -652,17 +698,25 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     reader.readAsText(file);
     e.target.value = "";
-  });
+  };
+  document.getElementById("fileInput").addEventListener("change", handleFileChange);
+  document.querySelectorAll(".mobile-file-input").forEach(el => el.addEventListener("change", handleFileChange));
 
+  // Export YAML
   document.getElementById("btnExportYaml").addEventListener("click", () => exportYaml());
+  document.querySelectorAll(".mobile-export-btn").forEach(el => el.addEventListener("click", () => exportYaml()));
 
-  // Generate buttons
+  // Generate with loading overlay
   const onGenerate = async () => {
+    const overlay = document.getElementById("loading-overlay");
+    overlay.style.display = "flex";
     try { await generate(); }
     catch (err) { showToast("Error: " + err.message); console.error(err); }
+    finally { overlay.style.display = "none"; }
   };
   document.getElementById("btnGenerar").addEventListener("click", onGenerate);
   document.getElementById("btnGenerarMain").addEventListener("click", onGenerate);
+  document.querySelectorAll(".mobile-generate-btn").forEach(el => el.addEventListener("click", onGenerate));
 
   // Add item buttons
   document.getElementById("btnAddPersona").addEventListener("click", () => addItem("personas", PERSONA_FIELDS));
@@ -675,6 +729,23 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("drones-sel-all").addEventListener("click", () => setAllChecked("drones-sel-list", true));
   document.getElementById("drones-sel-none").addEventListener("click", () => setAllChecked("drones-sel-list", false));
 
+  // Accordion toggle (delegated)
+  document.addEventListener("click", e => {
+    const header = e.target.closest("[data-acc-toggle]");
+    if (!header) return;
+    const content = header.nextElementSibling;
+    const container = header.closest(".accordion-container");
+    const isOpen = !content.classList.contains("hidden");
+
+    container.querySelectorAll(".acc-content").forEach(c => c.classList.add("hidden"));
+    container.querySelectorAll(".acc-header").forEach(h => h.classList.remove("open"));
+
+    if (!isOpen) {
+      content.classList.remove("hidden");
+      header.classList.add("open");
+    }
+  });
+
   // Delegated delete handler
   document.addEventListener("click", e => {
     const btn = e.target.closest("[data-action=delete]");
@@ -682,5 +753,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (confirm(`Eliminar "${btn.dataset.itemKey}"?`)) {
       deleteItem(btn.dataset.section, btn.dataset.itemKey);
     }
+  });
+
+  // Toast close button
+  document.getElementById("toast-close").addEventListener("click", () => {
+    document.getElementById("toast").classList.remove("show");
   });
 });
