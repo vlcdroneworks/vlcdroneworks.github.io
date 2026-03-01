@@ -383,6 +383,7 @@ function loadFromLocal() {
 // =========================================================================
 function showSection(name) {
   document.querySelectorAll(".app-section").forEach(s => s.classList.add("hidden"));
+  document.getElementById("empty-state").classList.add("hidden");
   const target = document.getElementById(`section-${name}`);
   if (target) {
     target.classList.remove("hidden");
@@ -390,6 +391,7 @@ function showSection(name) {
     void target.offsetWidth;
     target.classList.add("section-enter");
   }
+  if (name === "comunicacion") updateEmptyState();
 
   document.querySelectorAll("[data-nav]").forEach(a => {
     a.classList.toggle("active", a.dataset.nav === name);
@@ -462,21 +464,44 @@ function renderComunicacion() {
   const dKeys = Object.keys(state.drones);
   const oKeys = Object.keys(state.operaciones);
 
-  fillSelect("com-operacion", oKeys, state.comunicacion.operacion,
-    k => `${k} (${state.operaciones[k]?.fecha || ""} — ${state.operaciones[k]?.lugar || ""})`);
-  fillSelect("com-operador", pKeys, state.comunicacion.operador,
-    k => `${k} (${state.personas[k]?.nombre || ""})`);
-  fillSelect("com-observador", pKeys, state.comunicacion.observador,
-    k => `${k} (${state.personas[k]?.nombre || ""})`, true);
+  const hasP = pKeys.length > 0;
+  const hasD = dKeys.length > 0;
+  const hasO = oKeys.length > 0;
+
+  toggleFieldsOrAlert("operacion", hasO);
+  toggleFieldsOrAlert("operador", hasP);
+  toggleFieldsOrAlert("pilotos", hasP);
+  toggleFieldsOrAlert("drones", hasD);
+  toggleFieldsOrAlert("observador", hasP);
+
+  if (hasO) {
+    fillSelect("com-operacion", oKeys, state.comunicacion.operacion,
+      k => `${k} (${state.operaciones[k]?.fecha || ""} — ${state.operaciones[k]?.lugar || ""})`);
+  }
+  if (hasP) {
+    fillSelect("com-operador", pKeys, state.comunicacion.operador,
+      k => `${k} (${state.personas[k]?.nombre || ""})`);
+    fillSelect("com-observador", pKeys, state.comunicacion.observador,
+      k => `${k} (${state.personas[k]?.nombre || ""})`, true);
+    renderCheckboxList("pilotos-list", pKeys, k => `${k} — ${state.personas[k]?.nombre || ""}`);
+  }
+  if (hasD) {
+    renderCheckboxList("drones-sel-list", dKeys, k => `${k} — ${state.drones[k]?.tipo_modelo || ""}`);
+  }
 
   document.getElementById("com-fecha-hora").value = state.comunicacion.fecha_hora || "";
   document.getElementById("com-fecha-operacion").value = "";
   document.getElementById("com-notificacion").checked = state.comunicacion.notificacion_email !== false;
 
-  renderCheckboxList("pilotos-list", pKeys, k => `${k} — ${state.personas[k]?.nombre || ""}`);
-  renderCheckboxList("drones-sel-list", dKeys, k => `${k} — ${state.drones[k]?.tipo_modelo || ""}`);
-
   updateSummary();
+}
+
+function toggleFieldsOrAlert(name, hasData) {
+  const fields = document.getElementById(`${name}-fields`);
+  const empty = document.getElementById(`${name}-empty`);
+  if (!fields || !empty) return;
+  fields.classList.toggle("hidden", !hasData);
+  empty.classList.toggle("hidden", hasData);
 }
 
 function fillSelect(id, keys, selected, labelFn, allowEmpty) {
@@ -575,7 +600,8 @@ function syncStateFromUI() {
 // =========================================================================
 function addItem(section, fieldDefs) {
   syncStateFromUI();
-  const key = `nuevo_${Date.now().toString(36)}`;
+  const prefix = section === "personas" ? "persona" : section === "drones" ? "dron" : "operacion";
+  const key = `${prefix}_${Date.now().toString(36)}`;
   const obj = {};
   for (const f of fieldDefs) obj[f.key] = "";
   state[section][key] = obj;
@@ -611,6 +637,37 @@ function renderAll() {
   renderAccordionList("operaciones-list", state.operaciones, OPERACION_FIELDS, "operaciones");
   renderComunicacion();
   updateNavCounts();
+  updateEmptyState();
+  updateListEmptyStates();
+}
+
+function updateListEmptyStates() {
+  for (const section of ["personas", "drones", "operaciones"]) {
+    const empty = Object.keys(state[section]).length === 0;
+    const el = document.getElementById(`${section}-list-empty`);
+    if (el) el.classList.toggle("hidden", !empty);
+  }
+}
+
+function updateEmptyState() {
+  const hasData = Object.keys(state.personas).length > 0
+    || Object.keys(state.drones).length > 0
+    || Object.keys(state.operaciones).length > 0;
+  const emptyEl = document.getElementById("empty-state");
+  const comEl = document.getElementById("section-comunicacion");
+  if (!emptyEl) return;
+  if (hasData) {
+    emptyEl.classList.add("hidden");
+    if (!comEl.classList.contains("hidden")) comEl.classList.remove("hidden");
+  } else {
+    const anyVisible = document.querySelector(".app-section:not(.hidden)");
+    if (anyVisible && anyVisible.id === "section-comunicacion") {
+      comEl.classList.add("hidden");
+      emptyEl.classList.remove("hidden");
+    } else {
+      emptyEl.classList.add("hidden");
+    }
+  }
 }
 
 function updateNavCounts() {
@@ -709,6 +766,9 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   document.getElementById("fileInput").addEventListener("change", handleFileChange);
   document.querySelectorAll(".mobile-file-input").forEach(el => el.addEventListener("change", handleFileChange));
+
+  // Empty state: file input
+  document.querySelectorAll(".empty-file-input").forEach(el => el.addEventListener("change", handleFileChange));
 
   // Export YAML
   document.getElementById("btnExportYaml").addEventListener("click", () => exportYaml());

@@ -186,6 +186,28 @@ button { font-family: inherit; }
   color: rgba(255,255,255,0.8);
 }
 
+/* =========== Empty alerts =========== */
+.empty-alert {
+  background: rgba(232, 145, 74, 0.08);
+  border: 1px dashed rgba(232, 145, 74, 0.3);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+.empty-alert-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--vdw-orange);
+  transition: opacity 0.2s;
+}
+.empty-alert-link:hover { opacity: 0.8; }
+.empty-alert-link::before {
+  content: "";
+}
+
 /* =========== Navigation =========== */
 .nav-tab {
   display: inline-flex;

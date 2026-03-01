@@ -62,17 +62,16 @@
               <a href="#" data-nav="personas" class="dropdown-link">Personas <span class="nav-count" id="count-personas"></span></a>
               <a href="#" data-nav="drones" class="dropdown-link">Drones <span class="nav-count" id="count-drones"></span></a>
               <a href="#" data-nav="operaciones" class="dropdown-link">Operaciones <span class="nav-count" id="count-operaciones"></span></a>
+              <div class="border-t border-white/10 my-1"></div>
+              <label class="dropdown-link cursor-pointer">
+                Cargar YAML
+                <input type="file" id="fileInput" accept=".yaml,.yml" hidden>
+              </label>
+              <a href="#" class="dropdown-link" id="btnExportYaml">Exportar YAML</a>
             </div>
           </div>
         </div>
-        <div class="flex items-center gap-2">
-          <label class="btn-ghost cursor-pointer text-sm">
-            Cargar YAML
-            <input type="file" id="fileInput" accept=".yaml,.yml" hidden>
-          </label>
-          <button class="btn-ghost text-sm" id="btnExportYaml">Exportar YAML</button>
-          <button class="btn-primary text-sm" id="btnGenerar">Generar</button>
-        </div>
+        <button class="btn-primary text-sm hidden" id="btnGenerar">Generar</button>
       </div>
 
       <!-- Mobile toggle -->
@@ -92,8 +91,10 @@
           Cargar YAML
           <input type="file" class="mobile-file-input" accept=".yaml,.yml" hidden>
         </label>
-        <button class="btn-ghost text-sm mobile-export-btn">Exportar</button>
-        <button class="btn-primary text-sm mobile-generate-btn">Generar</button>
+        <button class="btn-ghost text-sm mobile-export-btn">Exportar YAML</button>
+      </div>
+      <div class="pt-2">
+        <button class="btn-primary text-sm w-full mobile-generate-btn">Generar</button>
       </div>
     </div>
   </div>
@@ -101,20 +102,67 @@
 
 <main class="max-w-6xl mx-auto px-4 py-6">
 
+  <!-- ============ Empty State ============ -->
+  <section id="empty-state" class="hidden">
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="max-w-lg text-center">
+        <svg class="w-16 h-16 text-vdw-orange/60 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+        </svg>
+        <h2 class="text-2xl font-bold text-white mb-3">No hay datos cargados</h2>
+        <p class="text-white/60 mb-8">
+          Para generar comunicaciones necesitas tener al menos una persona, un dron y una operación.
+        </p>
+        <div class="vdw-card text-left mb-4">
+          <h5 class="card-title">Cargar desde fichero</h5>
+          <p class="text-white/50 text-sm mb-3">Si ya tienes un fichero YAML con tus datos, cárgalo directamente:</p>
+          <div class="flex justify-center">
+            <label class="btn-primary cursor-pointer text-sm">
+              Cargar YAML
+              <input type="file" class="empty-file-input" accept=".yaml,.yml" hidden>
+            </label>
+          </div>
+        </div>
+        <div class="vdw-card text-left">
+          <h5 class="card-title">Crear datos manualmente</h5>
+          <p class="text-white/50 text-sm mb-3">Si no dispones de un fichero YAML, puedes crear los datos desde cero:</p>
+          <div class="flex flex-col gap-2">
+            <a href="#" data-nav="personas" class="flex items-center gap-2 text-white/70 hover:text-vdw-orange text-sm transition-colors">
+              <span class="w-1.5 h-1.5 rounded-full bg-vdw-orange"></span>
+              <strong>Personas</strong> — pilotos, operadores y observadores
+            </a>
+            <a href="#" data-nav="drones" class="flex items-center gap-2 text-white/70 hover:text-vdw-orange text-sm transition-colors">
+              <span class="w-1.5 h-1.5 rounded-full bg-vdw-orange"></span>
+              <strong>Drones</strong> — aeronaves UAS con sus datos técnicos
+            </a>
+            <a href="#" data-nav="operaciones" class="flex items-center gap-2 text-white/70 hover:text-vdw-orange text-sm transition-colors">
+              <span class="w-1.5 h-1.5 rounded-full bg-vdw-orange"></span>
+              <strong>Operaciones</strong> — vuelos planificados con lugar, fecha y hora
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ Comunicación ============ -->
   <section class="app-section" id="section-comunicacion">
 
     <div class="vdw-card">
       <h5 class="card-title">Operación</h5>
-      <div>
+      <div id="operacion-fields">
         <label class="field-label" for="com-operacion">Operación</label>
         <select id="com-operacion" class="field-select"></select>
+      </div>
+      <div id="operacion-empty" class="hidden empty-alert">
+        <p class="text-white/60 text-sm mb-2">No hay operaciones definidas.</p>
+        <a href="#" data-nav="operaciones" class="empty-alert-link">Crear operaciones</a>
       </div>
     </div>
 
     <div class="vdw-card">
       <h5 class="card-title">Operador</h5>
-      <div class="grid md:grid-cols-2 gap-4">
+      <div id="operador-fields" class="grid md:grid-cols-2 gap-4">
         <div>
           <label class="field-label" for="com-operador">Operador</label>
           <select id="com-operador" class="field-select"></select>
@@ -125,6 +173,10 @@
             <span class="text-white/70 text-sm">Notificación por email</span>
           </label>
         </div>
+      </div>
+      <div id="operador-empty" class="hidden empty-alert">
+        <p class="text-white/60 text-sm mb-2">No hay personas definidas.</p>
+        <a href="#" data-nav="personas" class="empty-alert-link">Crear personas</a>
       </div>
     </div>
 
@@ -147,24 +199,42 @@
       <div class="grid md:grid-cols-2 gap-6">
         <div>
           <h6 class="text-sm font-semibold text-white/80 mb-2">Pilotos</h6>
-          <div class="flex gap-1.5 mb-2">
-            <button class="btn-sm" id="pilotos-all">Todos</button>
-            <button class="btn-sm" id="pilotos-none">Ninguno</button>
+          <div id="pilotos-fields">
+            <div class="flex gap-1.5 mb-2">
+              <button class="btn-sm" id="pilotos-all">Todos</button>
+              <button class="btn-sm" id="pilotos-none">Ninguno</button>
+            </div>
+            <div id="pilotos-list" class="checkbox-list"></div>
           </div>
-          <div id="pilotos-list" class="checkbox-list"></div>
+          <div id="pilotos-empty" class="hidden empty-alert">
+            <p class="text-white/60 text-sm mb-2">No hay personas definidas.</p>
+            <a href="#" data-nav="personas" class="empty-alert-link">Crear personas</a>
+          </div>
         </div>
         <div>
           <h6 class="text-sm font-semibold text-white/80 mb-2">Drones</h6>
-          <div class="flex gap-1.5 mb-2">
-            <button class="btn-sm" id="drones-sel-all">Todos</button>
-            <button class="btn-sm" id="drones-sel-none">Ninguno</button>
+          <div id="drones-fields">
+            <div class="flex gap-1.5 mb-2">
+              <button class="btn-sm" id="drones-sel-all">Todos</button>
+              <button class="btn-sm" id="drones-sel-none">Ninguno</button>
+            </div>
+            <div id="drones-sel-list" class="checkbox-list"></div>
           </div>
-          <div id="drones-sel-list" class="checkbox-list"></div>
+          <div id="drones-empty" class="hidden empty-alert">
+            <p class="text-white/60 text-sm mb-2">No hay drones definidos.</p>
+            <a href="#" data-nav="drones" class="empty-alert-link">Crear drones</a>
+          </div>
         </div>
       </div>
       <div class="mt-5">
         <h6 class="text-sm font-semibold text-white/80 mb-2">Observador</h6>
-        <select id="com-observador" class="field-select"></select>
+        <div id="observador-fields">
+          <select id="com-observador" class="field-select"></select>
+        </div>
+        <div id="observador-empty" class="hidden empty-alert">
+          <p class="text-white/60 text-sm mb-2">No hay personas definidas.</p>
+          <a href="#" data-nav="personas" class="empty-alert-link">Crear personas</a>
+        </div>
       </div>
       <div class="mt-4 bg-vdw-orange/10 border border-vdw-orange/20 rounded-xl px-4 py-2.5 text-center text-white/90 text-sm font-medium" id="combo-summary">
         0 piloto(s) × 0 drone(s) = 0 PDF(s)
@@ -178,27 +248,36 @@
   <section class="app-section hidden" id="section-personas">
     <div class="flex justify-between items-center mb-4">
       <h4 class="text-2xl font-bold text-white">Personas</h4>
-      <button class="btn-primary text-sm" id="btnAddPersona">+ Añadir persona</button>
+      <button class="btn-primary text-sm" id="btnAddPersona">Añadir persona</button>
     </div>
     <div id="personas-list" class="accordion-container"></div>
+    <div id="personas-list-empty" class="hidden empty-alert mt-4">
+      <p class="text-white/60 text-sm">No hay personas definidas. Usa el botón <strong class="text-vdw-orange">Añadir persona</strong> para crear la primera.</p>
+    </div>
   </section>
 
   <!-- ============ Drones ============ -->
   <section class="app-section hidden" id="section-drones">
     <div class="flex justify-between items-center mb-4">
       <h4 class="text-2xl font-bold text-white">Drones (UAS)</h4>
-      <button class="btn-primary text-sm" id="btnAddDrone">+ Añadir dron</button>
+      <button class="btn-primary text-sm" id="btnAddDrone">Añadir dron</button>
     </div>
     <div id="drones-list" class="accordion-container"></div>
+    <div id="drones-list-empty" class="hidden empty-alert mt-4">
+      <p class="text-white/60 text-sm">No hay drones definidos. Usa el botón <strong class="text-vdw-orange">Añadir dron</strong> para crear el primero.</p>
+    </div>
   </section>
 
   <!-- ============ Operaciones ============ -->
   <section class="app-section hidden" id="section-operaciones">
     <div class="flex justify-between items-center mb-4">
       <h4 class="text-2xl font-bold text-white">Operaciones</h4>
-      <button class="btn-primary text-sm" id="btnAddOperacion">+ Añadir operación</button>
+      <button class="btn-primary text-sm" id="btnAddOperacion">Añadir operación</button>
     </div>
     <div id="operaciones-list" class="accordion-container"></div>
+    <div id="operaciones-list-empty" class="hidden empty-alert mt-4">
+      <p class="text-white/60 text-sm">No hay operaciones definidas. Usa el botón <strong class="text-vdw-orange">Añadir operación</strong> para crear la primera.</p>
+    </div>
   </section>
 
 </main>
