@@ -43,7 +43,7 @@
 <nav class="sticky top-0 z-50 bg-vdw-navy/95 backdrop-blur-md border-b border-white/10">
   <div class="max-w-6xl mx-auto px-4">
     <div class="flex items-center justify-between h-14">
-      <a href="#" class="flex items-center gap-2">
+      <a href="#" data-nav="inicio" class="flex items-center gap-2">
         <img src="logo-2.png" alt="VDW" class="w-7 h-7">
         <span class="font-bold text-white">Comunicación UAS</span>
         <span class="hidden sm:inline text-white/40 text-xs">V9.0</span>
@@ -52,7 +52,8 @@
       <!-- Desktop nav -->
       <div class="hidden md:flex items-center gap-4">
         <div class="flex items-center gap-1">
-          <a href="#" data-nav="comunicacion" class="nav-tab active">Comunicación</a>
+          <a href="#" data-nav="inicio" class="nav-tab active">Inicio</a>
+          <a href="#" data-nav="comunicacion" class="nav-tab">Comunicación</a>
           <div class="relative" id="datos-dropdown-wrapper">
             <button class="nav-tab" id="datos-toggle">
               Datos
@@ -82,7 +83,8 @@
 
     <!-- Mobile menu -->
     <div class="hidden md:hidden pb-4 border-t border-white/10 mt-2 pt-3 space-y-1" id="mobile-menu">
-      <a href="#" data-nav="comunicacion" class="mobile-link active">Comunicación</a>
+      <a href="#" data-nav="inicio" class="mobile-link active">Inicio</a>
+      <a href="#" data-nav="comunicacion" class="mobile-link">Comunicación</a>
       <a href="#" data-nav="personas" class="mobile-link">Personas <span class="nav-count" id="count-personas-m"></span></a>
       <a href="#" data-nav="drones" class="mobile-link">Drones <span class="nav-count" id="count-drones-m"></span></a>
       <a href="#" data-nav="operaciones" class="mobile-link">Operaciones <span class="nav-count" id="count-operaciones-m"></span></a>
@@ -101,6 +103,105 @@
 </nav>
 
 <main class="max-w-6xl mx-auto px-4 py-6">
+
+  <!-- ============ Inicio ============ -->
+  <section class="app-section" id="section-inicio">
+
+    <div class="max-w-3xl mx-auto">
+
+      <div class="text-center mb-8">
+        <img src="logo-2.png" alt="Valencia Drone Works" class="w-16 h-16 mx-auto mb-4 opacity-80">
+        <h2 class="text-2xl font-bold text-white mb-2">Comunicación UAS</h2>
+        <p class="text-white/50 text-sm">Herramienta de generación de comunicaciones al Ministerio del Interior</p>
+      </div>
+
+      <div class="vdw-card">
+        <h5 class="card-title">Qué hace esta aplicación</h5>
+        <p class="text-white/70 text-sm leading-relaxed mb-3">
+          Esta herramienta facilita la generación de los documentos PDF necesarios para realizar la
+          <strong class="text-white">comunicación previa de operaciones con drones</strong> al Ministerio del Interior,
+          a través de su registro de entrada (ya sea en oficina o registro electrónico).
+        </p>
+        <p class="text-white/70 text-sm leading-relaxed mb-3">
+          Utiliza el último formulario oficial publicado por el Ministerio en su sede electrónica,
+          disponible en la sección dedicada a este trámite:
+        </p>
+        <a href="https://sede.interior.gob.es/portal/sede/tramites?codAgrupacion=Drones"
+           target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-1.5 text-vdw-orange text-sm font-semibold hover:opacity-80 transition-opacity mb-3">
+          sede.interior.gob.es — Trámites Drones
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <p class="text-white/50 text-xs leading-relaxed">
+          Documento base: <code class="text-white/70 bg-white/5 px-1.5 py-0.5 rounded">20201228-Formato-Solicitud-Comunicacion-V9.0.pdf</code>.
+          Si el Ministerio publicara una versión más reciente, esta aplicación podría requerir una actualización.
+        </p>
+      </div>
+
+      <div class="vdw-card">
+        <h5 class="card-title">Por qué existe esta aplicación</h5>
+        <p class="text-white/70 text-sm leading-relaxed mb-3">
+          El Ministerio del Interior pone a disposición de los operadores una aplicación propia
+          para realizar las comunicaciones de vuelo. En teoría, debería ser la opción más cómoda.
+          En la práctica... no siempre lo es.
+        </p>
+        <p class="text-white/70 text-sm leading-relaxed mb-3">
+          Dicha aplicación, a día de hoy, <strong class="text-white">no cumple todos los requisitos
+          establecidos en el RD 517/2024</strong> — lo cual resulta, como mínimo, llamativo viniendo
+          del propio organismo que redactó la norma. Además, tiene la peculiar costumbre de
+          <strong class="text-white">dejar de funcionar durante días</strong>, justo cuando necesitas
+          comunicar una operación con cierta urgencia.
+        </p>
+        <p class="text-white/70 text-sm leading-relaxed">
+          Ante esta situación, muchos operadores optan por la vía alternativa perfectamente válida:
+          el <strong class="text-white">registro electrónico general</strong>, presentando el formulario
+          PDF oficial. Para esos usuarios (y esas situaciones), esta aplicación puede resultar de utilidad.
+        </p>
+      </div>
+
+      <div class="vdw-card">
+        <h5 class="card-title">Privacidad y seguridad</h5>
+        <p class="text-white/70 text-sm leading-relaxed mb-3">
+          <strong class="text-white">Todo el proceso se ejecuta íntegramente en tu navegador.</strong>
+          No se envía ningún dato a servidores externos. Los datos de personas, drones y operaciones
+          se almacenan únicamente en el almacenamiento local de tu navegador (<em>localStorage</em>).
+        </p>
+        <p class="text-white/70 text-sm leading-relaxed">
+          No existe ningún riesgo de filtración de datos a terceros. La aplicación no realiza llamadas
+          de red ni requiere conexión a internet para funcionar (salvo la carga inicial de la página).
+        </p>
+      </div>
+
+      <div class="vdw-card">
+        <h5 class="card-title">Cómo empezar</h5>
+        <ol class="text-white/70 text-sm leading-relaxed space-y-2 list-decimal list-inside mb-4">
+          <li>Ve a <strong class="text-white">Datos</strong> y crea tus <strong class="text-white">Personas</strong> (pilotos, operadores, observadores), <strong class="text-white">Drones</strong> y <strong class="text-white">Operaciones</strong>.</li>
+          <li>En la pestaña <strong class="text-white">Comunicación</strong>, selecciona la operación, el operador, los pilotos y los drones implicados.</li>
+          <li>Pulsa <strong class="text-white">Generar PDF</strong> y obtendrás un documento (o un ZIP con varios) listo para presentar en el registro.</li>
+        </ol>
+      </div>
+
+      <div class="vdw-card">
+        <h5 class="card-title">Copia de seguridad de los datos</h5>
+        <p class="text-white/70 text-sm leading-relaxed mb-3">
+          Dado que los datos se almacenan localmente en el navegador, es recomendable realizar copias de seguridad periódicas.
+          En el menú <strong class="text-white">Datos</strong> encontrarás las opciones de:
+        </p>
+        <ul class="text-white/70 text-sm leading-relaxed space-y-1.5">
+          <li class="flex items-start gap-2">
+            <span class="text-vdw-orange font-bold mt-0.5">·</span>
+            <span><strong class="text-white">Exportar YAML</strong> — descarga todos tus datos en un fichero que puedes guardar en tu equipo.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-vdw-orange font-bold mt-0.5">·</span>
+            <span><strong class="text-white">Cargar YAML</strong> — restaura los datos desde un fichero exportado previamente.</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+  </section>
 
   <!-- ============ Empty State ============ -->
   <section id="empty-state" class="hidden">
@@ -146,7 +247,7 @@
   </section>
 
   <!-- ============ Comunicación ============ -->
-  <section class="app-section" id="section-comunicacion">
+  <section class="app-section hidden" id="section-comunicacion">
 
     <div class="vdw-card">
       <h5 class="card-title">Operación</h5>
