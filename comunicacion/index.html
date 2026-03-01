@@ -160,6 +160,15 @@
       </div>
 
       <div class="vdw-card">
+        <h5 class="card-title">Cómo empezar</h5>
+        <ol class="text-white/70 text-sm leading-relaxed space-y-2 list-decimal list-inside mb-4">
+          <li>Ve a <strong class="text-white">Datos</strong> y crea tus <strong class="text-white">Personas</strong> (pilotos, operadores, observadores), <strong class="text-white">Drones</strong> y <strong class="text-white">Operaciones</strong>.</li>
+          <li>En la pestaña <strong class="text-white">Comunicación</strong>, selecciona la operación, el operador, y marca los pilotos y drones que participan en el vuelo. Puedes seleccionar varios de cada uno.</li>
+          <li>Pulsa <strong class="text-white">Generar PDF</strong>. La aplicación generará automáticamente <strong class="text-white">un documento por cada combinación de piloto y dron seleccionada</strong>. Si hay más de uno, se empaquetarán en un ZIP.</li>
+        </ol>
+      </div>
+
+      <div class="vdw-card">
         <h5 class="card-title">Privacidad y seguridad</h5>
         <p class="text-white/70 text-sm leading-relaxed mb-3">
           <strong class="text-white">Todo el proceso se ejecuta íntegramente en tu navegador.</strong>
@@ -170,15 +179,6 @@
           No existe ningún riesgo de filtración de datos a terceros. La aplicación no realiza llamadas
           de red ni requiere conexión a internet para funcionar (salvo la carga inicial de la página).
         </p>
-      </div>
-
-      <div class="vdw-card">
-        <h5 class="card-title">Cómo empezar</h5>
-        <ol class="text-white/70 text-sm leading-relaxed space-y-2 list-decimal list-inside mb-4">
-          <li>Ve a <strong class="text-white">Datos</strong> y crea tus <strong class="text-white">Personas</strong> (pilotos, operadores, observadores), <strong class="text-white">Drones</strong> y <strong class="text-white">Operaciones</strong>.</li>
-          <li>En la pestaña <strong class="text-white">Comunicación</strong>, selecciona la operación, el operador, y marca los pilotos y drones que participan en el vuelo. Puedes seleccionar varios de cada uno.</li>
-          <li>Pulsa <strong class="text-white">Generar PDF</strong>. La aplicación generará automáticamente <strong class="text-white">un documento por cada combinación de piloto y dron seleccionada</strong>. Si hay más de uno, se empaquetarán en un ZIP.</li>
-        </ol>
       </div>
 
       <div class="vdw-card">
@@ -224,9 +224,16 @@
             </label>
           </div>
         </div>
+        <div class="vdw-card text-left mb-4">
+          <h5 class="card-title">Descargar fichero base</h5>
+          <p class="text-white/50 text-sm mb-3">Descarga un fichero YAML de ejemplo con datos ficticios. Edítalo con un editor de texto, sustituye los valores por los tuyos reales y luego cárgalo con la opción anterior.</p>
+          <div class="flex justify-center">
+            <button class="btn-primary text-sm" id="btnDownloadExample">Descargar ejemplo</button>
+          </div>
+        </div>
         <div class="vdw-card text-left">
           <h5 class="card-title">Crear datos manualmente</h5>
-          <p class="text-white/50 text-sm mb-3">Si no dispones de un fichero YAML, puedes crear los datos desde cero:</p>
+          <p class="text-white/50 text-sm mb-3">Si prefieres no usar ficheros, puedes crear los datos directamente desde la aplicación:</p>
           <div class="flex flex-col gap-2">
             <a href="#" data-nav="personas" class="flex items-center gap-2 text-white/70 hover:text-vdw-orange text-sm transition-colors">
               <span class="w-1.5 h-1.5 rounded-full bg-vdw-orange"></span>

@@ -339,17 +339,162 @@ function loadYamlText(text) {
 
 function exportYaml() {
   syncStateFromUI();
-  const obj = {
-    personas: state.personas,
-    drones: state.drones,
-    operaciones: state.operaciones,
-    comunicacion: state.comunicacion,
-  };
-  const text = jsyaml.dump(obj, { lineWidth: -1, quotingType: '"', forceQuotes: true });
-  downloadBlob(new TextEncoder().encode(text), "datos.yaml", "text/yaml");
-  saveToLocal();
-  showToast("YAML exportado");
+  const hasData = Object.keys(state.personas).length > 0
+    || Object.keys(state.drones).length > 0
+    || Object.keys(state.operaciones).length > 0;
+
+  if (hasData) {
+    const obj = {
+      personas: state.personas,
+      drones: state.drones,
+      operaciones: state.operaciones,
+      comunicacion: state.comunicacion,
+    };
+    const text = jsyaml.dump(obj, { lineWidth: -1, quotingType: '"', forceQuotes: true });
+    downloadBlob(new TextEncoder().encode(text), "datos.yaml", "text/yaml");
+    saveToLocal();
+    showToast("YAML exportado");
+  } else {
+    downloadBlob(new TextEncoder().encode(EXAMPLE_YAML), "datos.yaml", "text/yaml");
+    showToast("YAML de ejemplo exportado");
+  }
 }
+
+const EXAMPLE_YAML = `# ============================================================
+# Ejemplo de fichero YAML para Comunicación UAS
+# ============================================================
+#
+# Este fichero contiene datos de ejemplo. Modifica los valores
+# con tus datos reales y cárgalo en la aplicación con
+# "Datos > Cargar YAML".
+#
+# Estructura:
+#   - personas: pilotos, operadores y observadores
+#   - drones: aeronaves UAS con datos técnicos
+#   - operaciones: vuelos planificados
+#   - comunicacion: configuración general (normalmente no es
+#     necesario modificarla, se rellena desde la aplicación)
+#
+# ============================================================
+
+personas:
+  persona_piloto1:
+    nombre: "García López, Juan"
+    documento_identidad: "12345678A"
+    direccion: "Calle Mayor 10, 3ºA"
+    codigo_postal: "46001"
+    municipio: "Valencia"
+    provincia: "Valencia"
+    telefono: "600111222"
+    email: "juan.garcia@ejemplo.com"
+    numero_registro: "OP-ESP-001"
+    certificado_competencia: "A1/A3 - STS"
+    acreditacion_formacion: "Piloto A1/A3 - AESA"
+    poliza_seguros: "POL-2025-00001"
+
+  persona_piloto2:
+    nombre: "Martínez Ruiz, Ana"
+    documento_identidad: "87654321B"
+    direccion: "Avda. de la Constitución 25"
+    codigo_postal: "46002"
+    municipio: "Valencia"
+    provincia: "Valencia"
+    telefono: "600333444"
+    email: "ana.martinez@ejemplo.com"
+    numero_registro: "OP-ESP-002"
+    certificado_competencia: "A1/A3 - STS"
+    acreditacion_formacion: "Piloto A1/A3 - AESA"
+    poliza_seguros: "POL-2025-00002"
+
+drones:
+  dron_mavic3:
+    clase: "C1"
+    fabricante: "DJI"
+    tipo_modelo: "Mavic 3 Pro"
+    numero_serie: "1ZNBJ1234567890"
+    matricula: "UAS-ESP-00001"
+    mtom: "958 g"
+    autonomia: "43 min"
+    autopiloto: "Sí"
+    frecuencias: "2.4 GHz / 5.8 GHz"
+    color: "Gris"
+    luces: "Sí (posición y anticolisión)"
+    carga_pago: "Cámara Hasselblad 4/3 CMOS"
+    equipo_vhf: "No"
+    respondedor_modo_s: "No"
+    equipo_emergencia: "No"
+    dispositivo_vision: "No"
+
+  dron_mini4:
+    clase: "C0"
+    fabricante: "DJI"
+    tipo_modelo: "Mini 4 Pro"
+    numero_serie: "1YNBJ9876543210"
+    matricula: "UAS-ESP-00002"
+    mtom: "249 g"
+    autonomia: "34 min"
+    autopiloto: "Sí"
+    frecuencias: "2.4 GHz / 5.8 GHz"
+    color: "Gris claro"
+    luces: "No"
+    carga_pago: "Cámara 1/1.3 CMOS 48MP"
+    equipo_vhf: "No"
+    respondedor_modo_s: "No"
+    equipo_emergencia: "No"
+    dispositivo_vision: "No"
+
+  dron_inspire3:
+    clase: "C2"
+    fabricante: "DJI"
+    tipo_modelo: "Inspire 3"
+    numero_serie: "3ZNBJ5555666677"
+    matricula: "UAS-ESP-00003"
+    mtom: "3995 g"
+    autonomia: "28 min"
+    autopiloto: "Sí"
+    frecuencias: "2.4 GHz / 5.8 GHz"
+    color: "Negro"
+    luces: "Sí (posición y anticolisión)"
+    carga_pago: "Zenmuse X9-8K Air"
+    equipo_vhf: "No"
+    respondedor_modo_s: "No"
+    equipo_emergencia: "No"
+    dispositivo_vision: "No"
+
+operaciones:
+  operacion_ejemplo1:
+    tipo: "Filmación aérea"
+    fecha: "15/03/2026"
+    lugar: "Albufera, Valencia, Comunidad Valenciana"
+    hora_inicio: "09:00"
+    hora_fin: "13:00"
+    duracion: "4 horas"
+    zona_poblacion: "Fuera de aglomeración urbana"
+    coordenadas_wgs84: "39.3333, -0.3667"
+    radio_metros: "500"
+    ruta: "Circular sobre la zona de filmación"
+    area_proteccion: "Zona delimitada con señalización"
+    zona_recuperacion: "Punto de despegue"
+    altura_prevista: "120 m AGL"
+
+  operacion_ejemplo2:
+    tipo: "Inspección técnica"
+    fecha: "20/03/2026"
+    lugar: "Puerto de Valencia, Valencia, Comunidad Valenciana"
+    hora_inicio: "07:30"
+    hora_fin: "10:00"
+    duracion: "2 horas 30 minutos"
+    zona_poblacion: "Aglomeración urbana"
+    coordenadas_wgs84: "39.4500, -0.3167"
+    radio_metros: "200"
+    ruta: "Lineal a lo largo de la infraestructura"
+    area_proteccion: "Perímetro de seguridad 50 m"
+    zona_recuperacion: "Zona de aparcamiento habilitada"
+    altura_prevista: "50 m AGL"
+
+comunicacion:
+  notificacion_email: true
+`;
 
 // =========================================================================
 // localStorage
@@ -769,6 +914,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Empty state: file input
   document.querySelectorAll(".empty-file-input").forEach(el => el.addEventListener("change", handleFileChange));
+  document.getElementById("btnDownloadExample").addEventListener("click", () => {
+    downloadBlob(new TextEncoder().encode(EXAMPLE_YAML), "datos.yaml", "text/yaml");
+    showToast("YAML de ejemplo descargado");
+  });
 
   // Export YAML
   document.getElementById("btnExportYaml").addEventListener("click", () => exportYaml());
