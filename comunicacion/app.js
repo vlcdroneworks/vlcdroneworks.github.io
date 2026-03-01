@@ -774,6 +774,21 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnExportYaml").addEventListener("click", () => exportYaml());
   document.querySelectorAll(".mobile-export-btn").forEach(el => el.addEventListener("click", () => exportYaml()));
 
+  // Clear data
+  function clearAllData() {
+    if (!confirm("¿Estás seguro de que quieres borrar todos los datos?\n\nRecuerda que puedes exportarlos a YAML antes de borrarlos.\n\nEsta acción no se puede deshacer.")) return;
+    state.personas = {};
+    state.drones = {};
+    state.operaciones = {};
+    state.comunicacion = { notificacion_email: true };
+    localStorage.removeItem("comunicacion_state");
+    renderAll();
+    showSection("inicio");
+    showToast("Datos borrados correctamente");
+  }
+  document.getElementById("btnClearData").addEventListener("click", e => { e.preventDefault(); clearAllData(); });
+  document.querySelectorAll(".mobile-clear-btn").forEach(el => el.addEventListener("click", clearAllData));
+
   // Generate with loading overlay
   const onGenerate = async () => {
     const overlay = document.getElementById("loading-overlay");
