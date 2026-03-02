@@ -871,6 +871,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderAll();
 
+  const gotoSection = sessionStorage.getItem("goto_section");
+  if (gotoSection) {
+    sessionStorage.removeItem("goto_section");
+    showSection(gotoSection);
+  }
+
   // Section navigation (all [data-nav] links)
   document.querySelectorAll("[data-nav]").forEach(link => {
     link.addEventListener("click", e => {
@@ -918,6 +924,7 @@ document.addEventListener("DOMContentLoaded", () => {
     downloadBlob(new TextEncoder().encode(EXAMPLE_YAML), "datos.yaml", "text/yaml");
     showToast("YAML de ejemplo descargado");
   });
+  document.getElementById("btnLoadExampleEmpty").addEventListener("click", () => loadExampleData());
 
   // Export YAML
   document.getElementById("btnExportYaml").addEventListener("click", () => exportYaml());
@@ -944,10 +951,9 @@ document.addEventListener("DOMContentLoaded", () => {
     state.drones = parsed.drones || {};
     state.operaciones = parsed.operaciones || {};
     state.comunicacion = parsed.comunicacion || { notificacion_email: true };
-    renderAll();
     saveToLocal();
-    showSection("comunicacion");
-    showToast("Datos de ejemplo cargados");
+    sessionStorage.setItem("goto_section", "comunicacion");
+    location.reload();
   }
   document.getElementById("btnLoadExample").addEventListener("click", e => { e.preventDefault(); loadExampleData(); });
   document.querySelectorAll(".mobile-load-example-btn").forEach(el => el.addEventListener("click", loadExampleData));
