@@ -938,6 +938,20 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnClearData").addEventListener("click", e => { e.preventDefault(); clearAllData(); });
   document.querySelectorAll(".mobile-clear-btn").forEach(el => el.addEventListener("click", clearAllData));
 
+  function loadExampleData() {
+    const parsed = jsyaml.load(EXAMPLE_YAML);
+    state.personas = parsed.personas || {};
+    state.drones = parsed.drones || {};
+    state.operaciones = parsed.operaciones || {};
+    state.comunicacion = parsed.comunicacion || { notificacion_email: true };
+    renderAll();
+    saveToLocal();
+    showSection("comunicacion");
+    showToast("Datos de ejemplo cargados");
+  }
+  document.getElementById("btnLoadExample").addEventListener("click", e => { e.preventDefault(); loadExampleData(); });
+  document.querySelectorAll(".mobile-load-example-btn").forEach(el => el.addEventListener("click", loadExampleData));
+
   // Generate with loading overlay
   const onGenerate = async () => {
     const overlay = document.getElementById("loading-overlay");
