@@ -41,12 +41,16 @@
 
 <!-- Navbar -->
 <nav class="sticky top-0 z-50 bg-vdw-navy/95 backdrop-blur-md border-b border-white/10">
-  <div class="max-w-6xl mx-auto px-4">
-    <div class="flex items-center justify-between h-14">
-      <a href="#" data-nav="inicio" class="flex items-center gap-2">
-        <img src="logo-2.png" alt="VDW" class="w-7 h-7">
-        <span class="font-bold text-white">Comunicación UAS</span>
-        <span class="hidden sm:inline text-white/40 text-xs">V9.0</span>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <a href="http://www.valenciadroneworks.com/#inicio" data-nav="inicio" class="flex items-center gap-3">
+        <img src="logo-2.png" alt="VDW" class="w-10 h-10 md:w-12 md:h-12">
+        <div class="hidden sm:block">
+          <span class="text-white font-bold text-lg md:text-xl">Valencia</span>
+          <span class="text-vdw-orange font-bold text-lg md:text-xl"> Drone</span>
+          <span class="text-white font-bold text-lg md:text-xl"> Works</span>
+        </div>
+        <span class="sm:hidden font-bold text-white">VDW</span>
       </a>
 
       <!-- Desktop nav -->
@@ -102,7 +106,7 @@
   </div>
 </nav>
 
-<main class="max-w-6xl mx-auto px-4 py-6">
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
   <!-- ============ Inicio ============ -->
   <section class="app-section" id="section-inicio">
@@ -389,6 +393,21 @@
   </section>
 
 </main>
+
+<!-- Footer -->
+<footer class="bg-vdw-navy border-t border-white/10 py-8 mt-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <a href="http://www.valenciadroneworks.com/#inicio" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+        <img src="logo-2.png" alt="VDW" class="w-8 h-8">
+        <span class="text-white font-semibold">Valencia Drone Works</span>
+      </a>
+      <p class="text-white/60 text-sm">
+        © 2026 Valencia Drone Works. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</footer>
 
 <!-- Toast -->
 <div id="toast" class="toast-wrapper">
