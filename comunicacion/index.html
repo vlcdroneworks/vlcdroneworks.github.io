@@ -452,12 +452,9 @@
 <script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
 <script>
 (function() {
-  var V = '2.0.0';
+  var V = '1.0.2';
   window.APP_VERSION = V;
-  var s = document.createElement('script');
-  s.src = 'app.js?v=' + encodeURIComponent(V);
-  s.async = false;
-  document.body.appendChild(s);
+  document.write('<script src="app.js?v=' + encodeURIComponent(V) + '"><\/script>');
   var badge = document.getElementById('app-version-placeholder');
   if (badge) {
     badge.setAttribute('aria-hidden', 'true');
