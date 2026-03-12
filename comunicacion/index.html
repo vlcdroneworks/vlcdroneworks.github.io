@@ -27,6 +27,8 @@
       }
     }
   </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-vdw-navy min-h-screen font-sans text-white">
@@ -306,17 +308,17 @@
       <div class="grid md:grid-cols-3 gap-4 mb-4 hidden">
         <div>
           <label class="field-label font-semibold text-white/80" for="com-fecha-hora">Fecha/hora comunicación</label>
-          <input type="datetime-local" class="field-input" id="com-fecha-hora">
+          <input type="text" class="field-input vdw-datetime" id="com-fecha-hora" placeholder="YYYY-MM-DD HH:mm" readonly>
         </div>
       </div>
       <div class="grid md:grid-cols-3 gap-4">
         <div>
           <label class="field-label font-semibold text-white/80" for="com-fecha-inicio">Fecha operación</label>
-          <input type="date" class="field-input" id="com-fecha-inicio">
+          <input type="text" class="field-input vdw-date" id="com-fecha-inicio" placeholder="YYYY-MM-DD" readonly>
         </div>
         <div>
           <label class="field-label text-white/50" for="com-fecha-fin">Fecha fin <span class="text-white/30">(opcional)</span></label>
-          <input type="date" class="field-input" id="com-fecha-fin">
+          <input type="text" class="field-input vdw-date" id="com-fecha-fin" placeholder="YYYY-MM-DD" readonly>
         </div>
         <div>
           <label class="field-label text-white/50" for="com-periodicidad">Cada N días <span class="text-white/30">(opcional)</span></label>
@@ -447,6 +449,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://unpkg.com/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>

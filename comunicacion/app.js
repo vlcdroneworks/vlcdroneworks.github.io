@@ -611,26 +611,32 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             ${fields.map(f => {
               const inputType = f.type || "text";
+              const usePicker = inputType === "time" || inputType === "date" || inputType === "datetime-local";
+              const typeAttr = usePicker ? "text" : inputType;
+              const pickerClass = inputType === "time" ? " vdw-time" : inputType === "date" ? " vdw-date" : inputType === "datetime-local" ? " vdw-datetime" : "";
               let val = data[f.key] || "";
               if (f.type === "date") val = ddmmyyyy_to_iso(val);
               return `
               <div>
                 <label class="block text-xs text-white/50 mb-1">${esc(f.label)}</label>
-                <input type="${inputType}" class="field-input text-sm" value="${escAttr(val)}"
-                       data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="${inputType || "text"}">
+                <input type="${typeAttr}" class="field-input text-sm${pickerClass}" value="${escAttr(val)}"
+                       data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="${inputType || "text"}"${usePicker ? " readonly" : ""}>
               </div>`;
             }).join("")}
           </div>
         </div>`).join("")
       : fieldDefs.map(f => {
           const inputType = f.type || "text";
+          const usePicker = inputType === "time" || inputType === "date" || inputType === "datetime-local";
+          const typeAttr = usePicker ? "text" : inputType;
+          const pickerClass = inputType === "time" ? " vdw-time" : inputType === "date" ? " vdw-date" : inputType === "datetime-local" ? " vdw-datetime" : "";
           let val = data[f.key] || "";
           if (f.type === "date") val = ddmmyyyy_to_iso(val);
           return `
             <div>
               <label class="block text-xs text-white/50 mb-1">${esc(f.label)}</label>
-              <input type="${inputType}" class="field-input text-sm" value="${escAttr(val)}"
-                     data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="${inputType || "text"}">
+              <input type="${typeAttr}" class="field-input text-sm${pickerClass}" value="${escAttr(val)}"
+                     data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="${inputType || "text"}"${usePicker ? " readonly" : ""}>
             </div>`;
         }).join("");
 
@@ -889,6 +895,34 @@ function renderAll() {
   updateNavCounts();
   updateEmptyState();
   updateListEmptyStates();
+  initDatePickers();
+}
+
+function initDatePickers() {
+  if (typeof flatpickr === "undefined") return;
+  document.querySelectorAll(".vdw-date, .vdw-time, .vdw-datetime").forEach(el => {
+    if (el._flatpickr) {
+      el._flatpickr.destroy();
+      el._flatpickr = null;
+    }
+  });
+  flatpickr(".vdw-date", {
+    dateFormat: "Y-m-d",
+    allowInput: false
+  });
+  flatpickr(".vdw-time", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    time_24hr: true,
+    allowInput: false
+  });
+  flatpickr(".vdw-datetime", {
+    enableTime: true,
+    dateFormat: "Y-m-d\\TH:i",
+    time_24hr: true,
+    allowInput: false
+  });
 }
 
 function updateListEmptyStates() {

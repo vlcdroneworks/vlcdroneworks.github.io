@@ -23,24 +23,27 @@ jobs:
       - name: Extract base version and inject version
         id: inject
         run: |
-          FILE="comunicacion/index.html"
-          # Extraer solo la parte semántica (ej. 2.0.0 de '2.0.0' o '2.0.0+abc1234')
-          BASE=$(sed -n "s/.*var V = '\([0-9.]*\).*/\1/p" "$FILE")
+          VERSION_FILE="comunicacion/version.txt"
+          HTML_FILE="comunicacion/index.html"
+          if [ ! -f "$VERSION_FILE" ]; then
+            echo "No se encontró $VERSION_FILE"
+            exit 1
+          fi
+          BASE=$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' "$VERSION_FILE" | head -1)
           if [ -z "$BASE" ]; then
-            echo "No se encontró var V = 'X.Y.Z' en $FILE"
+            echo "Versión base no válida en $VERSION_FILE (esperado X.Y.Z)"
             exit 1
           fi
           NEW_V="${BASE}+${{ steps.sha.outputs.short_sha }}"
           echo "new_version=$NEW_V" >> $GITHUB_OUTPUT
-          # Reemplazar cualquier valor actual de V por el nuevo
-          sed -i "s/var V = '[^']*'/var V = '$NEW_V'/" "$FILE"
+          sed -i "s/var V = '[^']*'/var V = '$NEW_V'/" "$HTML_FILE"
           echo "Versión inyectada: $NEW_V"
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add comunicacion/index.html
+          git add comunicacion/index.html comunicacion/version.txt
           if git diff --staged --quiet; then
             echo "Sin cambios (la versión ya coincidía con este commit)"
             exit 0
