@@ -122,18 +122,18 @@ const DRONE_FIELDS = [
 ];
 
 const OPERACION_FIELDS = [
-  { key: "tipo",                label: "Tipo de operación" },
-  { key: "lugar",               label: "Lugar (población, provincia, CCAA)" },
-  { key: "hora_inicio",         label: "Hora inicio", type: "time" },
-  { key: "hora_fin",            label: "Hora fin", type: "time" },
-  { key: "duracion",            label: "Duración total" },
-  { key: "zona_poblacion",      label: "Zona de población" },
-  { key: "coordenadas_wgs84",   label: "Coordenadas WGS-84 con anotación DMS (grados, minutos y segundos)" },
-  { key: "radio_metros",        label: "Radio (metros)" },
-  { key: "ruta",                label: "Ruta" },
-  { key: "area_proteccion",     label: "Área de protección" },
-  { key: "zona_recuperacion",   label: "Zona de recuperación" },
-  { key: "altura_prevista",     label: "Altura prevista" },
+  { key: "tipo",                label: "Tipo de operación", group: "Datos generales" },
+  { key: "lugar",               label: "Lugar (población, provincia, CCAA)", group: "Datos generales" },
+  { key: "hora_inicio",        label: "Hora inicio", type: "time", group: "Horario" },
+  { key: "hora_fin",            label: "Hora fin", type: "time", group: "Horario" },
+  { key: "duracion",            label: "Duración total", group: "Horario" },
+  { key: "zona_poblacion",      label: "Zona de población", group: "Zona de vuelo" },
+  { key: "coordenadas_wgs84",   label: "Coordenadas WGS-84 con anotación DMS (grados, minutos y segundos)", group: "Zona de vuelo" },
+  { key: "radio_metros",        label: "Radio (metros)", group: "Zona de vuelo" },
+  { key: "altura_prevista",     label: "Altura prevista", group: "Zona de vuelo" },
+  { key: "area_proteccion",     label: "Área de protección", group: "Trayectoria y seguridad" },
+  { key: "zona_recuperacion",   label: "Zona de recuperación", group: "Trayectoria y seguridad" },
+  { key: "ruta",                label: "Ruta", group: "Trayectoria y seguridad" },
 ];
 
 // =========================================================================
