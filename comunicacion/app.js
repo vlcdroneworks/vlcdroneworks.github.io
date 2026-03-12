@@ -123,10 +123,10 @@ const DRONE_FIELDS = [
 
 const OPERACION_FIELDS = [
   { key: "tipo",                label: "Tipo de operación" },
-  { key: "fecha",               label: "Fecha (día/mes/año)" },
+  { key: "fecha",               label: "Fecha", type: "date" },
   { key: "lugar",               label: "Lugar (población, provincia, CCAA)" },
-  { key: "hora_inicio",         label: "Hora inicio" },
-  { key: "hora_fin",            label: "Hora fin" },
+  { key: "hora_inicio",         label: "Hora inicio", type: "time" },
+  { key: "hora_fin",            label: "Hora fin", type: "time" },
   { key: "duracion",            label: "Duración total" },
   { key: "zona_poblacion",      label: "Zona de población" },
   { key: "coordenadas_wgs84",   label: "Coordenadas WGS-84" },
@@ -198,7 +198,8 @@ function resolveData(opts = {}) {
     result[`operacion.${f.key}`] = opRaw[f.key] || "";
   }
 
-  const fechaOpOverride = opts.fecha_operacion || document.getElementById("com-fecha-operacion").value.trim();
+  const rawOverride = opts.fecha_operacion || document.getElementById("com-fecha-operacion").value.trim();
+  const fechaOpOverride = rawOverride && rawOverride.includes("-") ? iso_to_ddmmyyyy(rawOverride) : rawOverride;
   if (fechaOpOverride) result["operacion.fecha"] = fechaOpOverride;
 
   const fechaCom = opts.fecha_comunicacion || com.fecha_hora || "";
@@ -278,8 +279,9 @@ async function generate() {
   if (!drones.length) { showToast("Selecciona al menos un drone"); return; }
 
   const total = pilotos.length * drones.length;
-  const fechaOp = document.getElementById("com-fecha-operacion").value.trim()
-    || state.operaciones[operacion]?.fecha || "";
+  const rawFechaOp = document.getElementById("com-fecha-operacion").value.trim();
+  const fechaOp = rawFechaOp ? iso_to_ddmmyyyy(rawFechaOp)
+    : (state.operaciones[operacion]?.fecha || "");
   const fechaParts = fechaOp.split("/");
   const fechaClean = fechaParts.length === 3
     ? `${fechaParts[2]}${fechaParts[1]}${fechaParts[0]}`
@@ -351,7 +353,9 @@ function exportYaml() {
       comunicacion: state.comunicacion,
     };
     const text = jsyaml.dump(obj, { lineWidth: -1, quotingType: '"', forceQuotes: true });
-    downloadBlob(new TextEncoder().encode(text), "datos.yaml", "text/yaml");
+    const d = new Date();
+    const ds = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;
+    downloadBlob(new TextEncoder().encode(text), `datos-${ds}.yaml`, "text/yaml");
     saveToLocal();
     showToast("YAML exportado");
   } else {
@@ -582,13 +586,17 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
                  data-section="${section}" data-role="key" data-old-key="${escAttr(key)}">
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          ${fieldDefs.map(f => `
+          ${fieldDefs.map(f => {
+            const inputType = f.type || "text";
+            let val = data[f.key] || "";
+            if (f.type === "date") val = ddmmyyyy_to_iso(val);
+            return `
             <div>
               <label class="block text-xs text-white/50 mb-1">${esc(f.label)}</label>
-              <input type="text" class="field-input text-sm" value="${escAttr(data[f.key] || "")}"
-                     data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}">
-            </div>
-          `).join("")}
+              <input type="${inputType}" class="field-input text-sm" value="${escAttr(val)}"
+                     data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="${inputType}">
+            </div>`;
+          }).join("")}
         </div>
         <div class="flex gap-2 mt-4 pt-3 border-t border-white/10">
           <button class="text-red-400 hover:text-red-300 text-sm font-medium transition-colors" data-action="delete"
@@ -634,7 +642,7 @@ function renderComunicacion() {
     renderCheckboxList("drones-sel-list", dKeys, k => `${k} — ${state.drones[k]?.tipo_modelo || ""}`);
   }
 
-  document.getElementById("com-fecha-hora").value = state.comunicacion.fecha_hora || "";
+  document.getElementById("com-fecha-hora").value = datetimeES_to_iso(state.comunicacion.fecha_hora || "");
   document.getElementById("com-fecha-operacion").value = "";
   document.getElementById("com-notificacion").checked = state.comunicacion.notificacion_email !== false;
 
@@ -727,7 +735,11 @@ function syncStateFromUI() {
       const keyInput = item.querySelector('[data-role="key"]');
       const key = keyInput.value.trim() || keyInput.dataset.oldKey;
       const obj = {};
-      item.querySelectorAll("[data-field]").forEach(f => { obj[f.dataset.field] = f.value; });
+      item.querySelectorAll("[data-field]").forEach(f => {
+        let val = f.value;
+        if (f.dataset.type === "date") val = iso_to_ddmmyyyy(val);
+        obj[f.dataset.field] = val;
+      });
       cat[key] = obj;
     }
     state[section] = cat;
@@ -736,7 +748,7 @@ function syncStateFromUI() {
   state.comunicacion.operacion = document.getElementById("com-operacion").value;
   state.comunicacion.operador = document.getElementById("com-operador").value;
   state.comunicacion.observador = document.getElementById("com-observador").value;
-  state.comunicacion.fecha_hora = document.getElementById("com-fecha-hora").value;
+  state.comunicacion.fecha_hora = iso_to_datetimeES(document.getElementById("com-fecha-hora").value);
   state.comunicacion.notificacion_email = document.getElementById("com-notificacion").checked;
 }
 
@@ -859,6 +871,31 @@ function downloadBlob(data, filename, mime) {
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 function escAttr(s) { return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;"); }
 
+function ddmmyyyy_to_iso(s) {
+  if (!s) return "";
+  const parts = s.split("/");
+  if (parts.length !== 3) return s;
+  return `${parts[2]}-${parts[1].padStart(2,"0")}-${parts[0].padStart(2,"0")}`;
+}
+function iso_to_ddmmyyyy(s) {
+  if (!s) return "";
+  const parts = s.split("-");
+  if (parts.length !== 3) return s;
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+function datetimeES_to_iso(s) {
+  if (!s) return "";
+  const [datePart, timePart] = s.split(" ");
+  if (!datePart || !timePart) return s;
+  return `${ddmmyyyy_to_iso(datePart)}T${timePart}`;
+}
+function iso_to_datetimeES(s) {
+  if (!s) return "";
+  const [datePart, timePart] = s.split("T");
+  if (!datePart || !timePart) return s;
+  return `${iso_to_ddmmyyyy(datePart)} ${timePart}`;
+}
+
 // =========================================================================
 // Init
 // =========================================================================
@@ -868,6 +905,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const now = new Date();
   const p = n => String(n).padStart(2, "0");
   state.comunicacion.fecha_hora = `${p(now.getDate())}/${p(now.getMonth()+1)}/${now.getFullYear()} ${p(now.getHours())}:${p(now.getMinutes())}`;
+  document.getElementById("com-fecha-operacion").value = "";
 
   renderAll();
 
@@ -1004,6 +1042,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!btn) return;
     if (confirm(`Eliminar "${btn.dataset.itemKey}"?`)) {
       deleteItem(btn.dataset.section, btn.dataset.itemKey);
+    }
+  });
+
+  // Auto-save on field change (delegated)
+  document.addEventListener("change", e => {
+    if (e.target.closest(".acc-item") || e.target.closest("#section-comunicacion")) {
+      syncStateFromUI();
+      saveToLocal();
     }
   });
 

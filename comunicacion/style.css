@@ -59,6 +59,12 @@ button { font-family: inherit; }
   color: rgba(255,255,255,0.25);
 }
 
+.field-input[type="date"],
+.field-input[type="time"],
+.field-input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
 .field-select {
   -webkit-appearance: none;
   -moz-appearance: none;
