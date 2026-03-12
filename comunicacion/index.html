@@ -270,52 +270,59 @@
   <section class="app-section hidden" id="section-comunicacion">
 
     <div class="vdw-card">
-      <h5 class="card-title">Operación</h5>
-      <p class="text-white/50 text-sm mb-3">Selecciona la operación que quieres comunicar.</p>
-      <div id="operacion-fields">
-        <label class="field-label font-semibold text-white/80" for="com-operacion">Operación</label>
-        <select id="com-operacion" class="field-select"></select>
-      </div>
-      <div id="operacion-empty" class="hidden empty-alert">
-        <p class="text-white/60 text-sm mb-2">No hay operaciones definidas.</p>
-        <a href="#" data-nav="operaciones" class="empty-alert-link">Crear operaciones</a>
-      </div>
-    </div>
-
-    <div class="vdw-card">
-      <h5 class="card-title">Operador</h5>
-      <p class="text-white/50 text-sm mb-3">Selecciona el operador a cargo de la operación.</p>
-      <div id="operador-fields" class="grid md:grid-cols-2 gap-4">
+      <h5 class="card-title">Operación y operador</h5>
+      <p class="text-white/50 text-sm mb-3">Selecciona la operación que quieres comunicar y el operador a cargo.</p>
+      <div class="grid md:grid-cols-2 gap-4">
         <div>
-          <label class="field-label font-semibold text-white/80" for="com-operador">Operador</label>
-          <select id="com-operador" class="field-select"></select>
+          <div id="operacion-fields">
+            <label class="field-label font-semibold text-white/80" for="com-operacion">Operación</label>
+            <select id="com-operacion" class="field-select"></select>
+          </div>
+          <div id="operacion-empty" class="hidden empty-alert">
+            <p class="text-white/60 text-sm mb-2">No hay operaciones definidas.</p>
+            <a href="#" data-nav="operaciones" class="empty-alert-link">Crear operaciones</a>
+          </div>
         </div>
-        <div class="flex items-end">
-          <label class="flex items-center gap-2.5 cursor-pointer">
-            <input type="checkbox" id="com-notificacion" checked class="cb-native">
-            <span class="text-white/70 text-sm">Notificación por email</span>
-          </label>
+        <div>
+          <div id="operador-fields">
+            <label class="field-label font-semibold text-white/80" for="com-operador">Operador</label>
+            <select id="com-operador" class="field-select"></select>
+          </div>
+          <div id="operador-empty" class="hidden empty-alert">
+            <p class="text-white/60 text-sm mb-2">No hay personas definidas.</p>
+            <a href="#" data-nav="personas" class="empty-alert-link">Crear personas</a>
+          </div>
         </div>
       </div>
-      <div id="operador-empty" class="hidden empty-alert">
-        <p class="text-white/60 text-sm mb-2">No hay personas definidas.</p>
-        <a href="#" data-nav="personas" class="empty-alert-link">Crear personas</a>
+      <div class="hidden">
+        <input type="checkbox" id="com-notificacion" checked class="cb-native">
       </div>
     </div>
 
     <div class="vdw-card">
       <h5 class="card-title">Fechas</h5>
-      <p class="text-white/50 text-sm mb-3">Introduce las fechas de comunicación y/o operación (si no es la misma que en los datos de la operación).</p>
-      <div class="grid md:grid-cols-2 gap-4">
+      <p class="text-white/50 text-sm mb-3">Introduce la fecha de la operación. Opcionalmente, si la operación se repite en varios días, puedes indicar una fecha de fin y la periodicidad.</p>
+      <div class="grid md:grid-cols-3 gap-4 mb-4 hidden">
         <div>
           <label class="field-label font-semibold text-white/80" for="com-fecha-hora">Fecha/hora comunicación</label>
           <input type="datetime-local" class="field-input" id="com-fecha-hora">
         </div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
         <div>
-          <label class="field-label font-semibold text-white/80" for="com-fecha-operacion">Fecha operación (override)</label>
-          <input type="date" class="field-input" id="com-fecha-operacion">
+          <label class="field-label font-semibold text-white/80" for="com-fecha-inicio">Fecha operación</label>
+          <input type="date" class="field-input" id="com-fecha-inicio">
+        </div>
+        <div>
+          <label class="field-label text-white/50" for="com-fecha-fin">Fecha fin <span class="text-white/30">(opcional)</span></label>
+          <input type="date" class="field-input" id="com-fecha-fin">
+        </div>
+        <div>
+          <label class="field-label text-white/50" for="com-periodicidad">Cada N días <span class="text-white/30">(opcional)</span></label>
+          <input type="number" class="field-input" id="com-periodicidad" min="1" value="1" placeholder="1">
         </div>
       </div>
+      <p class="text-white/40 text-xs mt-2" id="fechas-preview"></p>
     </div>
 
     <div class="vdw-card">
@@ -351,20 +358,29 @@
           </div>
         </div>
       </div>
-      <div class="mt-5">
-        <h6 class="text-sm font-semibold text-white/80 mb-2">Observador</h6>
-        <div id="observador-fields">
-          <select id="com-observador" class="field-select"></select>
-        </div>
-        <div id="observador-empty" class="hidden empty-alert">
-          <p class="text-white/60 text-sm mb-2">No hay personas definidas.</p>
-          <a href="#" data-nav="personas" class="empty-alert-link">Crear personas</a>
+      <div class="mt-5 flex justify-center">
+        <div class="w-full md:w-1/2">
+          <h6 class="text-sm font-semibold text-white/80 mb-2">Observador</h6>
+          <div id="observador-fields">
+            <select id="com-observador" class="field-select"></select>
+          </div>
+          <div id="observador-empty" class="hidden empty-alert">
+            <p class="text-white/60 text-sm mb-2">No hay personas definidas.</p>
+            <a href="#" data-nav="personas" class="empty-alert-link">Crear personas</a>
+          </div>
         </div>
       </div>
-      <div class="mt-4 bg-vdw-orange/10 border border-vdw-orange/20 rounded-xl px-4 py-2.5 text-center text-white/90 text-sm font-medium" id="combo-summary">
-        0 piloto(s) × 0 drone(s) = 0 PDF(s)
+    </div>
+
+    <div class="vdw-card">
+      <div class="flex justify-center">
+        <div class="w-full md:w-1/2 bg-vdw-orange/10 border border-vdw-orange/20 rounded-xl px-4 py-2.5 text-center text-white/90 text-sm font-medium" id="combo-summary">
+          0 piloto(s) × 0 drone(s) = 0 PDF(s)
+        </div>
       </div>
-      <button class="btn-primary w-full mt-3 py-2.5 text-sm" id="btnGenerarMain">Generar PDF</button>
+      <div class="flex justify-center mt-4">
+        <button class="btn-primary w-full md:w-1/3 py-2.5 text-sm" id="btnGenerarMain">Generar PDF</button>
+      </div>
     </div>
 
   </section>

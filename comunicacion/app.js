@@ -123,7 +123,6 @@ const DRONE_FIELDS = [
 
 const OPERACION_FIELDS = [
   { key: "tipo",                label: "Tipo de operación" },
-  { key: "fecha",               label: "Fecha", type: "date" },
   { key: "lugar",               label: "Lugar (población, provincia, CCAA)" },
   { key: "hora_inicio",         label: "Hora inicio", type: "time" },
   { key: "hora_fin",            label: "Hora fin", type: "time" },
@@ -198,9 +197,7 @@ function resolveData(opts = {}) {
     result[`operacion.${f.key}`] = opRaw[f.key] || "";
   }
 
-  const rawOverride = opts.fecha_operacion || document.getElementById("com-fecha-operacion").value.trim();
-  const fechaOpOverride = rawOverride && rawOverride.includes("-") ? iso_to_ddmmyyyy(rawOverride) : rawOverride;
-  if (fechaOpOverride) result["operacion.fecha"] = fechaOpOverride;
+  if (opts.fecha_operacion) result["operacion.fecha"] = opts.fecha_operacion;
 
   const fechaCom = opts.fecha_comunicacion || com.fecha_hora || "";
   let lugarFecha = fechaCom;
@@ -266,6 +263,9 @@ async function fillPdf(data) {
 // =========================================================================
 async function generate() {
   syncStateFromUI();
+  const now = new Date();
+  const p = n => String(n).padStart(2, "0");
+  state.comunicacion.fecha_hora = `${p(now.getDate())}/${p(now.getMonth()+1)}/${now.getFullYear()} ${p(now.getHours())}:${p(now.getMinutes())}`;
 
   const operador = document.getElementById("com-operador").value;
   const operacion = document.getElementById("com-operacion").value;
@@ -278,38 +278,48 @@ async function generate() {
   if (!pilotos.length) { showToast("Selecciona al menos un piloto"); return; }
   if (!drones.length) { showToast("Selecciona al menos un drone"); return; }
 
-  const total = pilotos.length * drones.length;
-  const rawFechaOp = document.getElementById("com-fecha-operacion").value.trim();
-  const fechaOp = rawFechaOp ? iso_to_ddmmyyyy(rawFechaOp)
-    : (state.operaciones[operacion]?.fecha || "");
-  const fechaParts = fechaOp.split("/");
-  const fechaClean = fechaParts.length === 3
-    ? `${fechaParts[2]}${fechaParts[1]}${fechaParts[0]}`
-    : fechaOp.replace(/\//g, "");
+  const opDates = getOperationDates();
+  if (opDates.length === 0) {
+    showToast("Indica la fecha de operación");
+    return;
+  }
 
-  const makeName = (piloto, drone) =>
-    `comunicacion_${operacion}_${fechaClean}_${piloto}_${drone}.pdf`;
+  const fechasList = opDates.map(isoDate => iso_to_ddmmyyyy(isoDate));
+
+  const total = pilotos.length * drones.length * fechasList.length;
+
+  function fechaToClean(f) {
+    const parts = f.split("/");
+    return parts.length === 3 ? `${parts[2]}${parts[1]}${parts[0]}` : f.replace(/\//g, "");
+  }
+
+  const makeName = (piloto, drone, fecha) =>
+    `comunicacion_${operacion}_${fechaToClean(fecha)}_${piloto}_${drone}.pdf`;
 
   if (total === 1) {
-    const data = resolveData({ operador, piloto: pilotos[0], observador, uas: drones[0], operacion });
+    const data = resolveData({ operador, piloto: pilotos[0], observador, uas: drones[0], operacion, fecha_operacion: fechasList[0] });
     const pdfBytes = await fillPdf(data);
-    downloadBlob(pdfBytes, makeName(pilotos[0], drones[0]), "application/pdf");
+    downloadBlob(pdfBytes, makeName(pilotos[0], drones[0], fechasList[0]), "application/pdf");
     saveToLocal();
     showToast("PDF generado correctamente");
     return;
   }
 
   const zip = new JSZip();
-  for (const piloto of pilotos) {
-    for (const drone of drones) {
-      const data = resolveData({ operador, piloto, observador, uas: drone, operacion });
-      const pdfBytes = await fillPdf(data);
-      zip.file(makeName(piloto, drone), pdfBytes);
+  for (const fecha of fechasList) {
+    for (const piloto of pilotos) {
+      for (const drone of drones) {
+        const data = resolveData({ operador, piloto, observador, uas: drone, operacion, fecha_operacion: fecha });
+        const pdfBytes = await fillPdf(data);
+        zip.file(makeName(piloto, drone, fecha), pdfBytes);
+      }
     }
   }
 
+  const firstClean = fechaToClean(fechasList[0]);
+  const zipSuffix = fechasList.length > 1 ? `${firstClean}-${fechaToClean(fechasList[fechasList.length-1])}` : firstClean;
   const zipBlob = await zip.generateAsync({ type: "blob" });
-  downloadBlob(zipBlob, `comunicaciones_${operacion}_${fechaClean}.zip`, "application/zip");
+  downloadBlob(zipBlob, `comunicaciones_${operacion}_${zipSuffix}.zip`, "application/zip");
   saveToLocal();
   showToast(`${total} PDFs generados en ZIP`);
 }
@@ -324,6 +334,7 @@ function loadYamlText(text) {
   state.personas = raw.personas || {};
   state.drones = raw.drones || {};
   state.operaciones = raw.operaciones || {};
+  Object.keys(state.operaciones).forEach(k => { delete state.operaciones[k].fecha; });
 
   const com = raw.comunicacion || {};
   state.comunicacion = {
@@ -346,10 +357,16 @@ function exportYaml() {
     || Object.keys(state.operaciones).length > 0;
 
   if (hasData) {
+    const operacionesSinFecha = Object.fromEntries(
+      Object.entries(state.operaciones).map(([k, v]) => {
+        const { fecha, ...rest } = v || {};
+        return [k, rest];
+      })
+    );
     const obj = {
       personas: state.personas,
       drones: state.drones,
-      operaciones: state.operaciones,
+      operaciones: operacionesSinFecha,
       comunicacion: state.comunicacion,
     };
     const text = jsyaml.dump(obj, { lineWidth: -1, quotingType: '"', forceQuotes: true });
@@ -468,7 +485,6 @@ drones:
 operaciones:
   operacion_ejemplo1:
     tipo: "Filmación aérea"
-    fecha: "15/03/2026"
     lugar: "Albufera, Valencia, Comunidad Valenciana"
     hora_inicio: "09:00"
     hora_fin: "13:00"
@@ -483,7 +499,6 @@ operaciones:
 
   operacion_ejemplo2:
     tipo: "Inspección técnica"
-    fecha: "20/03/2026"
     lugar: "Puerto de Valencia, Valencia, Comunidad Valenciana"
     hora_inicio: "07:30"
     hora_fin: "10:00"
@@ -516,6 +531,7 @@ function loadFromLocal() {
     state.personas = saved.personas || {};
     state.drones = saved.drones || {};
     state.operaciones = saved.operaciones || {};
+    Object.keys(state.operaciones).forEach(k => { delete state.operaciones[k].fecha; });
     const com = saved.comunicacion || {};
     state.comunicacion = {
       fecha_hora: com.fecha_hora || "",
@@ -565,7 +581,7 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
   for (const [key, data] of Object.entries(catalog)) {
     const subtitle = section === "personas" ? (data.nombre || "")
       : section === "drones" ? `${data.fabricante || ""} ${data.tipo_modelo || ""} (${data.mtom || ""})`
-      : `${data.fecha || ""} — ${data.lugar || ""}`;
+      : `${data.lugar || ""}`;
 
     const item = document.createElement("div");
     item.className = "acc-item";
@@ -629,11 +645,11 @@ function renderComunicacion() {
 
   if (hasO) {
     fillSelect("com-operacion", oKeys, state.comunicacion.operacion,
-      k => `${k} (${state.operaciones[k]?.fecha || ""} — ${state.operaciones[k]?.lugar || ""})`);
+      k => `${k} (${state.operaciones[k]?.lugar || ""})`, true);
   }
   if (hasP) {
     fillSelect("com-operador", pKeys, state.comunicacion.operador,
-      k => `${k} (${state.personas[k]?.nombre || ""})`);
+      k => `${k} (${state.personas[k]?.nombre || ""})`, true);
     fillSelect("com-observador", pKeys, state.comunicacion.observador,
       k => `${k} (${state.personas[k]?.nombre || ""})`, true);
     renderCheckboxList("pilotos-list", pKeys, k => `${k} — ${state.personas[k]?.nombre || ""}`);
@@ -643,7 +659,9 @@ function renderComunicacion() {
   }
 
   document.getElementById("com-fecha-hora").value = datetimeES_to_iso(state.comunicacion.fecha_hora || "");
-  document.getElementById("com-fecha-operacion").value = "";
+  document.getElementById("com-fecha-inicio").value = "";
+  document.getElementById("com-fecha-fin").value = "";
+  document.getElementById("com-periodicidad").value = "1";
   document.getElementById("com-notificacion").checked = state.comunicacion.notificacion_email !== false;
 
   updateSummary();
@@ -706,12 +724,48 @@ function setAllChecked(id, val) {
   updateSummary();
 }
 
+function getOperationDates() {
+  const inicio = document.getElementById("com-fecha-inicio").value;
+  const fin = document.getElementById("com-fecha-fin").value;
+  const step = parseInt(document.getElementById("com-periodicidad").value) || 1;
+
+  if (!inicio) return [];
+  if (!fin || fin <= inicio) return [inicio];
+
+  const dates = [];
+  const d = new Date(inicio + "T00:00:00");
+  const end = new Date(fin + "T00:00:00");
+  while (d <= end) {
+    dates.push(d.toISOString().slice(0, 10));
+    d.setDate(d.getDate() + step);
+  }
+  return dates;
+}
+
+function updateFechasPreview() {
+  const dates = getOperationDates();
+  const el = document.getElementById("fechas-preview");
+  if (dates.length <= 1) {
+    el.textContent = "";
+  } else {
+    const formatted = dates.map(d => iso_to_ddmmyyyy(d)).join(", ");
+    el.textContent = `${dates.length} operaciones a comunicar: ${formatted}`;
+  }
+  updateSummary();
+}
+
 function updateSummary() {
   const p = getChecked("pilotos-list").length;
   const d = getChecked("drones-sel-list").length;
-  const total = p * d;
+  const dates = getOperationDates();
+  const numDates = Math.max(dates.length, 1);
+  const total = p * d * numDates;
   const el = document.getElementById("combo-summary");
-  el.textContent = `${p} piloto(s) × ${d} drone(s) = ${total} PDF(s)`;
+  if (numDates > 1) {
+    el.textContent = `${p} piloto(s) × ${d} drone(s) × ${numDates} fecha(s) = ${total} PDF(s)`;
+  } else {
+    el.textContent = `${p} piloto(s) × ${d} drone(s) = ${total} PDF(s)`;
+  }
 
   const btn = document.getElementById("btnGenerarMain");
   const btnHeader = document.getElementById("btnGenerar");
@@ -902,10 +956,12 @@ function iso_to_datetimeES(s) {
 document.addEventListener("DOMContentLoaded", () => {
   loadFromLocal();
 
+  state.comunicacion.operacion = "";
+  state.comunicacion.operador = "";
+  state.comunicacion.observador = "";
   const now = new Date();
   const p = n => String(n).padStart(2, "0");
   state.comunicacion.fecha_hora = `${p(now.getDate())}/${p(now.getMonth()+1)}/${now.getFullYear()} ${p(now.getHours())}:${p(now.getMinutes())}`;
-  document.getElementById("com-fecha-operacion").value = "";
 
   renderAll();
 
@@ -1012,6 +1068,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnAddPersona").addEventListener("click", () => addItem("personas", PERSONA_FIELDS));
   document.getElementById("btnAddDrone").addEventListener("click", () => addItem("drones", DRONE_FIELDS));
   document.getElementById("btnAddOperacion").addEventListener("click", () => addItem("operaciones", OPERACION_FIELDS));
+
+  // Date range preview
+  ["com-fecha-inicio", "com-fecha-fin", "com-periodicidad"].forEach(id => {
+    document.getElementById(id).addEventListener("change", updateFechasPreview);
+    document.getElementById(id).addEventListener("input", updateFechasPreview);
+  });
 
   // Checkbox select all/none
   document.getElementById("pilotos-all").addEventListener("click", () => setAllChecked("pilotos-list", true));
