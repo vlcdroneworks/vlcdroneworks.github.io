@@ -103,22 +103,22 @@ const PERSONA_FIELDS = [
 ];
 
 const DRONE_FIELDS = [
-  { key: "clase",              label: "Clase de UAS" },
-  { key: "fabricante",         label: "Fabricante" },
-  { key: "tipo_modelo",        label: "Tipo y modelo" },
-  { key: "numero_serie",       label: "Número de serie" },
-  { key: "matricula",          label: "Matrícula" },
-  { key: "mtom",               label: "MTOM" },
-  { key: "autonomia",          label: "Autonomía" },
-  { key: "autopiloto",         label: "Autopiloto" },
-  { key: "frecuencias",        label: "Frecuencias" },
-  { key: "color",              label: "Color" },
-  { key: "luces",              label: "Luces" },
-  { key: "carga_pago",         label: "Carga de pago" },
-  { key: "equipo_vhf",         label: "Equipo VHF" },
-  { key: "respondedor_modo_s", label: "Respondedor Modo S" },
-  { key: "equipo_emergencia",  label: "Equipo de emergencia" },
-  { key: "dispositivo_vision", label: "Dispositivo de visión" },
+  { key: "clase",              label: "Clase de UAS", group: "Identificación" },
+  { key: "fabricante",         label: "Fabricante", group: "Identificación" },
+  { key: "tipo_modelo",        label: "Tipo y modelo", group: "Identificación" },
+  { key: "numero_serie",       label: "Número de serie", group: "Identificación" },
+  { key: "matricula",          label: "Matrícula", group: "Identificación" },
+  { key: "mtom",               label: "MTOM", group: "Prestaciones y características" },
+  { key: "autonomia",          label: "Autonomía", group: "Prestaciones y características" },
+  { key: "autopiloto",         label: "Autopiloto", group: "Prestaciones y características" },
+  { key: "frecuencias",        label: "Frecuencias", group: "Prestaciones y características" },
+  { key: "color",              label: "Color", group: "Prestaciones y características" },
+  { key: "luces",              label: "Luces", group: "Prestaciones y características" },
+  { key: "carga_pago",         label: "Carga de pago", group: "Prestaciones y características" },
+  { key: "equipo_vhf",         label: "Equipo VHF", group: "Equipos" },
+  { key: "respondedor_modo_s", label: "Respondedor Modo S", group: "Equipos" },
+  { key: "equipo_emergencia",  label: "Equipo de emergencia", group: "Equipos" },
+  { key: "dispositivo_vision", label: "Dispositivo de visión", group: "Equipos" },
 ];
 
 const OPERACION_FIELDS = [
@@ -595,7 +595,7 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
 
     const item = document.createElement("div");
     item.className = "acc-item";
-    const useGroups = section === "personas" && fieldDefs.some(f => f.group);
+    const useGroups = fieldDefs.some(f => f.group);
     const groups = useGroups ? getFieldsByGroup() : [];
     const fieldsHtml = useGroups
       ? groups.map(({ name, fields }, idx) => `
