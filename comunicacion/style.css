@@ -64,6 +64,8 @@ button { font-family: inherit; }
 .field-input[type="time"],
 .field-input[type="datetime-local"] {
   color-scheme: dark;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .field-select {
@@ -331,6 +333,11 @@ button { font-family: inherit; }
   padding: 0 1rem 1rem;
   border-top: 1px solid rgba(255,255,255,0.05);
   padding-top: 0.75rem;
+}
+
+/* Evitar que inputs time/date desborden en móvil (el grid debe poder reducir) */
+.acc-content .grid > div {
+  min-width: 0;
 }
 
 .key-field {

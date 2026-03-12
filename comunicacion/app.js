@@ -124,7 +124,7 @@ const DRONE_FIELDS = [
 const OPERACION_FIELDS = [
   { key: "tipo",                label: "Tipo de operación", group: "Datos generales" },
   { key: "lugar",               label: "Lugar (población, provincia, CCAA)", group: "Datos generales" },
-  { key: "hora_inicio",        label: "Hora inicio", type: "time", group: "Horario" },
+  { key: "hora_inicio",         label: "Hora inicio", type: "time", group: "Horario" },
   { key: "hora_fin",            label: "Hora fin", type: "time", group: "Horario" },
   { key: "zona_poblacion",      label: "Zona de población", group: "Zona de vuelo" },
   { key: "coordenadas_wgs84",   label: "Coordenadas WGS-84 con anotación DMS (grados, minutos y segundos)", group: "Zona de vuelo" },
