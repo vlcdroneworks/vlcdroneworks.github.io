@@ -88,18 +88,18 @@ const PDF_TEMPLATE_URL = "template/20201228-Formato-Solicitud-Comunicacion-V9.0.
 // UI field definitions
 // =========================================================================
 const PERSONA_FIELDS = [
-  { key: "nombre",                  label: "Nombre (apellido1, apellido2, nombre)" },
-  { key: "documento_identidad",     label: "DNI/NIF/NIE/CIF" },
-  { key: "direccion",               label: "Dirección" },
-  { key: "codigo_postal",           label: "Código postal" },
-  { key: "municipio",               label: "Municipio" },
-  { key: "provincia",               label: "Provincia" },
-  { key: "telefono",                label: "Teléfono" },
-  { key: "email",                   label: "Email" },
-  { key: "numero_registro",         label: "Número de registro de operador" },
-  { key: "certificado_competencia", label: "Certificado de competencia" },
-  { key: "acreditacion_formacion",  label: "Acreditación de formación" },
-  { key: "poliza_seguros",          label: "Póliza de seguros" },
+  { key: "nombre",                  label: "Nombre (apellido1, apellido2, nombre)", group: "Datos personales" },
+  { key: "documento_identidad",     label: "DNI/NIF/NIE/CIF", group: "Datos personales" },
+  { key: "direccion",               label: "Dirección", group: "Dirección" },
+  { key: "codigo_postal",           label: "Código postal", group: "Dirección" },
+  { key: "municipio",              label: "Municipio", group: "Dirección" },
+  { key: "provincia",              label: "Provincia", group: "Dirección" },
+  { key: "telefono",               label: "Teléfono", group: "Contacto" },
+  { key: "email",                  label: "Email", group: "Contacto" },
+  { key: "numero_registro",        label: "Número de registro de operador", group: "Registro y formación" },
+  { key: "certificado_competencia", label: "Certificado de competencia", group: "Registro y formación" },
+  { key: "acreditacion_formacion",  label: "Acreditación de formación", group: "Registro y formación" },
+  { key: "poliza_seguros",         label: "Póliza de seguros", group: "Registro y formación" },
 ];
 
 const DRONE_FIELDS = [
@@ -578,6 +578,16 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
   const container = document.getElementById(containerId);
   container.innerHTML = "";
 
+  const getFieldsByGroup = () => {
+    const map = {};
+    for (const f of fieldDefs) {
+      const g = f.group || "";
+      if (!map[g]) map[g] = [];
+      map[g].push(f);
+    }
+    return Object.entries(map).filter(([name]) => name !== "").map(([name, fields]) => ({ name, fields }));
+  };
+
   for (const [key, data] of Object.entries(catalog)) {
     const subtitle = section === "personas" ? (data.nombre || "")
       : section === "drones" ? `${data.fabricante || ""} ${data.tipo_modelo || ""} (${data.mtom || ""})`
@@ -585,6 +595,38 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
 
     const item = document.createElement("div");
     item.className = "acc-item";
+    const useGroups = section === "personas" && fieldDefs.some(f => f.group);
+    const groups = useGroups ? getFieldsByGroup() : [];
+    const fieldsHtml = useGroups
+      ? groups.map(({ name, fields }, idx) => `
+        <div>
+          <h6 class="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">${esc(name)}</h6>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            ${fields.map(f => {
+              const inputType = f.type || "text";
+              let val = data[f.key] || "";
+              if (f.type === "date") val = ddmmyyyy_to_iso(val);
+              return `
+              <div>
+                <label class="block text-xs text-white/50 mb-1">${esc(f.label)}</label>
+                <input type="${inputType}" class="field-input text-sm" value="${escAttr(val)}"
+                       data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="${inputType || "text"}">
+              </div>`;
+            }).join("")}
+          </div>
+        </div>`).join("")
+      : fieldDefs.map(f => {
+          const inputType = f.type || "text";
+          let val = data[f.key] || "";
+          if (f.type === "date") val = ddmmyyyy_to_iso(val);
+          return `
+            <div>
+              <label class="block text-xs text-white/50 mb-1">${esc(f.label)}</label>
+              <input type="${inputType}" class="field-input text-sm" value="${escAttr(val)}"
+                     data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="${inputType || "text"}">
+            </div>`;
+        }).join("");
+
     item.innerHTML = `
       <div class="acc-header" data-acc-toggle>
         <div class="flex items-center gap-2 min-w-0">
@@ -601,18 +643,8 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
           <input type="text" class="field-input text-sm" value="${escAttr(key)}"
                  data-section="${section}" data-role="key" data-old-key="${escAttr(key)}">
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          ${fieldDefs.map(f => {
-            const inputType = f.type || "text";
-            let val = data[f.key] || "";
-            if (f.type === "date") val = ddmmyyyy_to_iso(val);
-            return `
-            <div>
-              <label class="block text-xs text-white/50 mb-1">${esc(f.label)}</label>
-              <input type="${inputType}" class="field-input text-sm" value="${escAttr(val)}"
-                     data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="${inputType}">
-            </div>`;
-          }).join("")}
+        <div class="${useGroups ? "flex flex-col space-y-5" : "grid grid-cols-1 md:grid-cols-2 gap-3"}">
+          ${fieldsHtml}
         </div>
         <div class="flex gap-2 mt-4 pt-3 border-t border-white/10">
           <button class="text-red-400 hover:text-red-300 text-sm font-medium transition-colors" data-action="delete"
