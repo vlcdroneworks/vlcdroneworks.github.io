@@ -271,8 +271,9 @@
 
     <div class="vdw-card">
       <h5 class="card-title">Operación</h5>
+      <p class="text-white/50 text-sm mb-3">Selecciona la operación que quieres comunicar.</p>
       <div id="operacion-fields">
-        <label class="field-label" for="com-operacion">Operación</label>
+        <label class="field-label font-semibold text-white/80" for="com-operacion">Operación</label>
         <select id="com-operacion" class="field-select"></select>
       </div>
       <div id="operacion-empty" class="hidden empty-alert">
@@ -283,9 +284,10 @@
 
     <div class="vdw-card">
       <h5 class="card-title">Operador</h5>
+      <p class="text-white/50 text-sm mb-3">Selecciona el operador a cargo de la operación.</p>
       <div id="operador-fields" class="grid md:grid-cols-2 gap-4">
         <div>
-          <label class="field-label" for="com-operador">Operador</label>
+          <label class="field-label font-semibold text-white/80" for="com-operador">Operador</label>
           <select id="com-operador" class="field-select"></select>
         </div>
         <div class="flex items-end">
@@ -303,13 +305,14 @@
 
     <div class="vdw-card">
       <h5 class="card-title">Fechas</h5>
+      <p class="text-white/50 text-sm mb-3">Introduce las fechas de comunicación y/o operación (si no es la misma que en los datos de la operación).</p>
       <div class="grid md:grid-cols-2 gap-4">
         <div>
-          <label class="field-label" for="com-fecha-hora">Fecha/hora comunicación</label>
+          <label class="field-label font-semibold text-white/80" for="com-fecha-hora">Fecha/hora comunicación</label>
           <input type="datetime-local" class="field-input" id="com-fecha-hora">
         </div>
         <div>
-          <label class="field-label" for="com-fecha-operacion">Fecha operación (override)</label>
+          <label class="field-label font-semibold text-white/80" for="com-fecha-operacion">Fecha operación (override)</label>
           <input type="date" class="field-input" id="com-fecha-operacion">
         </div>
       </div>
@@ -317,6 +320,7 @@
 
     <div class="vdw-card">
       <h5 class="card-title">Roles</h5>
+      <p class="text-white/50 text-sm mb-3">Selecciona qué pilotos, drones y observador (si lo hubiera) intervendrán en la operación. Marca tantos pilotos y drones como corresponda.</p>
       <div class="grid md:grid-cols-2 gap-6">
         <div>
           <h6 class="text-sm font-semibold text-white/80 mb-2">Pilotos</h6>

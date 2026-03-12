@@ -129,7 +129,7 @@ const OPERACION_FIELDS = [
   { key: "hora_fin",            label: "Hora fin", type: "time" },
   { key: "duracion",            label: "Duración total" },
   { key: "zona_poblacion",      label: "Zona de población" },
-  { key: "coordenadas_wgs84",   label: "Coordenadas WGS-84" },
+  { key: "coordenadas_wgs84",   label: "Coordenadas WGS-84 con anotación DMS (grados, minutos y segundos)" },
   { key: "radio_metros",        label: "Radio (metros)" },
   { key: "ruta",                label: "Ruta" },
   { key: "area_proteccion",     label: "Área de protección" },
