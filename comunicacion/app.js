@@ -126,7 +126,6 @@ const OPERACION_FIELDS = [
   { key: "lugar",               label: "Lugar (población, provincia, CCAA)", group: "Datos generales" },
   { key: "hora_inicio",        label: "Hora inicio", type: "time", group: "Horario" },
   { key: "hora_fin",            label: "Hora fin", type: "time", group: "Horario" },
-  { key: "duracion",            label: "Duración total", group: "Horario" },
   { key: "zona_poblacion",      label: "Zona de población", group: "Zona de vuelo" },
   { key: "coordenadas_wgs84",   label: "Coordenadas WGS-84 con anotación DMS (grados, minutos y segundos)", group: "Zona de vuelo" },
   { key: "radio_metros",        label: "Radio (metros)", group: "Zona de vuelo" },
@@ -198,6 +197,10 @@ function resolveData(opts = {}) {
   }
 
   if (opts.fecha_operacion) result["operacion.fecha"] = opts.fecha_operacion;
+
+  const hi = (opRaw.hora_inicio || "").trim();
+  const hf = (opRaw.hora_fin || "").trim();
+  result["operacion.duracion"] = calcDuracion(hi, hf);
 
   const fechaCom = opts.fecha_comunicacion || com.fecha_hora || "";
   let lugarFecha = fechaCom;
@@ -334,7 +337,10 @@ function loadYamlText(text) {
   state.personas = raw.personas || {};
   state.drones = raw.drones || {};
   state.operaciones = raw.operaciones || {};
-  Object.keys(state.operaciones).forEach(k => { delete state.operaciones[k].fecha; });
+  Object.keys(state.operaciones).forEach(k => {
+    delete state.operaciones[k].fecha;
+    delete state.operaciones[k].duracion;
+  });
 
   const com = raw.comunicacion || {};
   state.comunicacion = {
@@ -359,7 +365,7 @@ function exportYaml() {
   if (hasData) {
     const operacionesSinFecha = Object.fromEntries(
       Object.entries(state.operaciones).map(([k, v]) => {
-        const { fecha, ...rest } = v || {};
+        const { fecha, duracion, ...rest } = v || {};
         return [k, rest];
       })
     );
@@ -488,7 +494,6 @@ operaciones:
     lugar: "Albufera, Valencia, Comunidad Valenciana"
     hora_inicio: "09:00"
     hora_fin: "13:00"
-    duracion: "4 horas"
     zona_poblacion: "Fuera de aglomeración urbana"
     coordenadas_wgs84: "39.3333, -0.3667"
     radio_metros: "500"
@@ -502,7 +507,6 @@ operaciones:
     lugar: "Puerto de Valencia, Valencia, Comunidad Valenciana"
     hora_inicio: "07:30"
     hora_fin: "10:00"
-    duracion: "2 horas 30 minutos"
     zona_poblacion: "Aglomeración urbana"
     coordenadas_wgs84: "39.4500, -0.3167"
     radio_metros: "200"
@@ -531,7 +535,10 @@ function loadFromLocal() {
     state.personas = saved.personas || {};
     state.drones = saved.drones || {};
     state.operaciones = saved.operaciones || {};
-    Object.keys(state.operaciones).forEach(k => { delete state.operaciones[k].fecha; });
+    Object.keys(state.operaciones).forEach(k => {
+      delete state.operaciones[k].fecha;
+      delete state.operaciones[k].duracion;
+    });
     const com = saved.comunicacion || {};
     state.comunicacion = {
       fecha_hora: com.fecha_hora || "",
@@ -980,6 +987,23 @@ function iso_to_datetimeES(s) {
   const [datePart, timePart] = s.split("T");
   if (!datePart || !timePart) return s;
   return `${iso_to_ddmmyyyy(datePart)} ${timePart}`;
+}
+
+function calcDuracion(horaInicio, horaFin) {
+  if (!horaInicio || !horaFin) return "";
+  const parse = (h) => {
+    const m = (h || "").match(/^(\d{1,2}):(\d{2})$/);
+    return m ? parseInt(m[1], 10) * 60 + parseInt(m[2], 10) : null;
+  };
+  const start = parse(horaInicio);
+  const end = parse(horaFin);
+  if (start == null || end == null || end <= start) return "";
+  const mins = end - start;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  if (h && m) return `${h} hora${h !== 1 ? "s" : ""} ${m} minuto${m !== 1 ? "s" : ""}`;
+  if (h) return `${h} hora${h !== 1 ? "s" : ""}`;
+  return `${m} minuto${m !== 1 ? "s" : ""}`;
 }
 
 // =========================================================================

@@ -59,6 +59,7 @@ button { font-family: inherit; }
   color: rgba(255,255,255,0.25);
 }
 
+/* Sin color-scheme: dark para que el selector nativo muestre el botón "Today" */
 .field-input[type="date"],
 .field-input[type="time"],
 .field-input[type="datetime-local"] {
