@@ -398,6 +398,13 @@ button { font-family: inherit; }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* =========== Version badge (solo en página de inicio) =========== */
+.app-version {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.25);
+  font-variant-numeric: tabular-nums;
+}
+
 /* =========== Scrollbar =========== */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
