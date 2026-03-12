@@ -7,7 +7,7 @@
 
 /* =========== Base =========== */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { -webkit-font-smoothing: antialiased; }
+body { -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 a { text-decoration: none; color: inherit; }
 button { font-family: inherit; }
 
@@ -66,6 +66,14 @@ button { font-family: inherit; }
   cursor: pointer;
   max-width: 100%;
   min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* En móvil, que las celdas del grid en cards puedan reducirse y no desborden (fechas, etc.) */
+.vdw-card .grid > div {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .field-select {
