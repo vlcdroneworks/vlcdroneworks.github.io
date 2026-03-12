@@ -333,6 +333,7 @@ button { font-family: inherit; }
   padding: 0 1rem 1rem;
   border-top: 1px solid rgba(255,255,255,0.05);
   padding-top: 0.75rem;
+  overflow-x: hidden;
 }
 
 /* Evitar que inputs time/date desborden en móvil (el grid debe poder reducir) */
