@@ -1130,6 +1130,14 @@ function setAllChecked(id, val) {
   updateSummary();
 }
 
+/** Fecha a YYYY-MM-DD en hora local (evita el desfase de un día por UTC con toISOString). */
+function toLocalDateString(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 function getOperationDates() {
   const inicio = document.getElementById("com-fecha-inicio").value;
   const fin = document.getElementById("com-fecha-fin").value;
@@ -1142,7 +1150,7 @@ function getOperationDates() {
   const d = new Date(inicio + "T00:00:00");
   const end = new Date(fin + "T00:00:00");
   while (d <= end) {
-    dates.push(d.toISOString().slice(0, 10));
+    dates.push(toLocalDateString(d));
     d.setDate(d.getDate() + step);
   }
   return dates;
