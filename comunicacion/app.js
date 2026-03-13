@@ -1242,15 +1242,14 @@ function updateSummary() {
   const numDates = Math.max(dates.length, 1);
   const rows = buildRows();
   const numRows = rows.length;
-  const pagesPerPdf = OPERADOR_PAGES + ACTIVIDAD_PAGES * numRows;
   const totalPdfs = numDates;
   let label;
   if (numRows === 0) {
     label = "Añade filas (piloto + dron) o marca pilotos y drones";
   } else {
     label = numDates > 1
-      ? `${numDates} fecha(s) → ${totalPdfs} PDF(s) (${pagesPerPdf} págs cada uno)`
-      : `1 PDF (${pagesPerPdf} págs: 2 operador + ${numRows} × 4 actividad)`;
+      ? `${numDates} fecha(s) → ${totalPdfs} PDF(s)`
+      : "1 PDF";
   }
   const el = document.getElementById("combo-summary");
   el.textContent = label;
