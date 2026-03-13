@@ -216,6 +216,8 @@ const OPERACION_FIELDS = [
 // Application state
 // =========================================================================
 const STORAGE_KEY = "comunicacion_uas_state";
+/** Valor especial en combinaciones: un PDF por cada drone en la base de datos para ese piloto. */
+const DRONE_TODOS = "__todos__";
 
 function getDefaultComunicacion() {
   return {
@@ -962,7 +964,7 @@ function fillSelect(id, keys, selected, labelFn, allowEmpty) {
   if (allowEmpty) {
     const opt = document.createElement("option");
     opt.value = "";
-    opt.textContent = "(ninguno)";
+    opt.textContent = "<ninguno>";
     sel.appendChild(opt);
   }
   for (const k of keys) {
@@ -1016,7 +1018,7 @@ function renderCombinacionesList() {
     pilotoSel.title = "Piloto";
     const pOpt0 = document.createElement("option");
     pOpt0.value = "";
-    pOpt0.textContent = "(piloto)";
+    pOpt0.textContent = "<ninguno>";
     pilotoSel.appendChild(pOpt0);
     pKeys.forEach(k => {
       const opt = document.createElement("option");
@@ -1033,8 +1035,13 @@ function renderCombinacionesList() {
     droneSel.title = "Dron";
     const dOpt0 = document.createElement("option");
     dOpt0.value = "";
-    dOpt0.textContent = "(dron)";
+    dOpt0.textContent = "<ninguno>";
     droneSel.appendChild(dOpt0);
+    const dOptTodos = document.createElement("option");
+    dOptTodos.value = DRONE_TODOS;
+    dOptTodos.textContent = "Todos";
+    if ((entry.drone || "") === DRONE_TODOS) dOptTodos.selected = true;
+    droneSel.appendChild(dOptTodos);
     dKeys.forEach(dk => {
       const opt = document.createElement("option");
       opt.value = dk;
@@ -1050,7 +1057,7 @@ function renderCombinacionesList() {
     observadorSel.title = "Observador";
     const oOpt0 = document.createElement("option");
     oOpt0.value = "";
-    oOpt0.textContent = "(observador)";
+    oOpt0.textContent = "<ninguno>";
     observadorSel.appendChild(oOpt0);
     pKeys.forEach(k => {
       const opt = document.createElement("option");
@@ -1106,18 +1113,23 @@ function getPilotDronePairsFromCombinaciones() {
   if (!list) return null;
   const rows = list.querySelectorAll("[data-combinacion-row]");
   const pairs = [];
+  const dKeysAll = Object.keys(state.drones);
   for (const row of rows) {
     const pilotoSel = row.querySelector("select[data-combo-piloto]");
     const droneSel = row.querySelector("select[data-combo-drone]");
     const observadorSel = row.querySelector("select[data-combo-observador]");
     const piloto = pilotoSel ? pilotoSel.value : "";
     const drone = droneSel ? droneSel.value : "";
-    if (!piloto || !drone) continue;
-    pairs.push({
-      piloto,
-      drone,
-      observador: observadorSel ? observadorSel.value : "",
-    });
+    const observador = observadorSel ? observadorSel.value : "";
+    if (!piloto) continue;
+    if (!drone) continue;
+    if (drone === DRONE_TODOS) {
+      for (const dk of dKeysAll) {
+        pairs.push({ piloto, drone: dk, observador });
+      }
+    } else {
+      pairs.push({ piloto, drone, observador });
+    }
   }
   return pairs.length > 0 ? pairs : null;
 }
