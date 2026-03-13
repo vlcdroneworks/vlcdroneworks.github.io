@@ -976,6 +976,7 @@ function renderComunicacion() {
   document.getElementById("com-periodicidad").value = state.comunicacion.periodicidad || "1";
   document.getElementById("com-notificacion").checked = state.comunicacion.notificacion_email !== false;
 
+  updateFechasPreview();
   updateSummary();
 }
 
@@ -1198,6 +1199,31 @@ function getOperationDates() {
   return dates;
 }
 
+const ANTELACION_MINIMA_DIAS = 5;
+
+function checkAntelacionMinima() {
+  const inicio = document.getElementById("com-fecha-inicio")?.value;
+  const avisoEl = document.getElementById("fechas-antelacion-aviso");
+  if (!avisoEl) return;
+  if (!inicio) {
+    avisoEl.classList.add("hidden");
+    avisoEl.textContent = "";
+    return;
+  }
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  const fechaOp = new Date(inicio + "T00:00:00");
+  const diffMs = fechaOp - hoy;
+  const diffDays = Math.floor(diffMs / (24 * 60 * 60 * 1000));
+  if (diffDays < ANTELACION_MINIMA_DIAS) {
+    avisoEl.textContent = `La normativa exige comunicar el vuelo con al menos ${ANTELACION_MINIMA_DIAS} días de antelación. Esta aplicación generará el PDF igualmente pero la fecha de operación seleccionada podría no cumplir este requisito.`;
+    avisoEl.classList.remove("hidden");
+  } else {
+    avisoEl.classList.add("hidden");
+    avisoEl.textContent = "";
+  }
+}
+
 function updateFechasPreview() {
   const dates = getOperationDates();
   const el = document.getElementById("fechas-preview");
@@ -1207,6 +1233,7 @@ function updateFechasPreview() {
     const formatted = dates.map(d => iso_to_ddmmyyyy(d)).join(", ");
     el.textContent = `${dates.length} operaciones a comunicar: ${formatted}`;
   }
+  checkAntelacionMinima();
   updateSummary();
 }
 
