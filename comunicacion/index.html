@@ -329,9 +329,9 @@
     </div>
 
     <div class="vdw-card">
-      <h5 class="card-title">Roles</h5>
-      <p class="text-white/50 text-sm mb-3">Selecciona qué pilotos, drones y observador (si lo hubiera) intervendrán en la operación. Marca tantos pilotos y drones como corresponda.</p>
-      <div class="grid md:grid-cols-2 gap-6">
+      <h5 class="card-title">Pilotos y drones</h5>
+      <p class="text-white/50 text-sm mb-3">Selecciona qué pilotos, drones y observador (si lo hubiera) intervendrán en la operación. Agrega tantos pilotos y drones como corresponda.</p>
+      <div class="grid md:grid-cols-2 gap-6 hidden">
         <div>
           <h6 class="text-sm font-semibold text-white/80 mb-2">Pilotos</h6>
           <div id="pilotos-fields">
@@ -361,9 +361,15 @@
           </div>
         </div>
       </div>
+      <div>
+        <div class="flex flex-wrap gap-2 mb-3">
+          <button type="button" class="btn-sm" id="combinaciones-add">Agregar fila</button>
+        </div>
+        <div id="combinaciones-list"></div>
+      </div>
       <div class="mt-5 flex justify-center">
         <div class="w-full md:w-1/2">
-          <h6 class="text-sm font-semibold text-white/80 mb-2">Observador</h6>
+          <h6 class="text-sm font-semibold text-white/80 mb-2">Observador (por defecto)</h6>
           <div id="observador-fields">
             <select id="com-observador" class="field-select"></select>
           </div>
@@ -455,7 +461,7 @@
 <script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
 <script>
 (function() {
-  var V = '1.0.3+78711d7';
+  var V = '1.1.0';
   window.APP_VERSION = V;
   document.write('<script src="app.js?v=' + encodeURIComponent(V) + '"><\/script>');
   var badge = document.getElementById('app-version-placeholder');

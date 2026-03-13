@@ -140,6 +140,17 @@ const OPERACION_FIELDS = [
 // =========================================================================
 const STORAGE_KEY = "comunicacion_uas_state";
 
+function getDefaultComunicacion() {
+  return {
+    fecha_hora: "",
+    operador: "",
+    observador: "",
+    operacion: "",
+    notificacion_email: true,
+    combinaciones: [],
+  };
+}
+
 let state = {
   personas: {},
   drones: {},
@@ -147,6 +158,7 @@ let state = {
   comunicacion: {
     fecha_hora: "", operador: "", observador: "",
     operacion: "", notificacion_email: true,
+    combinaciones: [], // [{ piloto: "key", drone: "key1", observador: "keyObs" }, ...]
   },
 };
 
@@ -273,13 +285,18 @@ async function generate() {
   const operador = document.getElementById("com-operador").value;
   const operacion = document.getElementById("com-operacion").value;
   const observador = document.getElementById("com-observador").value;
-  const pilotos = getChecked("pilotos-list");
-  const drones = getChecked("drones-sel-list");
+  const pairs = getPilotDronePairsFromCombinaciones();
+  const pilotos = pairs ? null : getChecked("pilotos-list");
+  const drones = pairs ? null : getChecked("drones-sel-list");
 
   if (!operacion) { showToast("Selecciona una operación"); return; }
   if (!operador) { showToast("Selecciona un operador"); return; }
-  if (!pilotos.length) { showToast("Selecciona al menos un piloto"); return; }
-  if (!drones.length) { showToast("Selecciona al menos un drone"); return; }
+  if (pairs) {
+    if (pairs.length === 0) { showToast("Añade al menos una fila con piloto y dron"); return; }
+  } else {
+    if (!pilotos.length) { showToast("Selecciona al menos un piloto"); return; }
+    if (!drones.length) { showToast("Selecciona al menos un drone"); return; }
+  }
 
   const opDates = getOperationDates();
   if (opDates.length === 0) {
@@ -289,7 +306,9 @@ async function generate() {
 
   const fechasList = opDates.map(isoDate => iso_to_ddmmyyyy(isoDate));
 
-  const total = pilotos.length * drones.length * fechasList.length;
+  const total = pairs
+    ? pairs.length * fechasList.length
+    : pilotos.length * drones.length * fechasList.length;
 
   function fechaToClean(f) {
     const parts = f.split("/");
@@ -300,21 +319,34 @@ async function generate() {
     `comunicacion_${operacion}_${fechaToClean(fecha)}_${piloto}_${drone}.pdf`;
 
   if (total === 1) {
-    const data = resolveData({ operador, piloto: pilotos[0], observador, uas: drones[0], operacion, fecha_operacion: fechasList[0] });
+    const piloto0 = pairs ? pairs[0].piloto : pilotos[0];
+    const drone0 = pairs ? pairs[0].drone : drones[0];
+    const obs0 = pairs && pairs[0].observador !== undefined ? pairs[0].observador : observador;
+    const data = resolveData({ operador, piloto: piloto0, observador: obs0, uas: drone0, operacion, fecha_operacion: fechasList[0] });
     const pdfBytes = await fillPdf(data);
-    downloadBlob(pdfBytes, makeName(pilotos[0], drones[0], fechasList[0]), "application/pdf");
+    downloadBlob(pdfBytes, makeName(piloto0, drone0, fechasList[0]), "application/pdf");
     saveToLocal();
     showToast("PDF generado correctamente");
     return;
   }
 
   const zip = new JSZip();
-  for (const fecha of fechasList) {
-    for (const piloto of pilotos) {
-      for (const drone of drones) {
-        const data = resolveData({ operador, piloto, observador, uas: drone, operacion, fecha_operacion: fecha });
+  if (pairs) {
+    for (const fecha of fechasList) {
+      for (const { piloto, drone, observador: obs } of pairs) {
+        const data = resolveData({ operador, piloto, observador: obs !== undefined ? obs : observador, uas: drone, operacion, fecha_operacion: fecha });
         const pdfBytes = await fillPdf(data);
         zip.file(makeName(piloto, drone, fecha), pdfBytes);
+      }
+    }
+  } else {
+    for (const fecha of fechasList) {
+      for (const piloto of pilotos) {
+        for (const drone of drones) {
+          const data = resolveData({ operador, piloto, observador, uas: drone, operacion, fecha_operacion: fecha });
+          const pdfBytes = await fillPdf(data);
+          zip.file(makeName(piloto, drone, fecha), pdfBytes);
+        }
       }
     }
   }
@@ -342,14 +374,7 @@ function loadYamlText(text) {
     delete state.operaciones[k].duracion;
   });
 
-  const com = raw.comunicacion || {};
-  state.comunicacion = {
-    fecha_hora: com.fecha_hora || "",
-    operador: com.operador || "",
-    observador: com.observador || "",
-    operacion: com.operacion || "",
-    notificacion_email: com.notificacion_email !== false,
-  };
+  state.comunicacion = getDefaultComunicacion();
 
   renderAll();
   saveToLocal();
@@ -373,7 +398,6 @@ function exportYaml() {
       personas: state.personas,
       drones: state.drones,
       operaciones: operacionesSinFecha,
-      comunicacion: state.comunicacion,
     };
     const text = jsyaml.dump(obj, { lineWidth: -1, quotingType: '"', forceQuotes: true });
     const d = new Date();
@@ -399,8 +423,6 @@ const EXAMPLE_YAML = `# ========================================================
 #   - personas: pilotos, operadores y observadores
 #   - drones: aeronaves UAS con datos técnicos
 #   - operaciones: vuelos planificados
-#   - comunicacion: configuración general (normalmente no es
-#     necesario modificarla, se rellena desde la aplicación)
 #
 # ============================================================
 
@@ -514,16 +536,19 @@ operaciones:
     area_proteccion: "Perímetro de seguridad 50 m"
     zona_recuperacion: "Zona de aparcamiento habilitada"
     altura_prevista: "50 m AGL"
-
-comunicacion:
-  notificacion_email: true
 `;
 
 // =========================================================================
 // localStorage
 // =========================================================================
 function saveToLocal() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  try {
+    const toSave = {
+      ...state,
+      comunicacion: getDefaultComunicacion(),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  } catch {}
 }
 
 function loadFromLocal() {
@@ -539,15 +564,28 @@ function loadFromLocal() {
       delete state.operaciones[k].fecha;
       delete state.operaciones[k].duracion;
     });
-    const com = saved.comunicacion || {};
-    state.comunicacion = {
-      fecha_hora: com.fecha_hora || "",
-      operador: com.operador || "",
-      observador: com.observador || "",
-      operacion: com.operacion || "",
-      notificacion_email: com.notificacion_email !== false,
-    };
+    state.comunicacion = getDefaultComunicacion();
   } catch {}
+}
+
+/** Normaliza combinaciones al formato { piloto, drone, observador }. Migra formato antiguo con drones[]. */
+function normalizeCombinaciones(arr) {
+  if (!Array.isArray(arr)) return [];
+  const out = [];
+  for (const e of arr) {
+    if (e.drones && Array.isArray(e.drones)) {
+      for (const d of e.drones) {
+        out.push({ piloto: e.piloto || "", drone: d, observador: e.observador || "" });
+      }
+    } else {
+      out.push({
+        piloto: e.piloto || "",
+        drone: e.drone || "",
+        observador: e.observador || "",
+      });
+    }
+  }
+  return out;
 }
 
 // =========================================================================
@@ -703,6 +741,9 @@ function renderComunicacion() {
     renderCheckboxList("drones-sel-list", dKeys, k => `${k} — ${state.drones[k]?.tipo_modelo || ""}`);
   }
 
+  if (!state.comunicacion.combinaciones) state.comunicacion.combinaciones = [];
+  renderCombinacionesList();
+
   document.getElementById("com-fecha-hora").value = datetimeES_to_iso(state.comunicacion.fecha_hora || "");
   document.getElementById("com-fecha-inicio").value = "";
   document.getElementById("com-fecha-fin").value = "";
@@ -761,6 +802,130 @@ function getChecked(id) {
   return Array.from(document.querySelectorAll(`#${id} input[type=checkbox]:checked`)).map(c => c.value);
 }
 
+function renderCombinacionesList() {
+  const list = document.getElementById("combinaciones-list");
+  if (!list) return;
+  const pKeys = Object.keys(state.personas);
+  const dKeys = Object.keys(state.drones);
+  const combos = state.comunicacion.combinaciones || [];
+  list.innerHTML = "";
+  combos.forEach((entry, idx) => {
+    const row = document.createElement("div");
+    row.className = "combinacion-row flex flex-wrap items-center gap-2 mb-3 p-3 rounded-lg bg-white/5 border border-white/10";
+    row.setAttribute("data-combinacion-row", "");
+    const onChange = () => { syncCombinacionesFromUI(); saveToLocal(); updateSummary(); };
+
+    const pilotoSel = document.createElement("select");
+    pilotoSel.className = "field-select field-input text-sm flex-1 min-w-0";
+    pilotoSel.setAttribute("data-combo-piloto", "");
+    pilotoSel.title = "Piloto";
+    const pOpt0 = document.createElement("option");
+    pOpt0.value = "";
+    pOpt0.textContent = "(piloto)";
+    pilotoSel.appendChild(pOpt0);
+    pKeys.forEach(k => {
+      const opt = document.createElement("option");
+      opt.value = k;
+      opt.textContent = `${k} — ${state.personas[k]?.nombre || ""}`;
+      if (k === (entry.piloto || "")) opt.selected = true;
+      pilotoSel.appendChild(opt);
+    });
+    pilotoSel.addEventListener("change", onChange);
+
+    const droneSel = document.createElement("select");
+    droneSel.className = "field-select field-input text-sm flex-1 min-w-0";
+    droneSel.setAttribute("data-combo-drone", "");
+    droneSel.title = "Dron";
+    const dOpt0 = document.createElement("option");
+    dOpt0.value = "";
+    dOpt0.textContent = "(dron)";
+    droneSel.appendChild(dOpt0);
+    dKeys.forEach(dk => {
+      const opt = document.createElement("option");
+      opt.value = dk;
+      opt.textContent = dk;
+      if (dk === (entry.drone || "")) opt.selected = true;
+      droneSel.appendChild(opt);
+    });
+    droneSel.addEventListener("change", onChange);
+
+    const observadorSel = document.createElement("select");
+    observadorSel.className = "field-select field-input text-sm flex-1 min-w-0";
+    observadorSel.setAttribute("data-combo-observador", "");
+    observadorSel.title = "Observador";
+    const oOpt0 = document.createElement("option");
+    oOpt0.value = "";
+    oOpt0.textContent = "(observador)";
+    observadorSel.appendChild(oOpt0);
+    pKeys.forEach(k => {
+      const opt = document.createElement("option");
+      opt.value = k;
+      opt.textContent = `${k} — ${state.personas[k]?.nombre || ""}`;
+      if (k === (entry.observador || "")) opt.selected = true;
+      observadorSel.appendChild(opt);
+    });
+    observadorSel.addEventListener("change", onChange);
+
+    const btnRemove = document.createElement("button");
+    btnRemove.type = "button";
+    btnRemove.className = "text-red-400 hover:text-red-300 text-sm shrink-0";
+    btnRemove.textContent = "Quitar";
+    btnRemove.setAttribute("data-combo-remove", "");
+    btnRemove.dataset.index = String(idx);
+    btnRemove.addEventListener("click", () => {
+      state.comunicacion.combinaciones.splice(idx, 1);
+      saveToLocal();
+      renderComunicacion();
+      updateSummary();
+    });
+
+    row.appendChild(pilotoSel);
+    row.appendChild(droneSel);
+    row.appendChild(observadorSel);
+    row.appendChild(btnRemove);
+    list.appendChild(row);
+  });
+}
+
+function syncCombinacionesFromUI() {
+  const list = document.getElementById("combinaciones-list");
+  if (!list) return;
+  const rows = list.querySelectorAll("[data-combinacion-row]");
+  state.comunicacion.combinaciones = [];
+  rows.forEach(row => {
+    const pilotoSel = row.querySelector("select[data-combo-piloto]");
+    const droneSel = row.querySelector("select[data-combo-drone]");
+    const observadorSel = row.querySelector("select[data-combo-observador]");
+    state.comunicacion.combinaciones.push({
+      piloto: pilotoSel ? pilotoSel.value : "",
+      drone: droneSel ? droneSel.value : "",
+      observador: observadorSel ? observadorSel.value : "",
+    });
+  });
+}
+
+/** Devuelve las filas (piloto, drone, observador) desde el formulario de combinaciones, o null si no se usa (fallback a cartesiano). */
+function getPilotDronePairsFromCombinaciones() {
+  const list = document.getElementById("combinaciones-list");
+  if (!list) return null;
+  const rows = list.querySelectorAll("[data-combinacion-row]");
+  const pairs = [];
+  for (const row of rows) {
+    const pilotoSel = row.querySelector("select[data-combo-piloto]");
+    const droneSel = row.querySelector("select[data-combo-drone]");
+    const observadorSel = row.querySelector("select[data-combo-observador]");
+    const piloto = pilotoSel ? pilotoSel.value : "";
+    const drone = droneSel ? droneSel.value : "";
+    if (!piloto || !drone) continue;
+    pairs.push({
+      piloto,
+      drone,
+      observador: observadorSel ? observadorSel.value : "",
+    });
+  }
+  return pairs.length > 0 ? pairs : null;
+}
+
 function setAllChecked(id, val) {
   document.querySelectorAll(`#${id} input[type=checkbox]`).forEach(cb => {
     cb.checked = val;
@@ -800,17 +965,26 @@ function updateFechasPreview() {
 }
 
 function updateSummary() {
-  const p = getChecked("pilotos-list").length;
-  const d = getChecked("drones-sel-list").length;
   const dates = getOperationDates();
   const numDates = Math.max(dates.length, 1);
-  const total = p * d * numDates;
-  const el = document.getElementById("combo-summary");
-  if (numDates > 1) {
-    el.textContent = `${p} piloto(s) × ${d} drone(s) × ${numDates} fecha(s) = ${total} PDF(s)`;
+  const pairs = getPilotDronePairsFromCombinaciones();
+  let total;
+  let label;
+  if (pairs && pairs.length > 0) {
+    total = pairs.length * numDates;
+    label = numDates > 1
+      ? `${pairs.length} combinación(es) × ${numDates} fecha(s) = ${total} PDF(s)`
+      : `${pairs.length} combinación(es) = ${total} PDF(s)`;
   } else {
-    el.textContent = `${p} piloto(s) × ${d} drone(s) = ${total} PDF(s)`;
+    const p = getChecked("pilotos-list").length;
+    const d = getChecked("drones-sel-list").length;
+    total = p * d * numDates;
+    label = numDates > 1
+      ? `${p} piloto(s) × ${d} drone(s) × ${numDates} fecha(s) = ${total} PDF(s)`
+      : `${p} piloto(s) × ${d} drone(s) = ${total} PDF(s)`;
   }
+  const el = document.getElementById("combo-summary");
+  el.textContent = label;
 
   const btn = document.getElementById("btnGenerarMain");
   const btnHeader = document.getElementById("btnGenerar");
@@ -849,6 +1023,7 @@ function syncStateFromUI() {
   state.comunicacion.observador = document.getElementById("com-observador").value;
   state.comunicacion.fecha_hora = iso_to_datetimeES(document.getElementById("com-fecha-hora").value);
   state.comunicacion.notificacion_email = document.getElementById("com-notificacion").checked;
+  syncCombinacionesFromUI();
 }
 
 // =========================================================================
@@ -1120,7 +1295,7 @@ document.addEventListener("DOMContentLoaded", () => {
     state.personas = {};
     state.drones = {};
     state.operaciones = {};
-    state.comunicacion = { notificacion_email: true };
+    state.comunicacion = getDefaultComunicacion();
     localStorage.removeItem("comunicacion_state");
     renderAll();
     showSection("inicio");
@@ -1134,7 +1309,7 @@ document.addEventListener("DOMContentLoaded", () => {
     state.personas = parsed.personas || {};
     state.drones = parsed.drones || {};
     state.operaciones = parsed.operaciones || {};
-    state.comunicacion = parsed.comunicacion || { notificacion_email: true };
+    state.comunicacion = getDefaultComunicacion();
     saveToLocal();
     sessionStorage.setItem("goto_section", "comunicacion");
     location.reload();
@@ -1170,6 +1345,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("pilotos-none").addEventListener("click", () => setAllChecked("pilotos-list", false));
   document.getElementById("drones-sel-all").addEventListener("click", () => setAllChecked("drones-sel-list", true));
   document.getElementById("drones-sel-none").addEventListener("click", () => setAllChecked("drones-sel-list", false));
+
+  document.getElementById("combinaciones-add").addEventListener("click", () => {
+    if (!state.comunicacion.combinaciones) state.comunicacion.combinaciones = [];
+    state.comunicacion.combinaciones.push({ piloto: "", drone: "", observador: "" });
+    saveToLocal();
+    renderComunicacion();
+    updateSummary();
+  });
 
   // Accordion toggle (delegated)
   document.addEventListener("click", e => {
