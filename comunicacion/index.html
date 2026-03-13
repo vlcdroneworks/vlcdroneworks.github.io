@@ -314,11 +314,11 @@
       <div class="grid md:grid-cols-3 gap-4">
         <div>
           <label class="field-label font-semibold text-white/80" for="com-fecha-inicio">Fecha operación</label>
-          <input type="text" class="field-input vdw-date" id="com-fecha-inicio" placeholder="YYYY-MM-DD" readonly>
+          <input type="text" class="field-input vdw-date" id="com-fecha-inicio" placeholder="dd-mm-yyyy" readonly>
         </div>
         <div>
           <label class="field-label text-white/50" for="com-fecha-fin">Fecha fin <span class="text-white/30">(opcional)</span></label>
-          <input type="text" class="field-input vdw-date" id="com-fecha-fin" placeholder="YYYY-MM-DD" readonly>
+          <input type="text" class="field-input vdw-date" id="com-fecha-fin" placeholder="dd-mm-yyyy" readonly>
         </div>
         <div>
           <label class="field-label text-white/50" for="com-periodicidad">Cada N días <span class="text-white/30">(opcional)</span></label>
@@ -461,7 +461,7 @@
 <script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
 <script>
 (function() {
-  var V = '1.1.0';
+  var V = '1.2.0';
   window.APP_VERSION = V;
   document.write('<script src="app.js?v=' + encodeURIComponent(V) + '"><\/script>');
   var badge = document.getElementById('app-version-placeholder');

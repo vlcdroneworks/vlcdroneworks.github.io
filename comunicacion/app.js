@@ -84,6 +84,83 @@ const FIELD_MAP = {
 const CHECKBOX_FIELD = "topmostSubform[0].Page1[0].Correo_electrónico_2[0]";
 const PDF_TEMPLATE_URL = "template/20201228-Formato-Solicitud-Comunicacion-V9.0.pdf";
 
+// Nuevo flujo: un PDF por fecha = operador (2 págs) + N × actividad (4 págs cada una)
+const PDF_TEMPLATE_OPERADOR_URL = "template/template-operador-form.pdf";
+const PDF_TEMPLATE_ACTIVIDAD_URL = "template/template-actividad-form.pdf";
+const OPERADOR_PAGES = 2;
+const ACTIVIDAD_PAGES = 4;
+
+/** Mapeo datos → campos AcroForm en template-operador-form.pdf (2 páginas). */
+const OPERADOR_FIELD_MAP = {
+  "comunicacion.fecha": ["fecha_comunicacion_operador", "fecha_comunicacion_representante"],
+  "comunicacion.hora": ["hora_comunicacion_operador", "hora_comunicacion_representante"],
+  "operador.nombre": ["nombre_operador", "nombre_representante"],
+  "operador.documento_identidad": ["dni_operador", "dni_representante"],
+  "operador.direccion": ["direccion_operador", "direccion_representante"],
+  "operador.codigo_postal": ["cp_operador", "cp_representante"],
+  "operador.municipio": ["municipio_operador", "municipio_representante"],
+  "operador.provincia": ["provincia_operador", "provincia_representante"],
+  "operador.telefono": ["telefono_operador", "telefono_representante"],
+  "operador.email": ["email_operador", "email_representante"],
+  "operador.numero_registro": "registro_operador",
+  "pagina.1": "pagina_operador",
+  "pagina.2": "pagina_representante",
+};
+
+/** Mapeo datos → campos AcroForm en template-actividad-form.pdf (4 páginas). */
+const ACTIVIDAD_FIELD_MAP = {
+  "datos_actividad": ["datos_actividad_operacion", "datos_actividad_piloto", "datos_actividad_uas", "datos_actividad_observador"],
+  "comunicacion.fecha": ["fecha_comunicacion_operador", "fecha_comunicacion_piloto", "fecha_comunicacion_uas", "fecha_comunicacion_observador"],
+  "comunicacion.hora": ["hora_comunicacion_operador", "hora_comunicacion_piloto", "hora_comunicacion_uas", "hora_comunicacion_observador"],
+  "operacion.tipo": "tipo_operacion",
+  "operacion.fecha_hora_inicio": "fecha_y_hora_inicio_operacion",
+  "operacion.fecha_hora_fin": "fecha_y_hora_fin_operacion",
+  "operacion.coordenadas_wgs84": "coordenadas",
+  "operacion.area_proteccion": "area_proteccion",
+  "operacion.zona_recuperacion": "area_recuperacion",
+  "operacion.altura_prevista": "altura",
+  "operacion.zona_poblacion": "zona_vuelo",
+  "operacion.radio_metros": "radio",
+  "piloto.nombre": "nombre_piloto",
+  "piloto.documento_identidad": "dni_piloto",
+  "piloto.direccion": "direccion_piloto",
+  "piloto.codigo_postal": "cp_piloto",
+  "piloto.municipio": "minicipio_piloto",
+  "piloto.provincia": "provincia_piloto",
+  "piloto.certificado_competencia": "certificado_competencia_piloto",
+  "piloto.acreditacion_formacion": "acreditacion_formacion_autopractica_piloto",
+  "piloto.poliza_seguros": "seguro_piloto",
+  "uas.clase": "clase_uas",
+  "uas.fabricante": "fabricante_uas",
+  "uas.tipo_modelo": "tipo_y_modelo_uas",
+  "uas.numero_serie": "ns_uas",
+  "uas.matricula": "matricula_uas",
+  "uas.mtom": "mtom_uas",
+  "uas.autonomia": "autonomia_uas",
+  "uas.autopiloto": "autopiloto_uas",
+  "uas.frecuencias": "bandas_uas",
+  "uas.color": "color_uas",
+  "uas.luces": "luces_uas",
+  "uas.carga_pago": "carta_pago_uas",
+  "uas.equipo_vhf": "vhf_uas",
+  "uas.respondedor_modo_s": "respondedor_uas",
+  "uas.equipo_emergencia": "equipo_emergencia_uas",
+  "uas.dispositivo_vision": "camara_uas",
+  "observador.nombre": "nombre_observador",
+  "observador.documento_identidad": "dni_observador",
+  "observador.direccion": ["domicilio_observador", "direccion_observador"],
+  "observador.codigo_postal": "cp_observador",
+  "observador.municipio": "municipio_observador",
+  "observador.provincia": "provincia_observador",
+  "pagina.1": "pagina_operacion",
+  "pagina.2": "pagina_piloto",
+  "pagina.3": "pagina_uas",
+  "pagina.4": "pagina_observador",
+};
+
+let pdfTemplateOperadorBytes = null;
+let pdfTemplateActividadBytes = null;
+
 // =========================================================================
 // UI field definitions
 // =========================================================================
@@ -212,6 +289,8 @@ function resolveData(opts = {}) {
 
   const hi = (opRaw.hora_inicio || "").trim();
   const hf = (opRaw.hora_fin || "").trim();
+  result["operacion.fecha_hora_inicio"] = ((opts.fecha_operacion || "") + " " + hi).trim();
+  result["operacion.fecha_hora_fin"] = ((opts.fecha_operacion || "") + " " + hf).trim();
   result["operacion.duracion"] = calcDuracion(hi, hf);
 
   const fechaCom = opts.fecha_comunicacion || com.fecha_hora || "";
@@ -241,6 +320,110 @@ async function loadTemplate() {
   if (!resp.ok) throw new Error("No se pudo cargar la plantilla PDF");
   pdfTemplateBytes = await resp.arrayBuffer();
   return pdfTemplateBytes;
+}
+
+async function loadTemplateOperador() {
+  if (pdfTemplateOperadorBytes) return pdfTemplateOperadorBytes;
+  const resp = await fetch(PDF_TEMPLATE_OPERADOR_URL);
+  if (!resp.ok) throw new Error("No se pudo cargar la plantilla operador (template-operador-form.pdf)");
+  pdfTemplateOperadorBytes = await resp.arrayBuffer();
+  return pdfTemplateOperadorBytes;
+}
+
+async function loadTemplateActividad() {
+  if (pdfTemplateActividadBytes) return pdfTemplateActividadBytes;
+  const resp = await fetch(PDF_TEMPLATE_ACTIVIDAD_URL);
+  if (!resp.ok) throw new Error("No se pudo cargar la plantilla actividad (template-actividad-form.pdf)");
+  pdfTemplateActividadBytes = await resp.arrayBuffer();
+  return pdfTemplateActividadBytes;
+}
+
+/** Rellena un PDF con un mapeo campo-lógico → nombre AcroForm. data puede incluir pagina.1, pagina.2, datos_actividad, etc. */
+async function fillPdfWithMap(templateBytes, fieldMap, data) {
+  const pdfDoc = await PDFLib.PDFDocument.load(templateBytes);
+  const form = pdfDoc.getForm();
+  let fontBold = null;
+  if (data.datos_actividad != null && data.datos_actividad !== "") {
+    try {
+      const boldFontRef = (typeof PDFLib.StandardFonts !== "undefined" && PDFLib.StandardFonts.HelveticaBold) || "Helvetica-Bold";
+      fontBold = await pdfDoc.embedStandardFont(boldFontRef);
+    } catch { /* fallback: los campos se rellenan sin negrita */ }
+  }
+  for (const [dataKey, fieldNames] of Object.entries(fieldMap)) {
+    const val = data[dataKey];
+    if (val === undefined || val === null) continue;
+    if (typeof val === "boolean") continue;
+    const strVal = String(val);
+    if (strVal === "" && !dataKey.startsWith("pagina.")) continue;
+    const names = Array.isArray(fieldNames) ? fieldNames : [fieldNames];
+    for (const fieldName of names) {
+      try {
+        const field = form.getTextField(fieldName);
+        field.setText(strVal);
+        if (dataKey.startsWith("pagina.")) {
+          try { field.setFontSize(9); } catch { /* el campo puede no tener /DA */ }
+        }
+        if (dataKey === "datos_actividad" && fontBold) {
+          try { field.updateAppearances(fontBold); } catch { /* fallback sin negrita */ }
+        }
+      } catch {
+        try {
+          const dd = form.getDropdown(fieldName);
+          dd.select(strVal);
+        } catch { /* skip */ }
+      }
+    }
+  }
+  try { form.updateFieldAppearances(); } catch { /* opcional */ }
+  return await pdfDoc.save({ updateFieldAppearances: !fontBold });
+}
+
+/** Rellena la plantilla operador (2 páginas). totalPages = 2 + 4 * numFilas. */
+async function fillOperadorPdf(data, totalPages) {
+  const d = { ...data };
+  d["pagina.1"] = `1/${totalPages}`;
+  d["pagina.2"] = `2/${totalPages}`;
+  const templateBytes = await loadTemplateOperador();
+  return await fillPdfWithMap(templateBytes, OPERADOR_FIELD_MAP, d);
+}
+
+/** Rellena la plantilla actividad (4 páginas) para una fila. pageBase = 2 + 4*indexFila; rowIndex = número de fila (1-based) para "Datos Actividad X". */
+async function fillActividadPdf(data, pageBase, totalPages, rowIndex) {
+  const d = { ...data };
+  d["datos_actividad"] = `Datos de la actividad ${rowIndex}`;
+  d["pagina.1"] = `${pageBase + 1}/${totalPages}`;
+  d["pagina.2"] = `${pageBase + 2}/${totalPages}`;
+  d["pagina.3"] = `${pageBase + 3}/${totalPages}`;
+  d["pagina.4"] = `${pageBase + 4}/${totalPages}`;
+  const templateBytes = await loadTemplateActividad();
+  return await fillPdfWithMap(templateBytes, ACTIVIDAD_FIELD_MAP, d);
+}
+
+/** Utilidad: listar nombres de campos de un PDF (ej. en consola: listPdfFields("template/template-operador-form.pdf")). */
+async function listPdfFields(url) {
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error("No se pudo cargar " + url);
+  const bytes = await resp.arrayBuffer();
+  const doc = await PDFLib.PDFDocument.load(bytes);
+  const form = doc.getForm();
+  const fields = form.getFields();
+  const names = fields.map(f => f.getName());
+  console.log(url + " →", names);
+  return names;
+}
+
+/** Concatena PDF operador (2 págs) + varios PDFs actividad (4 págs cada uno). Devuelve bytes del PDF unido. */
+async function mergeOperadorConActividades(operadorBytes, actividadBytesArray) {
+  const merged = await PDFLib.PDFDocument.create();
+  const opDoc = await PDFLib.PDFDocument.load(operadorBytes);
+  const opPages = await merged.copyPages(opDoc, [0, 1]);
+  opPages.forEach(p => merged.addPage(p));
+  for (const actBytes of actividadBytesArray) {
+    const actDoc = await PDFLib.PDFDocument.load(actBytes);
+    const actPages = await merged.copyPages(actDoc, [0, 1, 2, 3]);
+    actPages.forEach(p => merged.addPage(p));
+  }
+  return await merged.save();
 }
 
 async function fillPdf(data) {
@@ -274,8 +457,23 @@ async function fillPdf(data) {
 }
 
 // =========================================================================
-// Unified generation: 1 combo -> PDF, N combos -> ZIP
+// Unified generation: un PDF por fecha = operador (2 págs) + N × actividad (4 págs)
 // =========================================================================
+function buildRows() {
+  const pairs = getPilotDronePairsFromCombinaciones();
+  if (pairs && pairs.length > 0) return pairs;
+  const pilotos = getChecked("pilotos-list");
+  const drones = getChecked("drones-sel-list");
+  const observador = document.getElementById("com-observador").value;
+  const rows = [];
+  for (const piloto of pilotos) {
+    for (const drone of drones) {
+      rows.push({ piloto, drone, observador: observador || "" });
+    }
+  }
+  return rows;
+}
+
 async function generate() {
   syncStateFromUI();
   const now = new Date();
@@ -285,17 +483,13 @@ async function generate() {
   const operador = document.getElementById("com-operador").value;
   const operacion = document.getElementById("com-operacion").value;
   const observador = document.getElementById("com-observador").value;
-  const pairs = getPilotDronePairsFromCombinaciones();
-  const pilotos = pairs ? null : getChecked("pilotos-list");
-  const drones = pairs ? null : getChecked("drones-sel-list");
+  const rows = buildRows();
 
   if (!operacion) { showToast("Selecciona una operación"); return; }
   if (!operador) { showToast("Selecciona un operador"); return; }
-  if (pairs) {
-    if (pairs.length === 0) { showToast("Añade al menos una fila con piloto y dron"); return; }
-  } else {
-    if (!pilotos.length) { showToast("Selecciona al menos un piloto"); return; }
-    if (!drones.length) { showToast("Selecciona al menos un drone"); return; }
+  if (!rows.length) {
+    showToast("Añade al menos una fila con piloto y dron, o marca pilotos y drones");
+    return;
   }
 
   const opDates = getOperationDates();
@@ -305,58 +499,53 @@ async function generate() {
   }
 
   const fechasList = opDates.map(isoDate => iso_to_ddmmyyyy(isoDate));
-
-  const total = pairs
-    ? pairs.length * fechasList.length
-    : pilotos.length * drones.length * fechasList.length;
+  const totalPages = OPERADOR_PAGES + ACTIVIDAD_PAGES * rows.length;
 
   function fechaToClean(f) {
     const parts = f.split("/");
     return parts.length === 3 ? `${parts[2]}${parts[1]}${parts[0]}` : f.replace(/\//g, "");
   }
 
-  const makeName = (piloto, drone, fecha) =>
-    `comunicacion_${operacion}_${fechaToClean(fecha)}_${piloto}_${drone}.pdf`;
+  const fileName = (fecha) => `comunicacion_${operacion}_${fechaToClean(fecha)}.pdf`;
 
-  if (total === 1) {
-    const piloto0 = pairs ? pairs[0].piloto : pilotos[0];
-    const drone0 = pairs ? pairs[0].drone : drones[0];
-    const obs0 = pairs && pairs[0].observador !== undefined ? pairs[0].observador : observador;
-    const data = resolveData({ operador, piloto: piloto0, observador: obs0, uas: drone0, operacion, fecha_operacion: fechasList[0] });
-    const pdfBytes = await fillPdf(data);
-    downloadBlob(pdfBytes, makeName(piloto0, drone0, fechasList[0]), "application/pdf");
+  if (fechasList.length === 1) {
+    const fecha = fechasList[0];
+    const operadorData = resolveData({ operador, operacion, fecha_operacion: fecha });
+    const operadorBytes = await fillOperadorPdf(operadorData, totalPages);
+    const actividadBytesList = [];
+    for (let i = 0; i < rows.length; i++) {
+      const { piloto, drone, observador: obs } = rows[i];
+      const actData = resolveData({ operador, piloto, observador: obs !== undefined ? obs : observador, uas: drone, operacion, fecha_operacion: fecha });
+      const actBytes = await fillActividadPdf(actData, OPERADOR_PAGES + ACTIVIDAD_PAGES * i, totalPages, i + 1);
+      actividadBytesList.push(actBytes);
+    }
+    const mergedBytes = await mergeOperadorConActividades(operadorBytes, actividadBytesList);
+    downloadBlob(mergedBytes, fileName(fecha), "application/pdf");
     saveToLocal();
     showToast("PDF generado correctamente");
     return;
   }
 
   const zip = new JSZip();
-  if (pairs) {
-    for (const fecha of fechasList) {
-      for (const { piloto, drone, observador: obs } of pairs) {
-        const data = resolveData({ operador, piloto, observador: obs !== undefined ? obs : observador, uas: drone, operacion, fecha_operacion: fecha });
-        const pdfBytes = await fillPdf(data);
-        zip.file(makeName(piloto, drone, fecha), pdfBytes);
-      }
+  for (const fecha of fechasList) {
+    const operadorData = resolveData({ operador, operacion, fecha_operacion: fecha });
+    const operadorBytes = await fillOperadorPdf(operadorData, totalPages);
+    const actividadBytesList = [];
+    for (let i = 0; i < rows.length; i++) {
+      const { piloto, drone, observador: obs } = rows[i];
+      const actData = resolveData({ operador, piloto, observador: obs !== undefined ? obs : observador, uas: drone, operacion, fecha_operacion: fecha });
+      const actBytes = await fillActividadPdf(actData, OPERADOR_PAGES + ACTIVIDAD_PAGES * i, totalPages, i + 1);
+      actividadBytesList.push(actBytes);
     }
-  } else {
-    for (const fecha of fechasList) {
-      for (const piloto of pilotos) {
-        for (const drone of drones) {
-          const data = resolveData({ operador, piloto, observador, uas: drone, operacion, fecha_operacion: fecha });
-          const pdfBytes = await fillPdf(data);
-          zip.file(makeName(piloto, drone, fecha), pdfBytes);
-        }
-      }
-    }
+    const mergedBytes = await mergeOperadorConActividades(operadorBytes, actividadBytesList);
+    zip.file(fileName(fecha), mergedBytes);
   }
-
   const firstClean = fechaToClean(fechasList[0]);
-  const zipSuffix = fechasList.length > 1 ? `${firstClean}-${fechaToClean(fechasList[fechasList.length-1])}` : firstClean;
+  const zipSuffix = fechasList.length > 1 ? `${firstClean}-${fechaToClean(fechasList[fechasList.length - 1])}` : firstClean;
   const zipBlob = await zip.generateAsync({ type: "blob" });
   downloadBlob(zipBlob, `comunicaciones_${operacion}_${zipSuffix}.zip`, "application/zip");
   saveToLocal();
-  showToast(`${total} PDFs generados en ZIP`);
+  showToast(`${fechasList.length} PDF(s) generados en ZIP`);
 }
 
 // =========================================================================
@@ -745,9 +934,15 @@ function renderComunicacion() {
   renderCombinacionesList();
 
   document.getElementById("com-fecha-hora").value = datetimeES_to_iso(state.comunicacion.fecha_hora || "");
-  document.getElementById("com-fecha-inicio").value = "";
-  document.getElementById("com-fecha-fin").value = "";
-  document.getElementById("com-periodicidad").value = "1";
+  const feInicioEl = document.getElementById("com-fecha-inicio");
+  const feFinEl = document.getElementById("com-fecha-fin");
+  const valInicio = state.comunicacion.fecha_inicio != null ? state.comunicacion.fecha_inicio : "";
+  const valFin = state.comunicacion.fecha_fin != null ? state.comunicacion.fecha_fin : "";
+  feInicioEl.value = valInicio;
+  feFinEl.value = valFin;
+  if (feInicioEl._flatpickr) feInicioEl._flatpickr.setDate(valInicio || null, false);
+  if (feFinEl._flatpickr) feFinEl._flatpickr.setDate(valFin || null, false);
+  document.getElementById("com-periodicidad").value = state.comunicacion.periodicidad || "1";
   document.getElementById("com-notificacion").checked = state.comunicacion.notificacion_email !== false;
 
   updateSummary();
@@ -873,6 +1068,7 @@ function renderCombinacionesList() {
     btnRemove.setAttribute("data-combo-remove", "");
     btnRemove.dataset.index = String(idx);
     btnRemove.addEventListener("click", () => {
+      syncStateFromUI();
       state.comunicacion.combinaciones.splice(idx, 1);
       saveToLocal();
       renderComunicacion();
@@ -967,33 +1163,29 @@ function updateFechasPreview() {
 function updateSummary() {
   const dates = getOperationDates();
   const numDates = Math.max(dates.length, 1);
-  const pairs = getPilotDronePairsFromCombinaciones();
-  let total;
+  const rows = buildRows();
+  const numRows = rows.length;
+  const pagesPerPdf = OPERADOR_PAGES + ACTIVIDAD_PAGES * numRows;
+  const totalPdfs = numDates;
   let label;
-  if (pairs && pairs.length > 0) {
-    total = pairs.length * numDates;
-    label = numDates > 1
-      ? `${pairs.length} combinación(es) × ${numDates} fecha(s) = ${total} PDF(s)`
-      : `${pairs.length} combinación(es) = ${total} PDF(s)`;
+  if (numRows === 0) {
+    label = "Añade filas (piloto + dron) o marca pilotos y drones";
   } else {
-    const p = getChecked("pilotos-list").length;
-    const d = getChecked("drones-sel-list").length;
-    total = p * d * numDates;
     label = numDates > 1
-      ? `${p} piloto(s) × ${d} drone(s) × ${numDates} fecha(s) = ${total} PDF(s)`
-      : `${p} piloto(s) × ${d} drone(s) = ${total} PDF(s)`;
+      ? `${numDates} fecha(s) → ${totalPdfs} PDF(s) (${pagesPerPdf} págs cada uno)`
+      : `1 PDF (${pagesPerPdf} págs: 2 operador + ${numRows} × 4 actividad)`;
   }
   const el = document.getElementById("combo-summary");
   el.textContent = label;
 
   const btn = document.getElementById("btnGenerarMain");
   const btnHeader = document.getElementById("btnGenerar");
-  if (total <= 1) {
+  if (totalPdfs <= 1) {
     btn.textContent = "Generar PDF";
     btnHeader.textContent = "Generar PDF";
   } else {
-    btn.textContent = `Generar ZIP (${total} PDFs)`;
-    btnHeader.textContent = `Generar ZIP (${total})`;
+    btn.textContent = `Generar ZIP (${totalPdfs} PDFs)`;
+    btnHeader.textContent = `Generar ZIP (${totalPdfs})`;
   }
 }
 
@@ -1022,6 +1214,12 @@ function syncStateFromUI() {
   state.comunicacion.operador = document.getElementById("com-operador").value;
   state.comunicacion.observador = document.getElementById("com-observador").value;
   state.comunicacion.fecha_hora = iso_to_datetimeES(document.getElementById("com-fecha-hora").value);
+  const feInicio = document.getElementById("com-fecha-inicio");
+  const feFin = document.getElementById("com-fecha-fin");
+  const fePeriod = document.getElementById("com-periodicidad");
+  state.comunicacion.fecha_inicio = feInicio ? feInicio.value : "";
+  state.comunicacion.fecha_fin = feFin ? feFin.value : "";
+  state.comunicacion.periodicidad = fePeriod ? fePeriod.value : "1";
   state.comunicacion.notificacion_email = document.getElementById("com-notificacion").checked;
   syncCombinacionesFromUI();
 }
@@ -1083,6 +1281,8 @@ function initDatePickers() {
   });
   flatpickr(".vdw-date", {
     dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "d-m-Y",
     allowInput: false
   });
   flatpickr(".vdw-time", {
@@ -1219,6 +1419,7 @@ function calcDuracion(horaInicio, horaFin) {
 // Init
 // =========================================================================
 document.addEventListener("DOMContentLoaded", () => {
+  if (typeof window !== "undefined") window.listPdfFields = listPdfFields;
   loadFromLocal();
 
   state.comunicacion.operacion = "";
@@ -1347,6 +1548,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("drones-sel-none").addEventListener("click", () => setAllChecked("drones-sel-list", false));
 
   document.getElementById("combinaciones-add").addEventListener("click", () => {
+    syncStateFromUI();
     if (!state.comunicacion.combinaciones) state.comunicacion.combinaciones = [];
     state.comunicacion.combinaciones.push({ piloto: "", drone: "", observador: "" });
     saveToLocal();
