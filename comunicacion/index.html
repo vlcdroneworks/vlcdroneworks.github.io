@@ -37,7 +37,7 @@
 <div id="loading-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center" style="display:none">
   <div class="bg-vdw-navy-light border border-white/10 rounded-2xl p-8 flex flex-col items-center gap-3 shadow-2xl">
     <div class="spinner"></div>
-    <span class="text-white/70 text-sm">Generando documentos...</span>
+    <span class="text-white/70 text-sm" id="loading-text">Generando documentos...</span>
   </div>
 </div>
 
@@ -382,15 +382,14 @@
       </div>
     </div>
 
-    <div class="vdw-card">
-      <div class="flex justify-center">
-        <div class="w-full md:w-1/2 bg-vdw-orange/10 border border-vdw-orange/20 rounded-xl px-4 py-2.5 text-center text-white/90 text-sm font-medium" id="combo-summary">
-          0 piloto(s) × 0 drone(s) = 0 PDF(s)
-        </div>
-      </div>
-      <div class="flex justify-center mt-4">
-        <button class="btn-primary w-full md:w-1/3 py-2.5 text-sm" id="btnGenerarMain">Generar PDF</button>
-      </div>
+    <div class="vdw-card flex flex-col items-center py-8 gap-4">
+      <div class="w-full md:w-1/2 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2.5 text-center text-red-300/90 text-sm font-medium hidden" id="generate-warning"></div>
+      <label class="flex items-center gap-2 text-white/80 text-sm cursor-pointer select-none">
+        <input type="checkbox" id="com-firmar" class="accent-[#E8914A] w-4 h-4 rounded">
+        Firmar digitalmente con AutoFirma
+      </label>
+      <p class="text-white/40 text-xs text-center hidden" id="autofirma-hint">Requiere <a href="https://firmaelectronica.gob.es/Home/Descargas.html" target="_blank" rel="noopener noreferrer" class="text-vdw-orange hover:underline">AutoFirma</a> instalada y un certificado digital (FNMT, DNIe, etc.).</p>
+      <button class="btn-primary w-full md:w-1/3 py-2.5 text-sm" id="btnGenerarMain">Generar PDF</button>
     </div>
 
   </section>
@@ -460,6 +459,7 @@
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://unpkg.com/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@doncicuto/autoscript@1.1.1/autoscript.js"></script>
 <script>
 (function() {
   var V = '1.2.2+a36c5d0';

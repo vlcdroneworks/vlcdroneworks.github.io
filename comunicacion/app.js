@@ -1,4 +1,4 @@
-/* global PDFLib, jsyaml, JSZip */
+/* global PDFLib, jsyaml, JSZip, AutoScript */
 
 // =========================================================================
 // PDF field mappings (data key -> AcroForm field name)
@@ -463,6 +463,51 @@ async function fillPdf(data) {
 }
 
 // =========================================================================
+// AutoFirma: firma digital PAdES
+// =========================================================================
+let _autoFirmaInitialized = false;
+
+function uint8ArrayToBase64(bytes) {
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+function base64ToUint8Array(b64) {
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+function initAutoFirma() {
+  if (_autoFirmaInitialized) return;
+  if (typeof AutoScript === "undefined") throw new Error("autoscript.js no está cargado");
+  AutoScript.cargarAppAfirma();
+  AutoScript.setStickySignatory(true);
+  _autoFirmaInitialized = true;
+}
+
+function signPdfWithAutoFirma(pdfBytes) {
+  return new Promise((resolve, reject) => {
+    const b64 = uint8ArrayToBase64(pdfBytes instanceof Uint8Array ? pdfBytes : new Uint8Array(pdfBytes));
+    AutoScript.sign(
+      b64,
+      "SHA256withRSA",
+      "PAdES",
+      "",
+      function onSuccess(signedB64) { resolve(base64ToUint8Array(signedB64)); },
+      function onError(type, msg) { reject(new Error("AutoFirma: " + (msg || type))); }
+    );
+  });
+}
+
+function setOverlayText(text) {
+  const el = document.getElementById("loading-text");
+  if (el) el.textContent = text;
+}
+
+// =========================================================================
 // Unified generation: un PDF por fecha = operador (2 págs) + N × actividad (4 págs)
 // =========================================================================
 function buildRows() {
@@ -490,6 +535,7 @@ async function generate() {
   const operacion = document.getElementById("com-operacion").value;
   const observador = document.getElementById("com-observador").value;
   const rows = buildRows();
+  const wantSign = document.getElementById("com-firmar").checked;
 
   if (!operacion) { showToast("Selecciona una operación"); return; }
   if (!operador) { showToast("Selecciona un operador"); return; }
@@ -504,8 +550,14 @@ async function generate() {
     return;
   }
 
+  if (wantSign) {
+    try { initAutoFirma(); }
+    catch { showToast("No se pudo inicializar AutoFirma. ¿Está instalada?"); return; }
+  }
+
   const fechasList = opDates.map(isoDate => iso_to_ddmmyyyy(isoDate));
   const totalPages = OPERADOR_PAGES + ACTIVIDAD_PAGES * rows.length;
+  const totalPdfs = fechasList.length;
 
   function fechaToClean(f) {
     const parts = f.split("/");
@@ -514,8 +566,7 @@ async function generate() {
 
   const fileName = (fecha) => `comunicacion_${operacion}_${fechaToClean(fecha)}.pdf`;
 
-  if (fechasList.length === 1) {
-    const fecha = fechasList[0];
+  async function buildPdf(fecha) {
     const operadorData = resolveData({ operador, operacion, fecha_operacion: fecha });
     const operadorBytes = await fillOperadorPdf(operadorData, totalPages);
     const actividadBytesList = [];
@@ -525,33 +576,40 @@ async function generate() {
       const actBytes = await fillActividadPdf(actData, OPERADOR_PAGES + ACTIVIDAD_PAGES * i, totalPages, i + 1);
       actividadBytesList.push(actBytes);
     }
-    const mergedBytes = await mergeOperadorConActividades(operadorBytes, actividadBytesList);
-    downloadBlob(mergedBytes, fileName(fecha), "application/pdf");
+    return await mergeOperadorConActividades(operadorBytes, actividadBytesList);
+  }
+
+  if (fechasList.length === 1) {
+    setOverlayText("Generando PDF...");
+    let pdfBytes = await buildPdf(fechasList[0]);
+    if (wantSign) {
+      setOverlayText("Esperando firma en AutoFirma...");
+      pdfBytes = await signPdfWithAutoFirma(pdfBytes);
+    }
+    downloadBlob(pdfBytes, fileName(fechasList[0]), "application/pdf");
     saveToLocal();
-    showToast("PDF generado correctamente");
+    showToast(wantSign ? "PDF firmado y descargado" : "PDF generado correctamente");
     return;
   }
 
   const zip = new JSZip();
-  for (const fecha of fechasList) {
-    const operadorData = resolveData({ operador, operacion, fecha_operacion: fecha });
-    const operadorBytes = await fillOperadorPdf(operadorData, totalPages);
-    const actividadBytesList = [];
-    for (let i = 0; i < rows.length; i++) {
-      const { piloto, drone, observador: obs } = rows[i];
-      const actData = resolveData({ operador, piloto, observador: obs !== undefined ? obs : observador, uas: drone, operacion, fecha_operacion: fecha });
-      const actBytes = await fillActividadPdf(actData, OPERADOR_PAGES + ACTIVIDAD_PAGES * i, totalPages, i + 1);
-      actividadBytesList.push(actBytes);
+  for (let idx = 0; idx < fechasList.length; idx++) {
+    const fecha = fechasList[idx];
+    setOverlayText(`Generando PDF ${idx + 1} de ${totalPdfs}...`);
+    let pdfBytes = await buildPdf(fecha);
+    if (wantSign) {
+      setOverlayText(`Firmando PDF ${idx + 1} de ${totalPdfs}...`);
+      pdfBytes = await signPdfWithAutoFirma(pdfBytes);
     }
-    const mergedBytes = await mergeOperadorConActividades(operadorBytes, actividadBytesList);
-    zip.file(fileName(fecha), mergedBytes);
+    zip.file(fileName(fecha), pdfBytes);
   }
+  setOverlayText("Empaquetando ZIP...");
   const firstClean = fechaToClean(fechasList[0]);
   const zipSuffix = fechasList.length > 1 ? `${firstClean}-${fechaToClean(fechasList[fechasList.length - 1])}` : firstClean;
   const zipBlob = await zip.generateAsync({ type: "blob" });
   downloadBlob(zipBlob, `comunicaciones_${operacion}_${zipSuffix}.zip`, "application/zip");
   saveToLocal();
-  showToast(`${fechasList.length} PDF(s) generados en ZIP`);
+  showToast(wantSign ? `${totalPdfs} PDF(s) firmados en ZIP` : `${totalPdfs} PDF(s) generados en ZIP`);
 }
 
 // =========================================================================
@@ -1294,27 +1352,34 @@ function updateSummary() {
   const dates = getOperationDates();
   const numDates = Math.max(dates.length, 1);
   const rows = buildRows();
-  const numRows = rows.length;
-  const totalPdfs = numDates;
-  let label;
-  if (numRows === 0) {
-    label = "Añade filas (piloto + dron) o marca pilotos y drones";
-  } else {
-    label = numDates > 1
-      ? `${numDates} fecha(s) → ${totalPdfs} PDF(s)`
-      : "1 PDF";
-  }
-  const el = document.getElementById("combo-summary");
-  el.textContent = label;
+  const operacion = document.getElementById("com-operacion")?.value;
+  const operador = document.getElementById("com-operador")?.value;
 
   const btn = document.getElementById("btnGenerarMain");
   const btnHeader = document.getElementById("btnGenerar");
-  if (totalPdfs <= 1) {
+  const warning = document.getElementById("generate-warning");
+
+  if (numDates <= 1) {
     btn.textContent = "Generar PDF";
     btnHeader.textContent = "Generar PDF";
   } else {
-    btn.textContent = `Generar ZIP (${totalPdfs} PDFs)`;
-    btnHeader.textContent = `Generar ZIP (${totalPdfs})`;
+    btn.textContent = `Generar ZIP (${numDates} PDFs)`;
+    btnHeader.textContent = `Generar ZIP (${numDates})`;
+  }
+
+  if (warning) {
+    let msg = "";
+    if (!operacion) msg = "Selecciona una operación";
+    else if (!operador) msg = "Selecciona un operador";
+    else if (!rows.length) msg = "Añade al menos una fila con piloto y dron";
+    else if (dates.length === 0) msg = "Indica la fecha de operación";
+
+    if (msg) {
+      warning.textContent = msg;
+      warning.classList.remove("hidden");
+    } else {
+      warning.classList.add("hidden");
+    }
   }
 }
 
@@ -1652,9 +1717,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnLoadExample").addEventListener("click", e => { e.preventDefault(); loadExampleData(); });
   document.querySelectorAll(".mobile-load-example-btn").forEach(el => el.addEventListener("click", loadExampleData));
 
+  // AutoFirma checkbox hint toggle
+  const firmarCb = document.getElementById("com-firmar");
+  const firmarHint = document.getElementById("autofirma-hint");
+  if (firmarCb && firmarHint) {
+    firmarCb.addEventListener("change", () => firmarHint.classList.toggle("hidden", !firmarCb.checked));
+  }
+
   // Generate with loading overlay
   const onGenerate = async () => {
     const overlay = document.getElementById("loading-overlay");
+    setOverlayText("Generando documentos...");
     overlay.style.display = "flex";
     try { await generate(); }
     catch (err) { showToast("Error: " + err.message); console.error(err); }
@@ -1673,6 +1746,11 @@ document.addEventListener("DOMContentLoaded", () => {
   ["com-fecha-inicio", "com-fecha-fin", "com-periodicidad"].forEach(id => {
     document.getElementById(id).addEventListener("change", updateFechasPreview);
     document.getElementById(id).addEventListener("input", updateFechasPreview);
+  });
+
+  // Update warning when operation/operator selects change
+  ["com-operacion", "com-operador"].forEach(id => {
+    document.getElementById(id).addEventListener("change", updateSummary);
   });
 
   // Checkbox select all/none
