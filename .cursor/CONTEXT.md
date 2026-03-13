@@ -36,7 +36,7 @@ La versión de la app se define en `comunicacion/index.html` (variable `V` en el
 
 - **Frontend:** HTML + CSS + JavaScript vanilla. Sin framework (React/Vue/etc.).
 - **Estilos:** Tailwind vía CDN (`cdn.tailwindcss.com`) + `comunicacion/style.css` propio. Clases Tailwind en `index.html` y en cadenas generadas en `app.js` (acordeones, grids).
-- **PDF:** `pdf-lib` (fill form). Plantilla: `comunicacion/template/20201228-Formato-Solicitud-Comunicacion-V9.0.pdf`.
+- **PDF:** `pdf-lib` (fill form). Flujo actual: plantillas `template-operador-form.pdf` (2 págs) y `template-actividad-form.pdf` (4 págs). Un PDF por fecha = operador + N copias de actividad; números de hoja PAGINA/TOTAL. Plantilla antigua `20201228-Formato-Solicitud-Comunicacion-V9.0.pdf` y `FIELD_MAP` siguen en código pero ya no se usan en la generación.
 - **YAML:** `js-yaml` para importar/exportar datos.
 - **ZIP:** `JSZip` para empaquetar varios PDFs.
 - **Persistencia:** `localStorage` bajo la clave `comunicacion_uas_state`.
@@ -75,13 +75,13 @@ Las claves son strings elegidos por el usuario (p. ej. "OP-1", "Juan García", "
 ## Flujo de generación de PDFs
 
 1. **UI → state:** `syncStateFromUI()` lee formularios y actualiza `state`.
-2. **Selección:** En la sección Comunicación se eligen: operación, operador, observador, pilotos (checkboxes), drones (checkboxes) y fechas de operación (inputs por operación).
-3. **Combinaciones:** Se genera un PDF por cada combinación **(piloto × drone × fecha)** (producto cartesiano). Operador y observador son comunes a todos.
-4. **Datos por PDF:** `resolveData({ operador, piloto, observador, uas: drone, operacion, fecha_operacion })` devuelve un objeto plano con claves tipo `operador.nombre`, `piloto.nombre`, `uas.tipo_modelo`, `operacion.fecha`, `comunicacion.fecha`, etc., usado por `fillPdf(data)`.
-5. **Rellenado:** `fillPdf()` carga la plantilla, obtiene el formulario AcroForm y asigna cada valor según `FIELD_MAP` (nombres de campos del PDF oficial). También rellena checkbox de notificación por email.
-6. **Salida:** Un solo PDF → descarga directa. Varios → ZIP con nombres `comunicacion_<operacion>_<fecha>_<piloto>_<drone>.pdf`.
+2. **Selección:** En Comunicación: operación, operador, observador, filas (piloto + dron + observador) o pilotos/drones por defecto, y fechas de operación.
+3. **Filas:** `buildRows()` devuelve la lista de (piloto, drone, observador); si hay combinaciones en el formulario las usa, si no hace producto cartesiano pilotos × drones.
+4. **Un PDF por fecha:** Para cada fecha se genera un único PDF: se rellena la plantilla operador (2 págs) con `fillOperadorPdf(data, totalPages)`, se rellena una copia de la plantilla actividad (4 págs) por cada fila con `fillActividadPdf(data, pageBase, totalPages)`, y se concatenan con `mergeOperadorConActividades(operadorBytes, actividadBytesArray)`. Total páginas = 2 + 4×N (N = número de filas). Números de hoja en formato PAGINA/TOTAL.
+5. **Datos:** `resolveData({ operador, piloto, observador, uas, operacion, fecha_operacion })` devuelve el objeto plano; `OPERADOR_FIELD_MAP` y `ACTIVIDAD_FIELD_MAP` mapean a los nombres de campo de cada plantilla.
+6. **Salida:** Una fecha → un PDF `comunicacion_<operacion>_<YYYYMMDD>.pdf`. Varias fechas → ZIP con un PDF por fecha.
 
-Todo esto está en `comunicacion/app.js`: `generate()`, `resolveData()`, `fillPdf()`, `loadTemplate()`, `FIELD_MAP`, `CHECKBOX_FIELD`, `PDF_TEMPLATE_URL`.
+En `comunicacion/app.js`: `generate()`, `buildRows()`, `fillOperadorPdf()`, `fillActividadPdf()`, `mergeOperadorConActividades()`, `resolveData()`, `OPERADOR_FIELD_MAP`, `ACTIVIDAD_FIELD_MAP`. Utilidad en consola: `listPdfFields(url)` para listar nombres de campos de un PDF.
 
 ---
 
