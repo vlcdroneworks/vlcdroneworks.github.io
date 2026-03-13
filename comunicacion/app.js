@@ -199,6 +199,7 @@ const DRONE_FIELDS = [
 ];
 
 const OPERACION_FIELDS = [
+  { key: "nombre",              label: "Nombre (identificador visible)", group: "Datos generales" },
   { key: "tipo",                label: "Tipo de operación", group: "Datos generales" },
   { key: "lugar",               label: "Lugar (población, provincia, CCAA)", group: "Datos generales" },
   { key: "hora_inicio",         label: "Hora inicio", type: "time", group: "Horario" },
@@ -561,8 +562,12 @@ function loadYamlText(text) {
   state.drones = raw.drones || {};
   state.operaciones = raw.operaciones || {};
   Object.keys(state.operaciones).forEach(k => {
-    delete state.operaciones[k].fecha;
-    delete state.operaciones[k].duracion;
+    const o = state.operaciones[k];
+    if (o) {
+      delete o.fecha;
+      delete o.duracion;
+      if (o.nombre == null || String(o.nombre).trim() === "") o.nombre = k;
+    }
   });
 
   state.comunicacion = getDefaultComunicacion();
@@ -703,6 +708,7 @@ drones:
 
 operaciones:
   operacion_ejemplo1:
+    nombre: "Filmación Albufera"
     tipo: "Filmación aérea"
     lugar: "Albufera, Valencia, Comunidad Valenciana"
     hora_inicio: "09:00"
@@ -716,6 +722,7 @@ operaciones:
     altura_prevista: "120 m AGL"
 
   operacion_ejemplo2:
+    nombre: "Inspección Puerto Valencia"
     tipo: "Inspección técnica"
     lugar: "Puerto de Valencia, Valencia, Comunidad Valenciana"
     hora_inicio: "07:30"
@@ -752,8 +759,12 @@ function loadFromLocal() {
     state.drones = saved.drones || {};
     state.operaciones = saved.operaciones || {};
     Object.keys(state.operaciones).forEach(k => {
-      delete state.operaciones[k].fecha;
-      delete state.operaciones[k].duracion;
+      const o = state.operaciones[k];
+      if (o) {
+        delete o.fecha;
+        delete o.duracion;
+        if (o.nombre == null || String(o.nombre).trim() === "") o.nombre = k;
+      }
     });
     state.comunicacion = getDefaultComunicacion();
   } catch {}
@@ -827,33 +838,53 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
   for (const [key, data] of Object.entries(catalog)) {
     const subtitle = section === "personas" ? (data.nombre || "")
       : section === "drones" ? `${data.fabricante || ""} ${data.tipo_modelo || ""} (${data.mtom || ""})`
+      : section === "operaciones" ? (data.nombre || data.lugar || "")
       : `${data.lugar || ""}`;
+    const displayTitle = subtitle || "(Sin nombre)";
 
     const item = document.createElement("div");
     item.className = "acc-item";
     const useGroups = fieldDefs.some(f => f.group);
     const groups = useGroups ? getFieldsByGroup() : [];
-    const fieldsHtml = useGroups
-      ? groups.map(({ name, fields }, idx) => `
-        <div>
-          <h6 class="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">${esc(name)}</h6>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            ${fields.map(f => {
-              const inputType = f.type || "text";
-              const usePicker = inputType === "time" || inputType === "date" || inputType === "datetime-local";
-              const typeAttr = usePicker ? "text" : inputType;
-              const pickerClass = inputType === "time" ? " vdw-time" : inputType === "date" ? " vdw-date" : inputType === "datetime-local" ? " vdw-datetime" : "";
-              let val = data[f.key] || "";
-              if (f.type === "date") val = ddmmyyyy_to_iso(val);
-              return `
+    const renderField = (f) => {
+      const inputType = f.type || "text";
+      const usePicker = inputType === "time" || inputType === "date" || inputType === "datetime-local";
+      const typeAttr = usePicker ? "text" : inputType;
+      const pickerClass = inputType === "time" ? " vdw-time" : inputType === "date" ? " vdw-date" : inputType === "datetime-local" ? " vdw-datetime" : "";
+      let val = data[f.key] || "";
+      if (f.type === "date") val = ddmmyyyy_to_iso(val);
+      return `
               <div>
                 <label class="block text-xs text-white/50 mb-1">${esc(f.label)}</label>
                 <input type="${typeAttr}" class="field-input text-sm${pickerClass}" value="${escAttr(val)}"
                        data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="${inputType || "text"}"${usePicker ? " readonly" : ""}>
               </div>`;
-            }).join("")}
+    };
+    const fieldsHtml = useGroups
+      ? groups.map(({ name, fields }) => {
+          const isOperacionesDatosGenerales = section === "operaciones" && name === "Datos generales";
+          if (isOperacionesDatosGenerales && fields.length > 0) {
+            const [first, ...rest] = fields;
+            return `
+        <div>
+          <h6 class="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">${esc(name)}</h6>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            ${renderField(first)}
           </div>
-        </div>`).join("")
+          ${rest.length > 0 ? `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+            ${rest.map(renderField).join("")}
+          </div>` : ""}
+        </div>`;
+          }
+          return `
+        <div>
+          <h6 class="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">${esc(name)}</h6>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            ${fields.map(renderField).join("")}
+          </div>
+        </div>`;
+        }).join("")
       : fieldDefs.map(f => {
           const inputType = f.type || "text";
           const usePicker = inputType === "time" || inputType === "date" || inputType === "datetime-local";
@@ -872,15 +903,14 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
     item.innerHTML = `
       <div class="acc-header" data-acc-toggle>
         <div class="flex items-center gap-2 min-w-0">
-          <strong class="text-white truncate">${esc(key)}</strong>
-          <span class="text-white/40 text-sm truncate hidden sm:inline">${esc(subtitle)}</span>
+          <strong class="text-white truncate">${esc(displayTitle)}</strong>
         </div>
         <svg class="acc-chevron w-5 h-5 text-white/40 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
         </svg>
       </div>
       <div class="acc-content hidden">
-        <div class="key-field">
+        <div class="key-field hidden">
           <label class="text-xs font-semibold text-white/50 whitespace-nowrap">Clave:</label>
           <input type="text" class="field-input text-sm" value="${escAttr(key)}"
                  data-section="${section}" data-role="key" data-old-key="${escAttr(key)}">
@@ -894,7 +924,6 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
         </div>
       </div>
     `;
-
     container.appendChild(item);
   }
 }
@@ -919,17 +948,17 @@ function renderComunicacion() {
 
   if (hasO) {
     fillSelect("com-operacion", oKeys, state.comunicacion.operacion,
-      k => `${k} (${state.operaciones[k]?.lugar || ""})`, true);
+      k => state.operaciones[k]?.nombre || state.operaciones[k]?.lugar || state.operaciones[k]?.tipo || k, true);
   }
   if (hasP) {
     fillSelect("com-operador", pKeys, state.comunicacion.operador,
-      k => `${k} (${state.personas[k]?.nombre || ""})`, true);
+      k => state.personas[k]?.nombre || k, true);
     fillSelect("com-observador", pKeys, state.comunicacion.observador,
-      k => `${k} (${state.personas[k]?.nombre || ""})`, true);
-    renderCheckboxList("pilotos-list", pKeys, k => `${k} — ${state.personas[k]?.nombre || ""}`);
+      k => state.personas[k]?.nombre || k, true);
+    renderCheckboxList("pilotos-list", pKeys, k => state.personas[k]?.nombre || k);
   }
   if (hasD) {
-    renderCheckboxList("drones-sel-list", dKeys, k => `${k} — ${state.drones[k]?.tipo_modelo || ""}`);
+    renderCheckboxList("drones-sel-list", dKeys, k => state.drones[k]?.tipo_modelo || state.drones[k]?.fabricante || k);
   }
 
   if (!state.comunicacion.combinaciones) state.comunicacion.combinaciones = [];
@@ -1023,7 +1052,7 @@ function renderCombinacionesList() {
     pKeys.forEach(k => {
       const opt = document.createElement("option");
       opt.value = k;
-      opt.textContent = `${k} — ${state.personas[k]?.nombre || ""}`;
+      opt.textContent = state.personas[k]?.nombre || k;
       if (k === (entry.piloto || "")) opt.selected = true;
       pilotoSel.appendChild(opt);
     });
@@ -1045,7 +1074,8 @@ function renderCombinacionesList() {
     dKeys.forEach(dk => {
       const opt = document.createElement("option");
       opt.value = dk;
-      opt.textContent = dk;
+      const d = state.drones[dk];
+      opt.textContent = d?.tipo_modelo || d?.fabricante || dk;
       if (dk === (entry.drone || "")) opt.selected = true;
       droneSel.appendChild(opt);
     });
@@ -1062,7 +1092,7 @@ function renderCombinacionesList() {
     pKeys.forEach(k => {
       const opt = document.createElement("option");
       opt.value = k;
-      opt.textContent = `${k} — ${state.personas[k]?.nombre || ""}`;
+      opt.textContent = state.personas[k]?.nombre || k;
       if (k === (entry.observador || "")) opt.selected = true;
       observadorSel.appendChild(opt);
     });
@@ -1218,7 +1248,8 @@ function syncStateFromUI() {
     const items = document.querySelectorAll(`#${section}-list .acc-item`);
     for (const item of items) {
       const keyInput = item.querySelector('[data-role="key"]');
-      const key = keyInput.value.trim() || keyInput.dataset.oldKey;
+      const key = keyInput ? (keyInput.value.trim() || keyInput.dataset.oldKey) : "";
+      if (!key) continue;
       const obj = {};
       item.querySelectorAll("[data-field]").forEach(f => {
         let val = f.value;
@@ -1530,6 +1561,10 @@ document.addEventListener("DOMContentLoaded", () => {
     state.personas = parsed.personas || {};
     state.drones = parsed.drones || {};
     state.operaciones = parsed.operaciones || {};
+    Object.keys(state.operaciones).forEach(k => {
+      const o = state.operaciones[k];
+      if (o && (o.nombre == null || String(o.nombre).trim() === "")) o.nombre = k;
+    });
     state.comunicacion = getDefaultComunicacion();
     saveToLocal();
     sessionStorage.setItem("goto_section", "comunicacion");
