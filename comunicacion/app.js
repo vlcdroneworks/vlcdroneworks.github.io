@@ -179,8 +179,11 @@ const PERSONA_FIELDS = [
   { key: "poliza_seguros",         label: "Póliza de seguros", group: "Registro y formación" },
 ];
 
+/** Valores permitidos para clase de aeronave (UAS). */
+const CLASE_UAS_VALIDOS = ["Ala fija", "Hibrido", "Rotor"];
+
 const DRONE_FIELDS = [
-  { key: "clase",              label: "Clase de UAS", group: "Identificación" },
+  { key: "clase",              label: "Clase de UAS", group: "Identificación", options: CLASE_UAS_VALIDOS },
   { key: "fabricante",         label: "Fabricante", group: "Identificación" },
   { key: "tipo_modelo",        label: "Tipo y modelo", group: "Identificación" },
   { key: "numero_serie",       label: "Número de serie", group: "Identificación" },
@@ -560,6 +563,14 @@ function loadYamlText(text) {
 
   state.personas = raw.personas || {};
   state.drones = raw.drones || {};
+  let clasesCorregidas = 0;
+  Object.keys(state.drones).forEach(k => {
+    const d = state.drones[k];
+    if (d && d.clase != null && !CLASE_UAS_VALIDOS.includes(String(d.clase).trim())) {
+      d.clase = CLASE_UAS_VALIDOS[0];
+      clasesCorregidas++;
+    }
+  });
   state.operaciones = raw.operaciones || {};
   Object.keys(state.operaciones).forEach(k => {
     const o = state.operaciones[k];
@@ -574,7 +585,11 @@ function loadYamlText(text) {
 
   renderAll();
   saveToLocal();
-  showToast("YAML cargado correctamente");
+  if (clasesCorregidas > 0) {
+    showToast("YAML cargado. Se han corregido " + clasesCorregidas + " valor(es) de clase de UAS no válidos.");
+  } else {
+    showToast("YAML cargado correctamente");
+  }
 }
 
 function exportYaml() {
@@ -653,7 +668,7 @@ personas:
 
 drones:
   dron_mavic3:
-    clase: "C1"
+    clase: "Rotor"
     fabricante: "DJI"
     tipo_modelo: "Mavic 3 Pro"
     numero_serie: "1ZNBJ1234567890"
@@ -671,7 +686,7 @@ drones:
     dispositivo_vision: "No"
 
   dron_mini4:
-    clase: "C0"
+    clase: "Rotor"
     fabricante: "DJI"
     tipo_modelo: "Mini 4 Pro"
     numero_serie: "1YNBJ9876543210"
@@ -689,7 +704,7 @@ drones:
     dispositivo_vision: "No"
 
   dron_inspire3:
-    clase: "C2"
+    clase: "Rotor"
     fabricante: "DJI"
     tipo_modelo: "Inspire 3"
     numero_serie: "3ZNBJ5555666677"
@@ -757,6 +772,12 @@ function loadFromLocal() {
     if (!saved || typeof saved !== "object") return;
     state.personas = saved.personas || {};
     state.drones = saved.drones || {};
+    Object.keys(state.drones).forEach(k => {
+      const d = state.drones[k];
+      if (d && d.clase != null && !CLASE_UAS_VALIDOS.includes(String(d.clase).trim())) {
+        d.clase = CLASE_UAS_VALIDOS[0];
+      }
+    });
     state.operaciones = saved.operaciones || {};
     Object.keys(state.operaciones).forEach(k => {
       const o = state.operaciones[k];
@@ -847,6 +868,22 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
     const useGroups = fieldDefs.some(f => f.group);
     const groups = useGroups ? getFieldsByGroup() : [];
     const renderField = (f) => {
+      if (f.options && Array.isArray(f.options)) {
+        let val = data[f.key] || "";
+        const opts = f.options.map((opt) => {
+          const sel = opt === val ? " selected" : "";
+          return `<option value="${escAttr(opt)}"${sel}>${esc(opt)}</option>`;
+        }).join("");
+        return `
+              <div>
+                <label class="block text-xs text-white/50 mb-1">${esc(f.label)}</label>
+                <select class="field-input field-select text-sm w-full rounded-lg bg-white/5 border border-white/10 text-white focus:border-vdw-orange focus:ring-1 focus:ring-vdw-orange"
+                        data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="text">
+                  <option value="">—</option>
+                  ${opts}
+                </select>
+              </div>`;
+      }
       const inputType = f.type || "text";
       const usePicker = inputType === "time" || inputType === "date" || inputType === "datetime-local";
       const typeAttr = usePicker ? "text" : inputType;
@@ -886,6 +923,22 @@ function renderAccordionList(containerId, catalog, fieldDefs, section) {
         </div>`;
         }).join("")
       : fieldDefs.map(f => {
+          if (f.options && Array.isArray(f.options)) {
+            let val = data[f.key] || "";
+            const opts = f.options.map((opt) => {
+              const sel = opt === val ? " selected" : "";
+              return `<option value="${escAttr(opt)}"${sel}>${esc(opt)}</option>`;
+            }).join("");
+            return `
+            <div>
+              <label class="block text-xs text-white/50 mb-1">${esc(f.label)}</label>
+              <select class="field-input field-select text-sm w-full rounded-lg bg-white/5 border border-white/10 text-white focus:border-vdw-orange focus:ring-1 focus:ring-vdw-orange"
+                      data-section="${section}" data-item-key="${escAttr(key)}" data-field="${f.key}" data-type="text">
+                <option value="">—</option>
+                ${opts}
+              </select>
+            </div>`;
+          }
           const inputType = f.type || "text";
           const usePicker = inputType === "time" || inputType === "date" || inputType === "datetime-local";
           const typeAttr = usePicker ? "text" : inputType;
