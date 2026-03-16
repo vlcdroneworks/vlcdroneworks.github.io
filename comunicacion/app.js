@@ -344,11 +344,13 @@ async function loadTemplateActividad() {
   return pdfTemplateActividadBytes;
 }
 
-/** Rellena un PDF con un mapeo campo-lógico → nombre AcroForm. data puede incluir pagina.1, pagina.2, datos_actividad, etc. */
+/** Rellena un PDF con un mapeo campo-lógico → nombre AcroForm y aplana los campos
+ *  para convertirlos en contenido estático (máxima compatibilidad entre visores). */
 async function fillPdfWithMap(templateBytes, fieldMap, data) {
   const pdfDoc = await PDFLib.PDFDocument.load(templateBytes);
   const form = pdfDoc.getForm();
   let fontBold = null;
+  let datosActividadField = null;
   if (data.datos_actividad != null && data.datos_actividad !== "") {
     try {
       const boldFontRef = (typeof PDFLib.StandardFonts !== "undefined" && PDFLib.StandardFonts.HelveticaBold) || "Helvetica-Bold";
@@ -369,9 +371,7 @@ async function fillPdfWithMap(templateBytes, fieldMap, data) {
         if (dataKey.startsWith("pagina.")) {
           try { field.setFontSize(9); } catch { /* el campo puede no tener /DA */ }
         }
-        if (dataKey === "datos_actividad" && fontBold) {
-          try { field.updateAppearances(fontBold); } catch { /* fallback sin negrita */ }
-        }
+        if (dataKey === "datos_actividad") datosActividadField = field;
       } catch {
         try {
           const dd = form.getDropdown(fieldName);
@@ -381,7 +381,11 @@ async function fillPdfWithMap(templateBytes, fieldMap, data) {
     }
   }
   try { form.updateFieldAppearances(); } catch { /* opcional */ }
-  return await pdfDoc.save({ updateFieldAppearances: !fontBold });
+  if (datosActividadField && fontBold) {
+    try { datosActividadField.updateAppearances(fontBold); } catch { /* fallback sin negrita */ }
+  }
+  form.flatten();
+  return await pdfDoc.save();
 }
 
 /** Rellena la plantilla operador (2 páginas). totalPages = 2 + 4 * numFilas. */
