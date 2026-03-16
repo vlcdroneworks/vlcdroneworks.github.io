@@ -4,31 +4,69 @@ Seguimiento de mejoras y tareas pendientes. El objetivo es tener **todo claro y 
 
 ---
 
-## Pendientes
+## Hecho (referencia)
 
 ### 1. Mejorar la creación de PDFs: PDF único con páginas repetidas
 - **Estado:** Hecho
 - **Completado:** Un PDF por fecha = operador (2 págs) + N×actividad (4 págs). Plantillas template-operador-form.pdf y template-actividad-form.pdf; OPERADOR_FIELD_MAP, ACTIVIDAD_FIELD_MAP; números de hoja PAGINA/TOTAL.
-- **Descripción (referencia):** En lugar de generar un PDF por cada (piloto, drone, fecha), generar **un único PDF** por comunicación donde ciertas páginas se repiten. Ejemplo: página 1 = datos operador, página 2 = datos piloto, página 3 = datos de la operación; si la operación se hace en 3 días distintos, el PDF tendría pág. 1, pág. 2, pág. 3 (día 1), pág. 3 (día 2), pág. 3 (día 3). Requiere una plantilla PDF pensada por páginas y lógica para copiar/rellenar la página repetible.
-- **Contexto técnico:** Hoy se usa `pdf-lib`, plantilla en `template/20201228-Formato-Solicitud-Comunicacion-V9.0.pdf`, `FIELD_MAP` y `fillPdf()` + `resolveData()` en `app.js`. La plantilla actual es la del Ministerio; para este flujo haría falta una plantilla nueva bien estructurada por páginas, o montar el PDF copiando páginas de la plantilla.
-- **Viabilidad en JavaScript:** Sí. Con **pdf-lib** se puede: cargar un PDF, usar `copyPages(docOrigen, [índice, índice, ...])` para copiar páginas (pasando el mismo índice varias veces se obtienen copias independientes), añadirlas al documento resultado y rellenar el formulario en cada copia. Detalle a resolver: cuando la misma página se repite, los nombres de los campos del formulario se repiten; hay que rellenar por página o por instancia de campo (pdf-lib permite trabajar con el formulario; ver cómo expone campos cuando hay varios con el mismo nombre).
-- **Por definir:** Definir exactamente qué páginas son fijas (1 operador, 1 piloto…) y cuál es la página “operación” que se repite por fecha. Si la plantilla oficial no está cortada por páginas reutilizables, podría hacerse una plantilla derivada (solo con esas páginas) o montar el PDF desde cero copiando y rellenando.
 
 ### 2. Sustituir date/time picker por un componente unificado
 - **Estado:** Hecho
-- **Completado:** Implementado con Flatpickr (CDN), inputs tipo texto con clases vdw-date, vdw-time, vdw-datetime; initDatePickers() en renderAll(). Contención en móvil con min-width: 0 en grid de cards.
+- **Completado:** Flatpickr (CDN), clases vdw-date, vdw-time, vdw-datetime; initDatePickers() en renderAll().
 
-### 3. Combinaciones piloto–drone (evitar PDFs innecesarios)
+### 3. Combinaciones piloto–drone
 - **Estado:** Hecho
-- **Completado:** Formulario "Combinaciones piloto–drone (opcional)" en Comunicación: Agregar piloto, Agregar todos, filas con piloto + drones + Quitar. Si hay combinaciones con drones, solo se generan esas parejas × fechas; si no, producto cartesiano. Persistencia en localStorage y YAML.
+- **Completado:** Formulario con filas piloto + dron + observador; opción "Todos" en selector de drones (genera una comunicación por cada drone). Persistencia en localStorage y YAML.
+
 ### 4. Extraer la versión de la app fuera de index.html
 - **Estado:** Hecho
-- **Completado:** `comunicacion/version.txt` como única fuente de la versión base; el workflow lee de ahí e inyecta en index.html. Para subir versión solo se edita version.txt.
+- **Completado:** `comunicacion/version.txt` como fuente; workflow inyecta en index.html.
+
+### 5. Rango de fechas correcto (UTC vs local)
+- **Estado:** Hecho
+- **Completado:** `getOperationDates()` usa `toLocalDateString()` en lugar de `toISOString().slice(0,10)` para evitar desfase de un día en zonas UTC+1. Fechas de inicio/fin se parsean con `"T00:00:00"` para interpretarlas como medianoche local.
+
+### 6. Desplegables solo con nombre (sin clave)
+- **Estado:** Hecho
+- **Completado:** Operación, operador, observador, piloto y dron muestran solo nombre/descripción en la UI; el `value` sigue siendo la clave interna.
+
+### 7. Campo nombre en operaciones
+- **Estado:** Hecho
+- **Completado:** Añadido campo "nombre" en OPERACION_FIELDS (Datos generales). En importación YAML/localStorage/ejemplo se rellena con la clave si falta. Layout: nombre en una línea, tipo y lugar debajo.
+
+### 8. Ocultar campo clave en formularios de datos
+- **Estado:** Hecho
+- **Completado:** El campo "Clave" en personas, drones y operaciones tiene clase `hidden`; el input sigue en el DOM para syncStateFromUI. El encabezado del acordeón muestra título descriptivo (nombre / fabricante+modelo / nombre|lugar).
+
+### 9. Aviso 5 días de antelación
+- **Estado:** Hecho
+- **Completado:** Si la fecha de operación es en menos de 5 días respecto a hoy, se muestra aviso en ámbar bajo las fechas (`#fechas-antelacion-aviso`) y se llama a `checkAntelacionMinima()` desde `updateFechasPreview()` y `renderComunicacion()`.
+
+### 10. Botón "Agregar fila" con estilo primary
+- **Estado:** Hecho
+- **Completado:** Misma apariencia que "Añadir persona" (btn-primary) con tamaño compacto (text-xs, px-2.5 py-1).
+
+### 11. Ocultar recuento de páginas en Comunicación
+- **Estado:** Hecho
+- **Completado:** El resumen muestra solo "1 PDF" o "N fecha(s) → N PDF(s)"; eliminado el texto con páginas por PDF.
+
+### 12. Clase de aeronave (UAS) restringida a tres valores
+- **Estado:** Hecho
+- **Completado:** Valores permitidos: "Ala fija", "Hibrido", "Rotor" (`CLASE_UAS_VALIDOS`). Campo `clase` en drones es un desplegable (select) en lugar de texto. YAML de ejemplo actualizado. Al cargar YAML o localStorage, valores no válidos se normalizan a "Ala fija" y se muestra toast si se corrigieron.
+
+### 13. Compatibilidad PDF con Adobe Acrobat Reader (flatten)
+- **Estado:** Hecho
+- **Completado:** `fillPdfWithMap` ahora aplana los campos del formulario (`form.flatten()`) después de rellenarlos y generar sus apariencias. Esto convierte los campos AcroForm en contenido estático de página, eliminando los nombres de campo duplicados que provocaban que Acrobat Reader no renderizase las páginas a partir de la segunda actividad. También corregido el orden de `updateAppearances(fontBold)` para `datos_actividad` (se aplica después de `form.updateFieldAppearances()` para que la negrita no sea sobreescrita).
+
+---
+
+## Pendientes
+
+- **Nada pendiente** de la lista histórica. Cualquier nueva mejora se puede añadir aquí debajo.
 
 ---
 
 ## Cómo usar este TODO
 
-- Mantener cada ítem con Estado, Descripción, Contexto técnico y (si aplica) Viabilidad, Requisitos, Por definir.
-- Al cerrar un ítem: Estado = "Hecho", añadir **Completado:** con fecha o commit.
+- Mantener cada ítem con Estado y Completado cuando corresponda.
 - Para detalle técnico de la app (state, flujos, archivos), ver `.cursor/CONTEXT.md`.

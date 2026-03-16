@@ -36,7 +36,7 @@ La versión de la app se define en `comunicacion/index.html` (variable `V` en el
 
 - **Frontend:** HTML + CSS + JavaScript vanilla. Sin framework (React/Vue/etc.).
 - **Estilos:** Tailwind vía CDN (`cdn.tailwindcss.com`) + `comunicacion/style.css` propio. Clases Tailwind en `index.html` y en cadenas generadas en `app.js` (acordeones, grids).
-- **PDF:** `pdf-lib` (fill form). Flujo actual: plantillas `template-operador-form.pdf` (2 págs) y `template-actividad-form.pdf` (4 págs). Un PDF por fecha = operador + N copias de actividad; números de hoja PAGINA/TOTAL. Plantilla antigua `20201228-Formato-Solicitud-Comunicacion-V9.0.pdf` y `FIELD_MAP` siguen en código pero ya no se usan en la generación.
+- **PDF:** `pdf-lib` (fill form + flatten). Flujo actual: plantillas `template-operador-form.pdf` (2 págs) y `template-actividad-form.pdf` (4 págs). Un PDF por fecha = operador + N copias de actividad; números de hoja PAGINA/TOTAL. Los campos AcroForm se aplanan (`form.flatten()`) antes de mergear para evitar nombres duplicados y garantizar compatibilidad con todos los visores (incluido Adobe Acrobat Reader). Plantilla antigua `20201228-Formato-Solicitud-Comunicacion-V9.0.pdf` y `FIELD_MAP` siguen en código pero ya no se usan en la generación.
 - **YAML:** `js-yaml` para importar/exportar datos.
 - **ZIP:** `JSZip` para empaquetar varios PDFs.
 - **Persistencia:** `localStorage` bajo la clave `comunicacion_uas_state`.
