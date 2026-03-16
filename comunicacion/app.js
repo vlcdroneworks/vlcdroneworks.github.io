@@ -92,8 +92,8 @@ const ACTIVIDAD_PAGES = 4;
 
 /** Mapeo datos → campos AcroForm en template-operador-form.pdf (2 páginas). */
 const OPERADOR_FIELD_MAP = {
-  "comunicacion.fecha": "fecha_comunicacion_operador",
-  "comunicacion.hora": "hora_comunicacion_operador",
+  "comunicacion.fecha": ["fecha_comunicacion_operador", "fecha_comunicacion_representante"],
+  "comunicacion.hora": ["hora_comunicacion_operador", "hora_comunicacion_representante"],
   "operador.nombre": "nombre_operador",
   "operador.documento_identidad": "dni_operador",
   "operador.direccion": "direccion_operador",
