@@ -56,7 +56,11 @@ Seguimiento de mejoras y tareas pendientes. El objetivo es tener **todo claro y 
 
 ### 13. Compatibilidad PDF con Adobe Acrobat Reader (flatten)
 - **Estado:** Hecho
-- **Completado:** `fillPdfWithMap` ahora aplana los campos del formulario (`form.flatten()`) después de rellenarlos y generar sus apariencias. Esto convierte los campos AcroForm en contenido estático de página, eliminando los nombres de campo duplicados que provocaban que Acrobat Reader no renderizase las páginas a partir de la segunda actividad. También corregido el orden de `updateAppearances(fontBold)` para `datos_actividad` (se aplica después de `form.updateFieldAppearances()` para que la negrita no sea sobreescrita).
+- **Completado:** `fillPdfWithMap` aplana los campos del formulario (`form.flatten()`) después de rellenarlos y generar sus apariencias. Esto convierte los campos AcroForm en contenido estático de página, eliminando los nombres de campo duplicados que provocaban que Acrobat Reader no renderizase las páginas a partir de la segunda actividad. También corregido el orden de `updateAppearances(fontBold)` para `datos_actividad` (se aplica después de `form.updateFieldAppearances()` para que la negrita no sea sobreescrita).
+
+### 14. Campos de representante vacíos en la plantilla operador
+- **Estado:** Hecho
+- **Completado:** `OPERADOR_FIELD_MAP` ya no mapea datos del operador a campos del representante. Solo se rellenan los campos `_operador`; los campos `_representante` quedan vacíos en el PDF generado.
 
 ---
 

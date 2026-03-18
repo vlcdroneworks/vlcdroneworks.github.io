@@ -21,6 +21,7 @@ comunicacion/          # App desplegada (HTML, JS, CSS, assets)
   app.js
   style.css
   logo-2.png
+  version.txt           # Versión base (p. ej. "3.0.0")
   template/             # Plantilla PDF oficial
 .github/workflows/      # p. ej. inject-version.yml
 .cursor/                # Documentación para desarrollo/agentes (no se despliega)
@@ -28,7 +29,7 @@ comunicacion/          # App desplegada (HTML, JS, CSS, assets)
   CONTEXT.md            # Este fichero
 ```
 
-La versión de la app se define en `comunicacion/index.html` (variable `V` en el script que carga `app.js`). Un workflow de GitHub Actions (`.github/workflows/inject-version.yml`) inyecta el commit SHA en esa versión en cada push a `main`.
+La versión base de la app se define en `comunicacion/version.txt`. Un workflow de GitHub Actions (`.github/workflows/inject-version.yml`) lee ese fichero y lo inyecta junto con el commit SHA en `comunicacion/index.html` en cada push a `main`.
 
 ---
 
@@ -36,7 +37,7 @@ La versión de la app se define en `comunicacion/index.html` (variable `V` en el
 
 - **Frontend:** HTML + CSS + JavaScript vanilla. Sin framework (React/Vue/etc.).
 - **Estilos:** Tailwind vía CDN (`cdn.tailwindcss.com`) + `comunicacion/style.css` propio. Clases Tailwind en `index.html` y en cadenas generadas en `app.js` (acordeones, grids).
-- **PDF:** `pdf-lib` (fill form + flatten). Flujo actual: plantillas `template-operador-form.pdf` (2 págs) y `template-actividad-form.pdf` (4 págs). Un PDF por fecha = operador + N copias de actividad; números de hoja PAGINA/TOTAL. Los campos AcroForm se aplanan (`form.flatten()`) antes de mergear para evitar nombres duplicados y garantizar compatibilidad con todos los visores (incluido Adobe Acrobat Reader). Plantilla antigua `20201228-Formato-Solicitud-Comunicacion-V9.0.pdf` y `FIELD_MAP` siguen en código pero ya no se usan en la generación.
+- **PDF:** `pdf-lib` (fill form + flatten). Flujo actual: plantillas `template-operador-form.pdf` (2 págs) y `template-actividad-form.pdf` (4 págs). Un PDF por fecha = operador + N copias de actividad; números de hoja PAGINA/TOTAL. Los campos AcroForm se aplanan (`form.flatten()`) antes de mergear para evitar nombres duplicados y garantizar compatibilidad con todos los visores (incluido Adobe Acrobat Reader). Los campos de representante en la plantilla operador quedan vacíos (solo se rellena la sección del operador). Plantilla antigua `20201228-Formato-Solicitud-Comunicacion-V9.0.pdf` y `FIELD_MAP` siguen en código pero ya no se usan en la generación.
 - **YAML:** `js-yaml` para importar/exportar datos.
 - **ZIP:** `JSZip` para empaquetar varios PDFs.
 - **Persistencia:** `localStorage` bajo la clave `comunicacion_uas_state`.
@@ -110,7 +111,7 @@ Eventos (navegación, dropdown, acordeón, botones, inputs) se registran en `DOM
 - **Añadir un campo:** Incluirlo en el array de fields correspondiente (`PERSONA_FIELDS`, `DRONE_FIELDS`, `OPERACION_FIELDS`) con `key`, `label` y opcionalmente `type` (p. ej. `"time"`, `"date"`) y `group`. Si existe en el PDF, añadir la entrada en `FIELD_MAP` y, si hace falta, en `resolveData()`.
 - **Formato fecha en PDF:** Se usa DD/MM/YYYY; la fecha de operación llega como tal desde la UI. Para el formulario de comunicación se usa `fecha_hora` (fecha + hora actual al generar).
 - **Cache:** El script se carga con `app.js?v=<VERSION>` para cache-busting; la versión puede incluir commit SHA vía GitHub Actions.
-- **Inputs time/date:** Son nativos; en móvil los `type="time"` pueden desbordar; se ha intentado contener con CSS (`min-width: 0`, `max-width: 100%`, `overflow-x: hidden` en `.acc-content`). Un TODO pendiente es sustituirlos por un componente único para todos los navegadores.
+- **Inputs time/date:** Flatpickr (CDN) con clases `vdw-date`, `vdw-time`, `vdw-datetime`; se inicializan con `initDatePickers()` en `renderAll()`. Apariencia unificada en todos los navegadores.
 
 ---
 
