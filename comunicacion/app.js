@@ -422,14 +422,25 @@ async function listPdfFields(url) {
   return names;
 }
 
+/** Elimina AcroForm y anotaciones de un PDFDocument para producir un PDF estático. */
+function stripFormData(pdfDoc) {
+  const { PDFName } = PDFLib;
+  try { pdfDoc.catalog.delete(PDFName.of('AcroForm')); } catch { /* no había AcroForm */ }
+  for (const page of pdfDoc.getPages()) {
+    try { page.node.delete(PDFName.of('Annots')); } catch { /* sin anotaciones */ }
+  }
+}
+
 /** Concatena PDF operador (2 págs) + varios PDFs actividad (4 págs cada uno). Devuelve bytes del PDF unido. */
 async function mergeOperadorConActividades(operadorBytes, actividadBytesArray) {
   const merged = await PDFLib.PDFDocument.create();
   const opDoc = await PDFLib.PDFDocument.load(operadorBytes);
+  stripFormData(opDoc);
   const opPages = await merged.copyPages(opDoc, [0, 1]);
   opPages.forEach(p => merged.addPage(p));
   for (const actBytes of actividadBytesArray) {
     const actDoc = await PDFLib.PDFDocument.load(actBytes);
+    stripFormData(actDoc);
     const actPages = await merged.copyPages(actDoc, [0, 1, 2, 3]);
     actPages.forEach(p => merged.addPage(p));
   }
