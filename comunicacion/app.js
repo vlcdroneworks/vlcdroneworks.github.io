@@ -89,6 +89,29 @@ const PDF_TEMPLATE_OPERADOR_URL = "template/template-operador-form.pdf";
 const PDF_TEMPLATE_ACTIVIDAD_URL = "template/template-actividad-form.pdf";
 const OPERADOR_PAGES = 2;
 const ACTIVIDAD_PAGES = 4;
+const VENTANA_DIAS_SIGUIENTES = 5;
+
+/** Agrupa fechas ISO ordenadas en bloques donde la última fecha dista como máximo
+ *  diasSiguientes días de la primera (ventana = inicio + 5 días siguientes). */
+function groupDatesByWindow(isoDates, diasSiguientes) {
+  if (!isoDates.length) return [];
+  const groups = [];
+  let group = [isoDates[0]];
+  let anchor = new Date(isoDates[0] + "T00:00:00");
+  for (let i = 1; i < isoDates.length; i++) {
+    const d = new Date(isoDates[i] + "T00:00:00");
+    const diffDays = Math.round((d - anchor) / 86400000);
+    if (diffDays <= diasSiguientes) {
+      group.push(isoDates[i]);
+    } else {
+      groups.push(group);
+      group = [isoDates[i]];
+      anchor = d;
+    }
+  }
+  groups.push(group);
+  return groups;
+}
 
 /** Mapeo datos → campos AcroForm en template-operador-form.pdf (2 páginas). */
 const OPERADOR_FIELD_MAP = {
@@ -551,6 +574,7 @@ async function generate() {
   const observador = document.getElementById("com-observador").value;
   const rows = buildRows();
   const wantSign = document.getElementById("com-firmar").checked;
+  const wantGroup = document.getElementById("com-agrupar")?.checked;
 
   if (!operacion) { showToast("Selecciona una operación"); return; }
   if (!operador) { showToast("Selecciona un operador"); return; }
@@ -570,57 +594,71 @@ async function generate() {
     catch { showToast("No se pudo inicializar AutoFirma. ¿Está instalada?"); return; }
   }
 
-  const fechasList = opDates.map(isoDate => iso_to_ddmmyyyy(isoDate));
-  const totalPages = OPERADOR_PAGES + ACTIVIDAD_PAGES * rows.length;
-  const totalPdfs = fechasList.length;
+  const isoGroups = wantGroup
+    ? groupDatesByWindow(opDates, VENTANA_DIAS_SIGUIENTES)
+    : opDates.map(d => [d]);
+  const groups = isoGroups.map(g => g.map(iso_to_ddmmyyyy));
+  const totalPdfs = groups.length;
 
   function fechaToClean(f) {
     const parts = f.split("/");
     return parts.length === 3 ? `${parts[2]}${parts[1]}${parts[0]}` : f.replace(/\//g, "");
   }
 
-  const fileName = (fecha) => `comunicacion_${operacion}_${fechaToClean(fecha)}.pdf`;
+  function groupFileName(fechasGroup) {
+    const first = fechaToClean(fechasGroup[0]);
+    if (fechasGroup.length === 1) return `comunicacion_${operacion}_${first}.pdf`;
+    const last = fechaToClean(fechasGroup[fechasGroup.length - 1]);
+    return `comunicacion_${operacion}_${first}-${last}.pdf`;
+  }
 
-  async function buildPdf(fecha) {
-    const operadorData = resolveData({ operador, operacion, fecha_operacion: fecha });
+  async function buildGroupPdf(fechasGroup) {
+    const totalPages = OPERADOR_PAGES + ACTIVIDAD_PAGES * rows.length * fechasGroup.length;
+    const operadorData = resolveData({ operador, operacion, fecha_operacion: fechasGroup[0] });
     const operadorBytes = await fillOperadorPdf(operadorData, totalPages);
     const actividadBytesList = [];
-    for (let i = 0; i < rows.length; i++) {
-      const { piloto, drone, observador: obs } = rows[i];
-      const actData = resolveData({ operador, piloto, observador: obs !== undefined ? obs : observador, uas: drone, operacion, fecha_operacion: fecha });
-      const actBytes = await fillActividadPdf(actData, OPERADOR_PAGES + ACTIVIDAD_PAGES * i, totalPages, i + 1);
-      actividadBytesList.push(actBytes);
+    let actIdx = 0;
+    for (const fecha of fechasGroup) {
+      for (let i = 0; i < rows.length; i++) {
+        const { piloto, drone, observador: obs } = rows[i];
+        const actData = resolveData({ operador, piloto, observador: obs !== undefined ? obs : observador, uas: drone, operacion, fecha_operacion: fecha });
+        const pageBase = OPERADOR_PAGES + ACTIVIDAD_PAGES * actIdx;
+        const actBytes = await fillActividadPdf(actData, pageBase, totalPages, actIdx + 1);
+        actividadBytesList.push(actBytes);
+        actIdx++;
+      }
     }
     return await mergeOperadorConActividades(operadorBytes, actividadBytesList);
   }
 
-  if (fechasList.length === 1) {
+  if (totalPdfs === 1) {
     setOverlayText("Generando PDF...");
-    let pdfBytes = await buildPdf(fechasList[0]);
+    let pdfBytes = await buildGroupPdf(groups[0]);
     if (wantSign) {
       setOverlayText("Esperando firma en AutoFirma...");
       pdfBytes = await signPdfWithAutoFirma(pdfBytes);
     }
-    downloadBlob(pdfBytes, fileName(fechasList[0]), "application/pdf");
+    downloadBlob(pdfBytes, groupFileName(groups[0]), "application/pdf");
     saveToLocal();
     showToast(wantSign ? "PDF firmado y descargado" : "PDF generado correctamente");
     return;
   }
 
   const zip = new JSZip();
-  for (let idx = 0; idx < fechasList.length; idx++) {
-    const fecha = fechasList[idx];
+  for (let idx = 0; idx < totalPdfs; idx++) {
     setOverlayText(`Generando PDF ${idx + 1} de ${totalPdfs}...`);
-    let pdfBytes = await buildPdf(fecha);
+    let pdfBytes = await buildGroupPdf(groups[idx]);
     if (wantSign) {
       setOverlayText(`Firmando PDF ${idx + 1} de ${totalPdfs}...`);
       pdfBytes = await signPdfWithAutoFirma(pdfBytes);
     }
-    zip.file(fileName(fecha), pdfBytes);
+    zip.file(groupFileName(groups[idx]), pdfBytes);
   }
   setOverlayText("Empaquetando ZIP...");
-  const firstClean = fechaToClean(fechasList[0]);
-  const zipSuffix = fechasList.length > 1 ? `${firstClean}-${fechaToClean(fechasList[fechasList.length - 1])}` : firstClean;
+  const firstClean = fechaToClean(groups[0][0]);
+  const lastGroup = groups[groups.length - 1];
+  const lastClean = fechaToClean(lastGroup[lastGroup.length - 1]);
+  const zipSuffix = totalPdfs > 1 ? `${firstClean}-${lastClean}` : firstClean;
   const zipBlob = await zip.generateAsync({ type: "blob" });
   downloadBlob(zipBlob, `comunicaciones_${operacion}_${zipSuffix}.zip`, "application/zip");
   saveToLocal();
@@ -1350,6 +1388,12 @@ function checkAntelacionMinima() {
   }
 }
 
+function countPdfs(dates) {
+  const wantGroup = document.getElementById("com-agrupar")?.checked;
+  if (!wantGroup || dates.length <= 1) return Math.max(dates.length, 1);
+  return groupDatesByWindow(dates, VENTANA_DIAS_SIGUIENTES).length;
+}
+
 function updateFechasPreview() {
   const dates = getOperationDates();
   const el = document.getElementById("fechas-preview");
@@ -1357,7 +1401,9 @@ function updateFechasPreview() {
     el.textContent = "";
   } else {
     const formatted = dates.map(d => iso_to_ddmmyyyy(d)).join(", ");
-    el.textContent = `${dates.length} operaciones a comunicar: ${formatted}`;
+    const numPdfs = countPdfs(dates);
+    const pdfInfo = numPdfs < dates.length ? ` (${numPdfs} PDF${numPdfs > 1 ? "s" : ""})` : "";
+    el.textContent = `${dates.length} operaciones a comunicar${pdfInfo}: ${formatted}`;
   }
   checkAntelacionMinima();
   updateSummary();
@@ -1365,21 +1411,21 @@ function updateFechasPreview() {
 
 function updateSummary() {
   const dates = getOperationDates();
-  const numDates = Math.max(dates.length, 1);
   const rows = buildRows();
   const operacion = document.getElementById("com-operacion")?.value;
   const operador = document.getElementById("com-operador")?.value;
+  const numPdfs = countPdfs(dates);
 
   const btn = document.getElementById("btnGenerarMain");
   const btnHeader = document.getElementById("btnGenerar");
   const warning = document.getElementById("generate-warning");
 
-  if (numDates <= 1) {
+  if (numPdfs <= 1) {
     btn.textContent = "Generar PDF";
     btnHeader.textContent = "Generar PDF";
   } else {
-    btn.textContent = `Generar ZIP (${numDates} PDFs)`;
-    btnHeader.textContent = `Generar ZIP (${numDates})`;
+    btn.textContent = `Generar ZIP (${numPdfs} PDFs)`;
+    btnHeader.textContent = `Generar ZIP (${numPdfs})`;
   }
 
   if (warning) {
@@ -1762,6 +1808,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(id).addEventListener("change", updateFechasPreview);
     document.getElementById(id).addEventListener("input", updateFechasPreview);
   });
+
+  // Group checkbox refreshes preview and summary
+  document.getElementById("com-agrupar")?.addEventListener("change", updateFechasPreview);
 
   // Update warning when operation/operator selects change
   ["com-operacion", "com-operador"].forEach(id => {
